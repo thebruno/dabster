@@ -1,8 +1,9 @@
-*Projekt Sigma Dabster 5*
+#summary opis projektu
+=Projekt Sigma Dabster 5=
 Wersja z dnia 22 kwietnia 2007 	
 
 
-*W czym rzecz?*
+==W czym rzecz?==
 Program Dabster umożliwia intuicyjne i łatwe w obsłudze przeglądanie plików w systemie plików użytkownika. Rozszerza on również jego funkcjonalność poprzez udostępnienie takich funkcji jak szyfrowanie i pakowanie plików, ukrywanie danych w plikach z grafiką i muzyką czy łączenie i wymianę danych z serwerami FTP. Istnieje również możliwość stworzenia wirtualnego systemu plików na serwerach pocztowych.
 
 Przeglądnie odbywa się przy pomocy graficznego interfejsu użytkownika (GUI), którym jest okienko przypominające Windows Commander lub chociażby systemowego Eksploratora. Przy jego projektowaniu położono nacisk na prostotę obsługi. Program powinien obsłużyć nawet początkujący użytkownik komputera.
@@ -12,14 +13,17 @@ Przeglądnie odbywa się przy pomocy graficznego interfejsu użytkownika (GUI), 
 Z myślą o bardziej zaawansowanych użytkownikach zadbano o to, by rozszerzając standardowe funkcje systemu plików używać algorytmów bezpiecznych i wystarczająco szybkich, posiadających akceptację specjalistów. Szyfrowanie korzysta z algorytmu AES lub Twofish, a pakowanie używa algorytmów opartych o transformatę Burrowsa-Wheelera.
 
 
-*Dokumenty do pobrania*
-» Dokumentacja w formatacie: PDF i DOC
-» Wstępny harmonogram prac nad projektem
-» Zalecenia dla programistów odnośnie nazewnictwa kontrolek
-» Wstępny projekt interfejsu graficznego
+==Dokumenty do pobrania==
+* Dokumentacja w formatacie: PDF i DOC
+* Wstępny harmonogram prac nad projektem
+* Zalecenia dla programistów odnośnie nazewnictwa kontrolek
+* Wstępny projekt interfejsu graficznego
 
 
-*Kontakt*
-Konrad BAŁYS (konrad.balys@gmail.com)
-Piotr LATUSEK (latusekpiotr@gmail.com)
-Jan ŚWIERZAWSKI (janswierzawski@gmail.com)
+==Kontakt==
+  * Konrad BAŁYS (konrad.balys@gmail.com)
+  * Piotr LATUSEK (latusekpiotr@gmail.com)
+  * Jan ŚWIERZAWSKI (janswierzawski@gmail.com)
+
+
+
