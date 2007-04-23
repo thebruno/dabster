@@ -1,14 +1,12 @@
 #summary Dabster - damned ambitious, bloated, sexy, toaster-like, eclectic rookie
 
-[http://www.dabster.prv.pl/ http://dabster.republika.pl/pic/dabster.jpg]
-
 =Projekt Sigma Dabster 5=
 
 http://www.dabster.prv.pl/
 
 
 ==W czym rzecz?==
-Program Dabster umożliwia intuicyjne i łatwe w obsłudze przeglądanie plików w systemie plików użytkownika. Rozszerza on również jego funkcjonalność poprzez udostępnienie takich funkcji jak szyfrowanie i pakowanie plików, ukrywanie danych w plikach z grafiką i muzyką czy łączenie i wymianę danych z serwerami FTP. Istnieje również możliwość stworzenia wirtualnego systemu plików na serwerach pocztowych.
+[http://www.dabster.prv.pl/ http://dabster.republika.pl/pic/dabster.jpg] Program Dabster umożliwia intuicyjne i łatwe w obsłudze przeglądanie plików w systemie plików użytkownika. Rozszerza on również jego funkcjonalność poprzez udostępnienie takich funkcji jak szyfrowanie i pakowanie plików, ukrywanie danych w plikach z grafiką i muzyką czy łączenie i wymianę danych z serwerami FTP. Istnieje również możliwość stworzenia wirtualnego systemu plików na serwerach pocztowych.
 
 Przeglądnie odbywa się przy pomocy graficznego interfejsu użytkownika (GUI), którym jest okienko przypominające Windows Commander lub chociażby systemowego Eksploratora. Przy jego projektowaniu położono nacisk na prostotę obsługi. Program powinien obsłużyć nawet początkujący użytkownik komputera.
 
@@ -18,7 +16,7 @@ Z myślą o bardziej zaawansowanych użytkownikach zadbano o to, by rozszerzają
 
 
 ==Dokumenty do pobrania==
-  # Dokumentacja w formatacie: PDF i DOC
+  # Dokumentacja w formatacie: [http://dabster.republika.pl/doc/dabster5.pdf PDF] i [http://dabster.republika.pl/doc/dabster5.doc DOC]
   # Wstępny harmonogram prac nad projektem
   # Zalecenia dla programistów odnośnie nazewnictwa kontrolek
   # Wstępny projekt interfejsu graficznego
