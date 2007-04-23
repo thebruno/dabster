@@ -1,6 +1,9 @@
 #summary opis projektu
 =Projekt Sigma Dabster 5=
+
 Wersja z dnia 22 kwietnia 2007 	
+
+[http://www.dabster.prv.pl/ http://dabster.republika.pl/pic/dabster.jpg]
 
 
 ==W czym rzecz?==
@@ -21,6 +24,6 @@ Z myślą o bardziej zaawansowanych użytkownikach zadbano o to, by rozszerzają
 
 
 ==Kontakt==
-  Konrad BAŁYS (konrad.balys@gmail.com)
-  Piotr LATUSEK (latusekpiotr@gmail.com)
-  Jan ŚWIERZAWSKI (janswierzawski@gmail.com)
+  * Konrad BAŁYS (konrad.balys@gmail.com)
+  * Piotr LATUSEK (latusekpiotr@gmail.com)
+  * Jan ŚWIERZAWSKI (janswierzawski@gmail.com)
