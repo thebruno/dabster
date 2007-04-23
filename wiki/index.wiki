@@ -14,14 +14,13 @@ Z myślą o bardziej zaawansowanych użytkownikach zadbano o to, by rozszerzają
 
 
 ==Dokumenty do pobrania==
-* Dokumentacja w formatacie: PDF i DOC
-* Wstępny harmonogram prac nad projektem
-* Zalecenia dla programistów odnośnie nazewnictwa kontrolek
-* Wstępny projekt interfejsu graficznego
+  # Dokumentacja w formatacie: PDF i DOC
+  # Wstępny harmonogram prac nad projektem
+  # Zalecenia dla programistów odnośnie nazewnictwa kontrolek
+  # Wstępny projekt interfejsu graficznego
 
 
 ==Kontakt==
-* Konrad BAŁYS (konrad.balys@gmail.com)
-* Piotr LATUSEK (latusekpiotr@gmail.com)
-* Jan ŚWIERZAWSKI (janswierzawski@gmail.com)
-
+  Konrad BAŁYS (konrad.balys@gmail.com)
+  Piotr LATUSEK (latusekpiotr@gmail.com)
+  Jan ŚWIERZAWSKI (janswierzawski@gmail.com)
