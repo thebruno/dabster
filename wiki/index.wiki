@@ -1,9 +1,12 @@
-#summary opis projektu
-=Projekt Sigma Dabster 5=
-
-Wersja z dnia 22 kwietnia 2007 	
+#summary Dabster - damned ambitious, bloated, sexy, toaster-like, eclectic rookie
 
 [http://www.dabster.prv.pl/ http://dabster.republika.pl/pic/dabster.jpg]
+
+=Projekt Sigma Dabster 5=
+
+www.dabster.prv.pl
+
+Wersja z dnia 22 kwietnia 2007
 
 
 ==W czym rzecz?==
