@@ -1,12 +1,16 @@
 #summary kim do diabła jesteśmy i dlaczego tworzymy Dabster? -- poprawcie to, nie chce mi się nic wymyślać :)
+#labels Deprecated
 = Po co? =
 Sigma Dabster 5 jest projektem zaliczeniowym. Robimy to z chęci zaliczenia semestru z programowania i zostania dopuszczonymi do (lub zwolnionymi z) egzaminu z Programowania Komputerów 4 na Politechnice Śląskiej w Gliwicach.
 
 = Kto? =
+Oto krótki opis zespołu "pracującego" nad Dabsterem.
+
 == Piotrek Latusek - Metzger == 
+
 http://dabster.googlecode.com/svn/wiki/metzger.png
 
-Napisał pierwsze cztery wersje Dabstera w Visual Basicu. Mimo to go lubimy, bo dał nam pomysł na projekt zaliczeniowy i nie musimy pisać gry. W projektach nie lubi samogłosek, ale jego kod działa.
+Napisał pierwsze cztery wersje Dabstera w Visual Basicu. Mimo to go lubimy, bo dał nam pomysł na projekt zaliczeniowy i nie musimy pisać gry. W projektach nie lubi samogłosek, ale pewnie dlatego jego kod działa :D
 
 == Konrad Bałys - Bruno ==
 http://dabster.googlecode.com/svn/wiki/bruno.png
