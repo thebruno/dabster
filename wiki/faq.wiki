@@ -1,4 +1,5 @@
 #summary FAQ opracowany w mailu przez Piotrka
+#labels Phase-Implementation
 = Często zadawane pytania =
 === W jakim formacie ma być wyjątek ===
  Dołączcie do pliku, w którym chcecie zgłosić wyjątek nagłówek err.h (załącznik). Poza tym do projektu dołączcie jeszcze err.cpp, com.h, com.cpp, str.h, str.cpp, set.h, set.cpp i stdMcrs.h - kompilują się pod VC++, powinny kompilować się pod BC++Builderem.
