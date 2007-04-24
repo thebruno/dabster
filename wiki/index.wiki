@@ -1,4 +1,5 @@
 #summary Dabster - damned ambitious, bloated, sexy, toaster-like, eclectic rookie
+#labels Featured
 
 [http://www.dabster.prv.pl/ http://dabster.republika.pl/pic/dabster.jpg]
 
