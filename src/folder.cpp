@@ -31,4 +31,29 @@
 folder::~folder(void) {
 }
 
+void folder::store(std::vector< std::map< std::string, std::string > > src, std::vector< std::map< std::string, std::string > > dest) {
+
+}
+
+void folder::extract(std::vector< std::map< std::string, std::string > > src, std::vector< std::map< std::string, std::string > > dest) {
+
+}
+
+void folder::del(std::vector< std::map< std::string, std::string > > path) {
+
+}
+void folder::modify(std::vector< std::map< std::string, std::string > > src, std::vector< std::map< std::string, std::string > > dest) {
+
+}
+void folder::copyInside(std::vector< std::map< std::string, std::string > > src, std::vector< std::map< std::string, std::string > > dest) {
+
+}
+
+std::vector< std::map< std::string, std::string > > folder::getContent(std::string path) {
+	std::vector< std::map< std::string, std::string > > result;
+	return result;
+}
+
+
+
 /********************************************************************/
