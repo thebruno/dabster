@@ -221,6 +221,7 @@ long str::stringToLong(const std::string s) {
 	long l = 0;
 	int first;
 
+	if (s.length() == 0) return 0;
 	if ((cTemp[0] == '-') || (cTemp[0] == '+')) { first = 1; } else { first = 0; }
 	for (int i = s.length() - 1; i >= first; --i) {
 		std::string::size_type pos = 0;
