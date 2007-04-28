@@ -1807,7 +1807,7 @@ namespace bmp {
 					// reszta ustawien byla powyzej powyzej 
 					BmpBuf.BitSeekg((*k)->DataStart);
 
-					for (iter = 0; iter < (*k)->DataSize && bCanceled; ++iter) {
+					for (iter = 0; iter < (*k)->DataSize && !bCanceled; ++iter) {
 						FileBuf.PutBit(BmpBuf.GetBit()); FileBuf.PutBit(BmpBuf.GetBit());
 						FileBuf.PutBit(BmpBuf.GetBit()); FileBuf.PutBit(BmpBuf.GetBit());
 						FileBuf.PutBit(BmpBuf.GetBit()); FileBuf.PutBit(BmpBuf.GetBit());

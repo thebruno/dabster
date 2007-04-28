@@ -35,8 +35,3 @@ drive::drive() {
 drive::~drive() {
 
 }
-
-unsigned long long drive::getCapacity() {
-
-	return 0;
-}

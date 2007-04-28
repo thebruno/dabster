@@ -36,7 +36,5 @@ file::~file() {
 
 }
 
-void file::edit() {
 
-}
 
