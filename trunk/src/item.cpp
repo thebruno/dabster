@@ -29,10 +29,12 @@
 #include <string>
 #include "item.h"
 
-item::item(void) {
-	bCanceled = false;
-	sName = "";
-	sRealPath = "";
+item::item(void) : bCanceled(false), sName(""), sRealPath("") {
+}
+
+item::item(prgrss progress) : 
+	pProgress(progress), bCanceled(false), 
+	sName(""), sRealPath("") {
 }
 
 item::~item(void) {

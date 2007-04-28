@@ -30,7 +30,6 @@
 #include <vector>
 #include <map>
 #include "sfolder.h"
-#include "prgrss.h"
 #include "err.h"
 #include "str.h"
 #include "stdMcrs.h"
@@ -40,7 +39,10 @@ sfolder::~sfolder(void) {
 
 /* Kopiuje do folderu obiekty podane w parametrze */
 void sfolder::store(std::vector< std::map< std::string, std::string > > src, std::vector< std::map< std::string, std::string > > dest) {
+	pProgress.show(0);
 	for (unsigned int i = 0; i < src.size(); i++) {
+		if (bCanceled) return;
+		pProgress.show(i * 100 / src.size());
 		if (src[i][dabKeyAtrDirectory] == dabFalse) {
 			/* Zapisywanie pliku */
 			std::string sPath1 = src[i][dabKeyRealPath];
@@ -70,6 +72,7 @@ void sfolder::store(std::vector< std::map< std::string, std::string > > src, std
 			}
 		}
 	}
+	pProgress.show(100);
 }
 
 /* Kopiuje obiekty podane w parametrze poza FB */
@@ -96,6 +99,7 @@ std::vector< std::map< std::string, std::string > > sfolder::getContent(std::str
 	System::String^ fullPath;
 	cli::array<System::String^>^ subDirs;
 	int filesStartAt;
+	pProgress.show(0);
 	try {
 		fullPath = dabIoPath::Combine(dabToSysStr(sRealPath.c_str()), dabToSysStr(path.c_str())); 
 		
@@ -122,6 +126,7 @@ std::vector< std::map< std::string, std::string > > sfolder::getContent(std::str
 			std::string sTemp;
 
 			if (bCanceled) return std::vector< std::map< std::string, std::string > > (0);
+			pProgress.show(i * 100 / subDirs->Length);
 
 			if (i < filesStartAt) {
 				fSysInfo = gcnew dabDirInfo(subDirs[i]->ToString());
@@ -255,6 +260,7 @@ std::vector< std::map< std::string, std::string > > sfolder::getContent(std::str
 		throw err("!SFL1", params);
 	}
 
+	pProgress.show(100);
 	return content;
 }
 
