@@ -30,10 +30,12 @@
 #define _ITEM_H
 
 #include <string>
+#include "prgrss.h"
 
 class item {
 public:
 	item(void);
+	item(prgrss progress);
 	virtual ~item(void) = 0;
 
 	void setName(std::string name);
@@ -46,7 +48,7 @@ protected:
 	std::string sName;
 	std::string sRealPath;
 	bool bCanceled;
-	//prgrss pProgress;
+	prgrss pProgress;
 };
 
 #endif
