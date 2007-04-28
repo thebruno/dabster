@@ -34,7 +34,7 @@
 #include <map>
 #include "item.h"
 
-class folder : public item {
+class folder : public virtual item {
 public:
 	virtual ~folder(void) = 0;
 
