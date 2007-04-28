@@ -61,7 +61,7 @@ void dabster::frmMain::initializeComponent(void) {
 	this->PerformLayout();
 }
 
-/* £adowanie frmMain */
+/* Ladowanie frmMain */
 System::Void dabster::frmMain::frmMain_Load(System::Object^ sender, System::EventArgs^ e) {
 	/* Ustalanie appPath */
 	str::path appPath;
@@ -84,15 +84,23 @@ System::Void dabster::frmMain::frmMain_Load(System::Object^ sender, System::Even
 	p.setRealPath("D:\\");
 	p.getContent("Metzger\\");
 
-	std::vector< std::map< std::string, std::string > > vmTempSrc(1);
-	vmTempSrc[0][dabKeyName] = "YYY";
-	vmTempSrc[0][dabKeyRelativePath] = "Y\\YY\\";
+	std::vector< std::map< std::string, std::string > > vmTempSrc(2);
+	vmTempSrc[0][dabKeyRealPath] = "D:\\";
+	vmTempSrc[0][dabKeyName] = "Y";
+	vmTempSrc[0][dabKeyLength] = "0";
 	vmTempSrc[0][dabKeyAtrDirectory] = dabTrue;
 
-	std::vector< std::map< std::string, std::string > > vmTempDst(1);
-	vmTempDst[0][dabKeyName] = "YYY";
-	vmTempDst[0][dabKeyRelativePath] = "Y\\YY\\";
-	vmTempDst[0][dabKeyAtrDirectory] = dabTrue;
+	vmTempSrc[1][dabKeyRealPath] = "D:\\Y\\";
+	vmTempSrc[1][dabKeyName] = "pl.txt";
+	vmTempSrc[1][dabKeyLength] = "12";
+	vmTempSrc[1][dabKeyAtrDirectory] = dabFalse;
+
+	std::vector< std::map< std::string, std::string > > vmTempDst(2);
+	vmTempDst[0][dabKeyRelativePath] = "";
+	vmTempDst[0][dabKeyName] = "YY";
+
+	vmTempDst[1][dabKeyRelativePath] = "YY\\";
+	vmTempDst[1][dabKeyName] = "pl2.txt";
 
 	p.store(vmTempSrc, vmTempDst);
 }

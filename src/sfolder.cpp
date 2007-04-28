@@ -39,12 +39,32 @@ sfolder::~sfolder(void) {
 
 /* Kopiuje do folderu obiekty podane w parametrze */
 void sfolder::store(std::vector< std::map< std::string, std::string > > src, std::vector< std::map< std::string, std::string > > dest) {
-	pProgress.show(0);
+	static const int iDIR_CREATING_TIME = 10;	//Przyjmujemy czas tworzenia foldru jak czas kopiowania 10B pliku
+	
+	long len = 0, made = 0;
+
+	/* Szacowanie calkowitego czasu kopiowania */
+	try {
+		pProgress.show(0);
+		for (unsigned int i = 0; i < src.size(); i++) {
+			if (src[i][dabKeyAtrDirectory] == dabFalse) {
+				len += str::stringToLong(src[i][dabKeyLength]);
+			} else {
+				len += iDIR_CREATING_TIME;
+			}
+		}
+	}
+	catch (...) {}
+	if (!len) len = 1;
+
+	/* Kopiowanie */
 	for (unsigned int i = 0; i < src.size(); i++) {
 		if (bCanceled) return;
-		pProgress.show(i * 100 / src.size());
+
 		if (src[i][dabKeyAtrDirectory] == dabFalse) {
 			/* Zapisywanie pliku */
+			made += str::stringToLong(src[i][dabKeyLength]);
+
 			std::string sPath1 = src[i][dabKeyRealPath];
 			if (sPath1[sPath1.size() - 1] != '\\') sPath1.push_back('\\');
 			sPath1 += src[i][dabKeyName];
@@ -57,9 +77,18 @@ void sfolder::store(std::vector< std::map< std::string, std::string > > src, std
 			sPath2 += dest[i][dabKeyName];
 			sPath2 = str::fixDelims(sPath2);
 
-			dabFile::Copy(dabToSysStr(sPath1.c_str()), dabToSysStr(sPath2.c_str()), true);
+			try {
+				dabFile::Copy(dabToSysStr(sPath1.c_str()), dabToSysStr(sPath2.c_str()), true);
+			}
+			catch (...) {
+				std::vector<std::string> params(1);
+				params[0] = sPath1;
+				throw err("!SFL2", params);
+			}
 		} else {
 			/* Tworzenie folderu */
+			made += iDIR_CREATING_TIME;
+
 			std::string sPath = sRealPath;
 			if (sPath[sPath.size() - 1] != '\\') sPath.push_back('\\');
 			sPath += dest[i][dabKeyRelativePath];
@@ -67,10 +96,19 @@ void sfolder::store(std::vector< std::map< std::string, std::string > > src, std
 			sPath += dest[i][dabKeyName];
 			sPath = str::fixDelims(sPath);
 
-			if (!dabDir::Exists(dabToSysStr(sPath.c_str()))) {
-				dabDir::CreateDirectory(dabToSysStr(sPath.c_str()));
+			try {
+				if (!dabDir::Exists(dabToSysStr(sPath.c_str()))) {
+					dabDir::CreateDirectory(dabToSysStr(sPath.c_str()));
+				}
+			}
+			catch (...) {
+				std::vector<std::string> params(1);
+				params[0] = sPath;
+				throw err("!SFL3", params);
 			}
 		}
+
+		pProgress.show(made * 100 / len);
 	}
 	pProgress.show(100);
 }
@@ -126,7 +164,6 @@ std::vector< std::map< std::string, std::string > > sfolder::getContent(std::str
 			std::string sTemp;
 
 			if (bCanceled) return std::vector< std::map< std::string, std::string > > (0);
-			pProgress.show(i * 100 / subDirs->Length);
 
 			if (i < filesStartAt) {
 				fSysInfo = gcnew dabDirInfo(subDirs[i]->ToString());
@@ -252,6 +289,8 @@ std::vector< std::map< std::string, std::string > > sfolder::getContent(std::str
 			delete fInfo;
 
 			content.push_back(dirEntry);
+
+			pProgress.show(i * 100 / subDirs->Length);
 		}
 	}
 	catch (...) {
