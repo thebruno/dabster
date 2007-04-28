@@ -34,6 +34,7 @@
 class prgrss {
 public:
 	prgrss(int progressPort = iNO_PROGRESS_PORT, int labelPort = iNO_LABEL_PORT);
+	prgrss(prgrss &progress);
 	~prgrss(void);
 
 	void setValue(int value);

@@ -29,14 +29,15 @@
 #include <string>
 #include "prgrss.h"
 
-prgrss::prgrss(int progressPort, int labelPort) {
-	iProgressPort = progressPort;
-	iLabelPort = labelPort;
+prgrss::prgrss(int progressPort, int labelPort) : 
+	iProgressPort(progressPort), iLabelPort(labelPort), 
+	iValue(0), sText(""), iStart(0), iStop(100) {
+}
 
-	iValue = 0;
-	sText = "";
-	iStart = 0;
-	iStop = 100;
+prgrss::prgrss(prgrss &progress) : 
+	iProgressPort(progress.iProgressPort), iLabelPort(progress.iLabelPort), 
+	iValue(progress.iValue), sText(progress.sText), 
+	iStart(progress.iStart), iStop(progress.iStop) {
 }
 
 prgrss::~prgrss(void) {
