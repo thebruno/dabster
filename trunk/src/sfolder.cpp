@@ -1,0 +1,261 @@
+/*********************************************************************
+
+	Sigma Dabster 5
+	Copyright (C) The Dabster Team 2007.
+	All rights reserved.
+
+	http://www.dabster.prv.pl/
+	http://code.google.com/p/dabster/
+
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; version 2 dated June, 1991. 
+
+	This program is distributed in the hope that it will be useful, but
+	WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+	General Public License for more details. 
+
+	You should have received a copy of the GNU General Public License
+	along with this program; if not, write to the Free Software
+	Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+	02110-1301 USA. 
+
+	Simple Folder
+	sfolder.cpp
+
+*********************************************************************/
+
+#include <string>
+#include <vector>
+#include <map>
+#include "sfolder.h"
+#include "prgrss.h"
+#include "err.h"
+#include "str.h"
+#include "stdMcrs.h"
+
+sfolder::~sfolder(void) {
+}
+
+/* Kopiuje do folderu obiekty podane w parametrze */
+void sfolder::store(std::vector< std::map< std::string, std::string > > src, std::vector< std::map< std::string, std::string > > dest) {
+	for (unsigned int i = 0; i < src.size(); i++) {
+		if (src[i][dabKeyAtrDirectory] == dabFalse) {
+			/* Zapisywanie pliku */
+			std::string sPath1 = src[i][dabKeyRealPath];
+			if (sPath1[sPath1.size() - 1] != '\\') sPath1.push_back('\\');
+			sPath1 += src[i][dabKeyName];
+			sPath1 = str::fixDelims(sPath1);
+
+			std::string sPath2 = sRealPath;
+			if (sPath2[sPath2.size() - 1] != '\\') sPath2.push_back('\\');
+			sPath2 += dest[i][dabKeyRelativePath];
+			if (sPath2[sPath2.size() - 1] != '\\') sPath2.push_back('\\');
+			sPath2 += dest[i][dabKeyName];
+			sPath2 = str::fixDelims(sPath2);
+
+			dabFile::Copy(dabToSysStr(sPath1.c_str()), dabToSysStr(sPath2.c_str()), true);
+		} else {
+			/* Tworzenie folderu */
+			std::string sPath = sRealPath;
+			if (sPath[sPath.size() - 1] != '\\') sPath.push_back('\\');
+			sPath += dest[i][dabKeyRelativePath];
+			if (sPath[sPath.size() - 1] != '\\') sPath.push_back('\\');
+			sPath += dest[i][dabKeyName];
+			sPath = str::fixDelims(sPath);
+
+			if (!dabDir::Exists(dabToSysStr(sPath.c_str()))) {
+				dabDir::CreateDirectory(dabToSysStr(sPath.c_str()));
+			}
+		}
+	}
+}
+
+/* Kopiuje obiekty podane w parametrze poza FB */
+void sfolder::extract(std::vector< std::map< std::string, std::string > > src, std::vector< std::map< std::string, std::string > > dest) {
+}
+
+/* Usuwa obiekty z folderu */
+void sfolder::del(std::vector< std::map< std::string, std::string > > path) {
+}
+
+/* Przenosi obiekty wewnatrz DFB */
+void sfolder::modify(std::vector< std::map< std::string, std::string > > src, std::vector< std::map< std::string, std::string > > dest) {
+}
+
+/* Kopiuje obiekty wewnatrz DFB */
+void sfolder::copyInside(std::vector< std::map< std::string, std::string > > src, std::vector< std::map< std::string, std::string > > dest) {
+}
+
+/* Zwraca zawartosc folderu z parametru */
+std::vector< std::map< std::string, std::string > > sfolder::getContent(std::string path) {
+	std::vector< std::map< std::string, std::string > > content(0);
+	
+	/* Przygotowywanie listy plikow i folderow */
+	System::String^ fullPath;
+	cli::array<System::String^>^ subDirs;
+	int filesStartAt;
+	try {
+		fullPath = dabIoPath::Combine(dabToSysStr(sRealPath.c_str()), dabToSysStr(path.c_str())); 
+		
+		//Foldery
+		subDirs = dabDir::GetDirectories(fullPath);
+		//Pliki
+		filesStartAt = subDirs->Length;
+		cli::array<System::String^>^ subFiles = dabDir::GetFiles(fullPath);
+		cli::array<System::String^>::Resize(subDirs, subDirs->Length + subFiles->Length);
+		subFiles->CopyTo(subDirs, filesStartAt);
+	}
+	catch (...) {
+		std::vector<std::string> params(1);
+		params[0] = str::sysStrToCppStr(fullPath);
+		throw err("!SFL0", params);
+	}
+
+	int i;
+	try {
+		/* Przygotowywanie informacji */
+		for (i = 0; i < subDirs->Length; i++) {
+			std::map< std::string, std::string > dirEntry;
+			dabFileSysInfo^ fSysInfo;
+			std::string sTemp;
+
+			if (bCanceled) return std::vector< std::map< std::string, std::string > > (0);
+
+			if (i < filesStartAt) {
+				fSysInfo = gcnew dabDirInfo(subDirs[i]->ToString());
+			} else {
+				fSysInfo = gcnew dabFileInfo(subDirs[i]->ToString());
+			}
+
+			//Nazwa i sciezka rzeczywista
+			sTemp = str::sysStrToCppStr(dabIoPath::GetDirectoryName(subDirs[i]->ToString()));
+			std::string::size_type pos = sTemp.length() - 1;
+			if (sTemp[pos] != '\\') sTemp.push_back('\\');
+			sTemp = str::fixDelims(sTemp);
+			dirEntry[dabKeyName] = str::sysStrToCppStr(dabIoPath::GetFileName(subDirs[i]->ToString()));
+			dirEntry[dabKeyRealPath] = sTemp;
+
+			//Data utworzenia
+			sTemp = str::sysStrToCppStr(fSysInfo->CreationTimeUtc.Day.ToString()) + ".";
+			sTemp += str::sysStrToCppStr(fSysInfo->CreationTimeUtc.Month.ToString()) + ".";
+			sTemp += str::sysStrToCppStr(fSysInfo->CreationTimeUtc.Year.ToString()) + " ";
+			sTemp += str::sysStrToCppStr(fSysInfo->CreationTimeUtc.Hour.ToString()) + ":";
+			sTemp += str::sysStrToCppStr(fSysInfo->CreationTimeUtc.Minute.ToString()) + ":";
+			sTemp += str::sysStrToCppStr(fSysInfo->CreationTimeUtc.Second.ToString());
+			dirEntry[dabKeyCreationTimeUtc] = sTemp;
+
+			//Data modyfikacji
+			sTemp = str::sysStrToCppStr(fSysInfo->LastWriteTimeUtc.Day.ToString()) + ".";
+			sTemp += str::sysStrToCppStr(fSysInfo->LastWriteTimeUtc.Month.ToString()) + ".";
+			sTemp += str::sysStrToCppStr(fSysInfo->LastWriteTimeUtc.Year.ToString()) + " ";
+			sTemp += str::sysStrToCppStr(fSysInfo->LastWriteTimeUtc.Hour.ToString()) + ":";
+			sTemp += str::sysStrToCppStr(fSysInfo->LastWriteTimeUtc.Minute.ToString()) + ":";
+			sTemp += str::sysStrToCppStr(fSysInfo->LastWriteTimeUtc.Second.ToString());
+			dirEntry[dabKeyLastWriteTimeUtc] = sTemp;
+
+			//Data ostatniego dostepu
+			sTemp = str::sysStrToCppStr(fSysInfo->LastAccessTimeUtc.Day.ToString()) + ".";
+			sTemp += str::sysStrToCppStr(fSysInfo->LastAccessTimeUtc.Month.ToString()) + ".";
+			sTemp += str::sysStrToCppStr(fSysInfo->LastAccessTimeUtc.Year.ToString()) + " ";
+			sTemp += str::sysStrToCppStr(fSysInfo->LastAccessTimeUtc.Hour.ToString()) + ":";
+			sTemp += str::sysStrToCppStr(fSysInfo->LastAccessTimeUtc.Minute.ToString()) + ":";
+			sTemp += str::sysStrToCppStr(fSysInfo->LastAccessTimeUtc.Second.ToString());
+			dirEntry[dabKeyLastAccessTimeUtc] = sTemp;
+
+			//Tymczasowy
+			if (((fSysInfo->Attributes) & (dabFAtr::Temporary)) == dabFAtr::Temporary) {
+				dirEntry[dabKeyAtrTemporary] = dabTrue;
+			} else {
+				dirEntry[dabKeyAtrTemporary] = dabFalse;
+			}
+
+			//Systemowy
+			if (((fSysInfo->Attributes) & (dabFAtr::System)) == dabFAtr::System) {
+				dirEntry[dabKeyAtrSystem] = dabTrue;
+			} else {
+				dirEntry[dabKeyAtrSystem] = dabFalse;
+			}
+
+			//Archiwum
+			if (((fSysInfo->Attributes) & (dabFAtr::Archive)) == dabFAtr::Archive) {
+				dirEntry[dabKeyAtrArchive] = dabTrue;
+			} else {
+				dirEntry[dabKeyAtrArchive] = dabFalse;
+			}
+
+			//Skompresowany
+			if (((fSysInfo->Attributes) & (dabFAtr::Compressed)) == dabFAtr::Compressed) {
+				dirEntry[dabKeyAtrCompressed] = dabTrue;
+			} else {
+				dirEntry[dabKeyAtrCompressed] = dabFalse;
+			}
+
+			//Zaszyfrowany
+			if (((fSysInfo->Attributes) & (dabFAtr::Encrypted)) == dabFAtr::Encrypted) {
+				dirEntry[dabKeyAtrEncrypted] = dabTrue;
+			} else {
+				dirEntry[dabKeyAtrEncrypted] = dabFalse;
+			}
+
+			//Ukryty
+			if (((fSysInfo->Attributes) & (dabFAtr::Hidden)) == dabFAtr::Hidden) {
+				dirEntry[dabKeyAtrHidden] = dabTrue;
+			} else {
+				dirEntry[dabKeyAtrHidden] = dabFalse;
+			}
+
+			//Nie indeksowany
+			if (((fSysInfo->Attributes) & (dabFAtr::NotContentIndexed)) == dabFAtr::NotContentIndexed) {
+				dirEntry[dabKeyAtrNotContentIndexed] = dabTrue;
+			} else {
+				dirEntry[dabKeyAtrNotContentIndexed] = dabFalse;
+			}
+
+			//Offline
+			if (((fSysInfo->Attributes) & (dabFAtr::Offline)) == dabFAtr::Offline) {
+				dirEntry[dabKeyAtrOffline] = dabTrue;
+			} else {
+				dirEntry[dabKeyAtrOffline] = dabFalse;
+			}
+
+			//ReadOnly
+			if (((fSysInfo->Attributes) & (dabFAtr::ReadOnly)) == dabFAtr::ReadOnly) {
+				dirEntry[dabKeyAtrReadOnly] = dabTrue;
+			} else {
+				dirEntry[dabKeyAtrReadOnly] = dabFalse;
+			}
+
+			//Folder
+			if (((fSysInfo->Attributes) & (dabFAtr::Directory)) == dabFAtr::Directory) {
+				dirEntry[dabKeyAtrDirectory] = dabTrue;
+			} else {
+				dirEntry[dabKeyAtrDirectory] = dabFalse;
+			}
+
+			delete fSysInfo;
+			dabFileInfo^ fInfo = gcnew dabFileInfo(subDirs[i]->ToString());
+
+			//Rozmiar
+			if (i < filesStartAt) {
+				dirEntry[dabKeyLength] = dabUnknown;	/* TODO: Zliczanie wielkosci folderow i plikow wewnatrz */
+			} else {
+				dirEntry[dabKeyLength] = str::sysStrToCppStr(fInfo->Length.ToString());
+			}
+
+			delete fInfo;
+
+			content.push_back(dirEntry);
+		}
+	}
+	catch (...) {
+		std::vector<std::string> params(1);
+		params[0] = str::sysStrToCppStr(subDirs[i]->ToString());
+		throw err("!SFL1", params);
+	}
+
+	return content;
+}
+
+/********************************************************************/
