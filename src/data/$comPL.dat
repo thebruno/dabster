@@ -1,0 +1,85 @@
+#
+#  SIGMA DABSTER 5
+#  (c) 2007 Zespó³ Dabstera
+#
+#  Komunikaty: PL
+#
+
+
+
+##  B³êdy modu³u Settings  ##
+
+!SET0d Wczytywanie ustawieñ z pliku '<param0>' nie powiod³o siê
+!SET0h Plik '<param0>' nie istnieje
+
+!SET1d Wczytywanie ustawieñ z pliku '<param0>' nie powiod³o siê
+!SET1h Za krótki identyfikator w linii "<param1>"
+
+!SET2d Wczytywanie ustawieñ z pliku '<param0>' nie powiod³o siê
+!SET2h W linii "<param1>" brakuje tekstu za identyfikatorem
+
+!SET3d Wczytywanie ustawieñ z pliku '<param0>' nie powiod³o siê
+!SET3h Tekst za identyfikatorem, W linii "<param1>" jest niepoprawny
+
+!SET4d Wczytywanie ustawieñ z pliku '<param0>' nie powiod³o siê
+!SET4h Konwersja linii "<param1>" nie powiod³a siê
+
+
+
+##  B³êdy modu³u Strings  ##
+
+!STR0d Œcie¿ka '<param0>' niepoprawna
+!STR0h Œcie¿ka nie mo¿e zaczynaæ siê od kropki
+
+!STR1d Œcie¿ka '<param0>' niepoprawna
+!STR1h Œcie¿ka musi zawieraæ nazwê pliku lub dysk
+
+!STR2d Œcie¿ka '<param0>' niepoprawna
+!STR2h Œcie¿ka nie mo¿e zaczynaæ siê od (back)slasha
+
+!STR3d Œcie¿ka '<param0>' niepoprawna
+!STR3h Œcie¿ka nie mo¿e zawieraæ podwójnego (back)slasha
+
+!STR4d Konwersja strToChar nie powiod³a siê
+!STR4h Alokowanie pamiêci nie powiod³o siê
+
+!STR5d Konwersja charToStr nie powiod³a siê
+!STR5h Alokowanie pamiêci nie powiod³o siê
+
+!STR6d Konwersja stringToLong nie powiod³a siê
+!STR6h Niepoprawny znak
+
+
+
+##  B³êdy modu³u SFolder  ##
+
+!SFL0d Wczytywanie zawartoœci folderu '<param0>' niepowiod³o siê
+!SFL0h Lista plików i folderów niedostêpna
+
+!SFL1d Informacje o pliku/folderze '<param0>' niedostêpne
+!SFL1h Plik uszkodzony lub brak dostêpu do pliku
+
+!SFL2d Nie mo¿na skopiowaæ pliku <param0>
+!SFL2h Œcie¿ka niepoprawna, plik uszkodzony lub brak dostêpu do pliku
+
+!SFL3d Nie mo¿na utworzyæ katalogu <param0>
+!SFL3h Œcie¿ka niepoprawna lub odmowa dostêpu
+
+
+
+##  Treœæ g³ównych kontrolek  ##
+
+@MNI0 Plik
+@MNI1 Polecenia
+@MNI2 Dyski zewnêtrzne
+@MNI3 Narzêdzia
+@MNI4 Ustawienia
+@MNI5 Widok
+@MNI6 Pomoc
+
+@TOOL_externalDrives Dyski zewnêtrzne
+@TOOL_copyToNeighbour Kopiuj do s¹siada
+@TOOL_moveToNeighbour Przenieœ do s¹siada
+
+@SLB0 © Zespó³ Dabstera 2007
+@SLB1 Gotowy do pracy

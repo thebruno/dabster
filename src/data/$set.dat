@@ -1,0 +1,85 @@
+#
+#  SIGMA DABSTER 5
+#  (c) 2007 Zespó³ Dabstera
+#
+#  Ustawienia
+#
+
+
+#  Ustawienia ogólne
+#  --------------------------------
+
+$sTMP_DIR default
+$sLANG PL
+
+
+#  Ustawienia paska narzêdzi
+#  --------------------------------
+
+$bTOOLBAR0 yes
+$iTOOLBAR0_LINE 0
+$iTOOLBAR0_POS 0
+
+$sTOOLBAR0_0 open pic more
+$sTOOLBAR0_1 space
+
+$sTOOLBAR0_2 undo pic
+$sTOOLBAR0_3 redo pic
+$sTOOLBAR0_4 space
+
+$sTOOLBAR0_5 copyToNeighbour pic
+$sTOOLBAR0_6 moveToNeighbour pic
+$sTOOLBAR0_7 space
+
+$sTOOLBAR0_8 cut pic
+$sTOOLBAR0_9 copy pic
+$sTOOLBAR0_10 paste pic
+$sTOOLBAR0_11 delete pic
+$sTOOLBAR0_12 space
+
+$sTOOLBAR0_13 newFolder pic
+$sTOOLBAR0_14 changeName pic
+$sTOOLBAR0_15 properties pic
+$sTOOLBAR0_16 space
+
+$sTOOLBAR0_17 externalDrives pic text
+$sTOOLBAR0_18 space
+
+$sTOOLBAR0_19 help pic
+$sTOOLBAR0_20 end
+
+
+
+$bTOOLBAR1 no
+$iTOOLBAR1_LINE 0
+$iTOOLBAR1_POS 1
+
+$sTOOLBAR1_0 properties pic
+$sTOOLBAR1_1 space
+
+$sTOOLBAR1_2 copyToNeighbour pic
+$sTOOLBAR1_3 moveToNeighbour pic
+
+$sTOOLBAR1_4 end
+
+
+
+$bTOOLBAR2 no
+$iTOOLBAR2_LINE 1
+$iTOOLBAR2_POS 0
+
+$sTOOLBAR2_0 cut pic
+$sTOOLBAR2_1 copy pic
+$sTOOLBAR2_2 paste pic
+$sTOOLBAR2_3 delete pic
+
+$sTOOLBAR2_4 end
+
+
+$bTOOLBAR3 no
+$bTOOLBAR4 no
+$bTOOLBAR5 no
+$bTOOLBAR6 no
+$bTOOLBAR7 no
+$bTOOLBAR8 no
+$bTOOLBAR9 no
