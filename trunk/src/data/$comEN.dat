@@ -1,0 +1,68 @@
+#
+#  SIGMA DABSTER 5
+#  (c) 2007 The Dabster Team
+#
+#  Communicates: EN
+#
+
+
+
+##  Settings module errors  ##
+
+!SET0d Loading settings from file <param0> failed
+!SET0h File <param0> does not exist
+
+!SET1d Loading settings from file <param0> failed
+!SET1h Identifier to short in line "<param1>"
+
+!SET2d Loading settings from file <param0> failed
+!SET2h No text after identifier in line "<param1>"
+
+!SET3d Loading settings from file <param0> failed
+!SET3h Incorrect text after identifier in line "<param1>"
+
+!SET4d Loading settings from file <param0> failed
+!SET4h Conversion of line "<param1>" failed
+
+
+
+##  Strings module errors  ##
+
+!STR0d Path <param0> incorrect
+!STR0h Path cannot begin with full stop mark
+
+!STR1d Path <param0> incorrect
+!STR1h Path have to include file name or drive
+
+!STR2d Path <param0> incorrect
+!STR2h Path cannot start with (back)slash
+
+!STR3d Path <param0> incorrect
+!STR3h Path cannot include double (back)slash
+
+!STR4d Conversion strToChar failed
+!STR4h Memory allocation failed
+
+!STR5d Conversion charToStr failed
+!STR5h Memory allocation failed
+
+!STR6d Conversion stringToLong failed
+!STR6h Character <param0> incorrect
+
+
+##  Main controls substance  ##
+
+@MNI0 File
+@MNI1 Commands
+@MNI2 External drives
+@MNI3 Tools
+@MNI4 Settings
+@MNI5 View
+@MNI6 Help
+
+@TOOL_externalDrives External Drives
+@TOOL_copyToNeighbour Copy to neighbour
+@TOOL_moveToNeighbour Move to neighbour
+
+@SLB0 © The Dabster Team 2007
+@SLB1 Ready to work
