@@ -57,13 +57,16 @@
 !SFL0h Lista plików i folderów niedostêpna
 
 !SFL1d Informacje o pliku/folderze '<param0>' niedostêpne
-!SFL1h Plik uszkodzony lub brak dostêpu do pliku
+!SFL1h Plik/folder uszkodzony lub odmowa dostêpu
 
-!SFL2d Nie mo¿na skopiowaæ pliku <param0>
-!SFL2h Œcie¿ka niepoprawna, plik uszkodzony lub brak dostêpu do pliku
+!SFL2d Nie mo¿na skopiowaæ pliku '<param0>'
+!SFL2h Œcie¿ka niepoprawna, plik uszkodzony lub odmowa dostêpu
 
-!SFL3d Nie mo¿na utworzyæ katalogu <param0>
+!SFL3d Nie mo¿na utworzyæ katalogu '<param0>'
 !SFL3h Œcie¿ka niepoprawna lub odmowa dostêpu
+
+!SFL4d Nie mo¿na usun¹æ pliku/folderu '<param0>'
+!SFL4h Œcie¿ka niepoprawna, plik w u¿yciu lub odmowa dostêpu
 
 
 

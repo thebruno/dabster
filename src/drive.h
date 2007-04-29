@@ -27,6 +27,7 @@
 *********************************************************************/
 
 #include "folder.h"
+
 #ifndef _DRIVE_H
 #define _DRIVE_H
 
@@ -36,4 +37,7 @@ public:
 	virtual ~drive(void) = 0;
 	virtual unsigned long long getCapacity(void) = 0;
 };
+
 #endif
+
+/********************************************************************/

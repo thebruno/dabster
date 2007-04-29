@@ -36,7 +36,7 @@
 
 class folder : public virtual item {
 public:
-	folder();
+	folder(void);
 	virtual ~folder(void) = 0;
 
 	virtual void store(std::vector< std::map< std::string, std::string > > src, std::vector< std::map< std::string, std::string > > dest) = 0;

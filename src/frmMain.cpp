@@ -33,6 +33,9 @@
 #include "set.h"
 #include "str.h"
 #include "sfolder.h"
+#include "file.h"
+#include "drive.h"
+#include "bmp.h"
 
 const int iMENU_ITEMS = 7;
 const int iTOOLS_PANELS = 10;
@@ -62,7 +65,8 @@ void dabster::frmMain::initializeComponent(void) {
 }
 
 /* Ladowanie frmMain */
-System::Void dabster::frmMain::frmMain_Load(System::Object^ sender, System::EventArgs^ e) {
+System::Void dabster::frmMain::frmMain_Load(System::Object^ sender, 
+											System::EventArgs^ e) {
 	/* Ustalanie appPath */
 	str::path appPath;
 	try { appPath = str::fixAppPath(); }
@@ -98,15 +102,36 @@ System::Void dabster::frmMain::frmMain_Load(System::Object^ sender, System::Even
 	std::vector< std::map< std::string, std::string > > vmTempDst(2);
 	vmTempDst[0][dabKeyRelativePath] = "";
 	vmTempDst[0][dabKeyName] = "YY";
+	vmTempDst[0][dabKeyAtrDirectory] = dabTrue;
 
 	vmTempDst[1][dabKeyRelativePath] = "YY\\";
 	vmTempDst[1][dabKeyName] = "pl2.txt";
+	vmTempDst[1][dabKeyAtrDirectory] = dabFalse;
 
 	p.store(vmTempSrc, vmTempDst);
+
+	vmTempSrc[0][dabKeyRealPath] = "D:\\Metzger";
+	vmTempSrc[0][dabKeyName] = "Y";
+
+	vmTempSrc[1][dabKeyRealPath] = "D:\\Metzger\\Y";
+	vmTempSrc[1][dabKeyName] = "pl.txt";
+
+	p.extract(vmTempDst, vmTempSrc);
+
+	vmTempSrc[0][dabKeyRelativePath] = "Metzger\\Y\\";
+	vmTempSrc[0][dabKeyName] = "pl.txt";
+	vmTempSrc[0][dabKeyAtrDirectory] = dabFalse;
+
+	vmTempSrc[1][dabKeyRelativePath] = "Metzger\\";
+	vmTempSrc[1][dabKeyName] = "Y";
+	vmTempSrc[1][dabKeyAtrDirectory] = dabTrue;
+
+	p.del(vmTempSrc);
 }
 
 /* Zmiana rozmiaru frmMain */
-System::Void dabster::frmMain::frmMain_Resize(System::Object^ sender, System::EventArgs^ e) {
+System::Void dabster::frmMain::frmMain_Resize(System::Object^ sender, 
+											  System::EventArgs^ e) {
 	resizeMenu();
 	resizeTools();
 	resizeStat();

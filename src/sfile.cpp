@@ -28,17 +28,16 @@
 
 #include "sfile.h"
 
-sfile::sfile() {
+sfile::sfile(void) {
 
 }
 
-sfile::~sfile() {
+sfile::~sfile(void) {
 
 }
 
 void sfile::edit() {
 
 }
-
 
 /********************************************************************/

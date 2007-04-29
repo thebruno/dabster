@@ -54,6 +54,7 @@ std::string item::getName(void) {
 void item::setRealPath(std::string path) {
 	sRealPath = path;
 }
+
 /* Pobiera rzeczywista sciezke */
 std::string item::getRealPath(void) {
 	return sRealPath;
