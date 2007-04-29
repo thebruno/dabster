@@ -47,7 +47,7 @@ namespace bmp {
 	// przeniesc do buffora
 	const uint8 BitSet = 0xFF, BitNSet = 0x00;
 	
-	const uint32 BMP_HEADER_BYTE_SIZE = 54;/**< wielkosc naglowka w bytach*/
+	const uint32 BMP_HEADER_BYTE_SIZE = 54;
 	const uint32 DAB_HEADER_BYTE_SIZE = 21;
 	const uint32 FILE_HEADER_BYTE_SIZE = 12; //+ nazwa 
 	const uint32 BUF_READING_SIZE = 180;
@@ -271,9 +271,6 @@ namespace bmp {
 		bool IsDab();
 
 		void ReadBmpHeader();
-		/** \brief tworz naglowek
-		* funkcja tworzaca naglowek dabstera
-		*/
 		void CreateDabHeader();
 		void ReadDabHeader();
 		void WriteDabHeader();

@@ -38,7 +38,7 @@
 
 namespace bmptypes
 {
-	#define __BMP_DABSTER_PACKING 1
+	#define BMP_DABSTER_PACKING 1
 	typedef unsigned long long uint64;
 	typedef signed long long int64;
 	typedef unsigned long int uint32;

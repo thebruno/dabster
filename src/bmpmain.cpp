@@ -215,16 +215,7 @@ atrDirectory
 /*
 
 dodac sprawdzanie bCancel i przerywanie operacji (tych co mozna)
-
-jutro - modify()
-
-
-
-
-
-
-
-
+dodac zmienna reprezentujaca slash '\\' lub '/' w zaleznosci od systemu
 
 
 */
