@@ -1,4 +1,5 @@
-#labels przydatnelinki
+#summary przydatne linki
+#labels Phase-Design
 doxygen:
 http://www.stack.nl/~dimitri/doxygen/
 
