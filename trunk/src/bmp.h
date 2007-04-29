@@ -35,7 +35,7 @@
 #include "sfile.h"
 
 
-#pragma pack(push, __BMP_DABSTER_PACKING)
+#pragma pack(push, BMP_DABSTER_PACKING)
 
 namespace bmp {
 	using namespace bmptypes;
@@ -47,7 +47,7 @@ namespace bmp {
 	// przeniesc do buffora
 	const uint8 BitSet = 0xFF, BitNSet = 0x00;
 	
-	const uint32 BMP_HEADER_BYTE_SIZE = 54;
+	const uint32 BMP_HEADER_BYTE_SIZE = 54;/**< wielkosc naglowka w bytach*/
 	const uint32 DAB_HEADER_BYTE_SIZE = 21;
 	const uint32 FILE_HEADER_BYTE_SIZE = 12; //+ nazwa 
 	const uint32 BUF_READING_SIZE = 180;
@@ -256,9 +256,7 @@ namespace bmp {
 	private: //data
 		BMP_HEADER BmpHeader;
 		DAB_HEADER DabHeader;
-		// zrobic FILE_HEADER *
 		std::vector<FILE_HEADER *> FilesHeaders;
-		// nie potrzebne, w DabHeader bedzie
 		uint8 PreferedCompr;
 		BMP_BUFFOR BmpBuf;
 		FILE_BUFFOR FileBuf;
@@ -273,7 +271,9 @@ namespace bmp {
 		bool IsDab();
 
 		void ReadBmpHeader();
-
+		/** \brief tworz naglowek
+		* funkcja tworzaca naglowek dabstera
+		*/
 		void CreateDabHeader();
 		void ReadDabHeader();
 		void WriteDabHeader();
@@ -282,25 +282,22 @@ namespace bmp {
 		void DeleteAllHeaders();
 
 		FILE_HEADER* ReadFileHeader();
-		void WriteFileHeader(FILE_HEADER *Dabheader);
+		void WriteFileHeader(FILE_HEADER *DabHeader);
 
 		void ReorganizeAfterDelete();
 		const uint8 ReadCompr();
 		void WriteCompr();
-		//void WriteCompr(uint8 DabNewCompr);
 	public: //functions
-
-		//void newEmpty(std::vector<std::string> path);
 		//void format(uint8 DabCompr, bool DabFirstTime = false); // kasuje wszystko
 		void edit();
 		void del(vmstring path);
 		void store(vmstring src, vmstring dest);
 		void extract(vmstring src, vmstring dest);
-		void copyInside(vmstring oldPath, vmstring newPath);
+		void copyInside(vmstring src, vmstring dest);
 		void modify(vmstring oldPath, vmstring newPath);
 		vmstring getContent(string path);	
 		uint64 getCapacity(void);
-		void  setCompression(uint8 Dabdegree);
+		void  setCompression(uint8 DabDegree);
 		const uint8 getCompression() ;
 
 		BMP();
