@@ -1861,7 +1861,6 @@ namespace bmp {
 			uint64 WritingPos;
 			R_W_Pos(): ReadingPos(0), WritingPos(0) { }
 		} Pos;
-
 		
 		string path;
 		std::vector<FILE_HEADER *> NewFilesHeaders;
@@ -1967,6 +1966,26 @@ namespace bmp {
 		for (ri = NewFilesHeaders.rbegin(), rj = FilesHeaders.rbegin();
 			ri != NewFilesHeaders.rend() && rj != FilesHeaders.rend(); ++ri, ++rj ) {
 				if ((*ri)->DataStart > (*rj)->DataStart) {
+					// caly plik mozna przesunac jednym odczytem i zapisem
+					if ((*ri)->DataSize <= BUFFOR_SIZE) {
+						BmpBuf.SetMode(BUFFOR::BUF_READONLY);
+						BmpBuf.SetReadSize(BUFFOR_SIZE);
+						FileBuf.BufReset();
+						FileBuf.SetMode(BUFFOR::BUF_TRANSFER);
+						BmpBuf.BitSeekg((*j)->DataStart);
+						for (temp = 0; temp < 8 * (*i)->DataSize ; ++temp) {
+							FileBuf.PutBit(BmpBuf.GetBit());
+						}
+
+						Pos.ReadingPos = (*j)->DataStart;
+						Pos.WritingPos = (*i)->DataStart;
+
+					}
+
+					else {
+
+
+					}
 
 				// dokonaj zamiany
 
