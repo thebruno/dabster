@@ -28,10 +28,10 @@
 
 #include "folder.h"
 
-folder::~folder(void) {
+folder::folder(void) {
 }
 
-folder::folder(void) {
+folder::~folder(void) {
 }
 
 /********************************************************************/

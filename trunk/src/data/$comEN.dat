@@ -9,35 +9,35 @@
 
 ##  Settings module errors  ##
 
-!SET0d Loading settings from file <param0> failed
+!SET0d Loading settings from file '<param0>' failed
 !SET0h File <param0> does not exist
 
-!SET1d Loading settings from file <param0> failed
+!SET1d Loading settings from file '<param0>' failed
 !SET1h Identifier to short in line "<param1>"
 
-!SET2d Loading settings from file <param0> failed
+!SET2d Loading settings from file '<param0>' failed
 !SET2h No text after identifier in line "<param1>"
 
 !SET3d Loading settings from file <param0> failed
 !SET3h Incorrect text after identifier in line "<param1>"
 
-!SET4d Loading settings from file <param0> failed
+!SET4d Loading settings from file '<param0>' failed
 !SET4h Conversion of line "<param1>" failed
 
 
 
 ##  Strings module errors  ##
 
-!STR0d Path <param0> incorrect
+!STR0d Path '<param0>' incorrect
 !STR0h Path cannot begin with full stop mark
 
-!STR1d Path <param0> incorrect
+!STR1d Path '<param0>' incorrect
 !STR1h Path have to include file name or drive
 
-!STR2d Path <param0> incorrect
+!STR2d Path '<param0>' incorrect
 !STR2h Path cannot start with (back)slash
 
-!STR3d Path <param0> incorrect
+!STR3d Path '<param0>' incorrect
 !STR3h Path cannot include double (back)slash
 
 !STR4d Conversion strToChar failed
@@ -47,7 +47,27 @@
 !STR5h Memory allocation failed
 
 !STR6d Conversion stringToLong failed
-!STR6h Character <param0> incorrect
+!STR6h Character "<param0>" incorrect
+
+
+
+##  SFolder module errors  ##
+
+!SFL0d Loading contents of folder '<param0>' failed
+!SFL0h File and folder list unavailable
+
+!SFL1d Informations about file\folder '<param0>' unavailable
+!SFL1h File/folder broken or access denied
+
+!SFL2d Cannot copy file '<param0>'
+!SFL2h Path incorrect, file broken or access denied
+
+!SFL3d Cannot create folder '<param0>'
+!SFL3h Path incorrect or access denied
+
+!SFL4d Cannot delete file/folder '<param0>'
+!SFL4h Path incorrect, file in use or access denied
+
 
 
 ##  Main controls substance  ##

@@ -28,10 +28,12 @@
 
 #include "drive.h"
 
-drive::drive() {
+drive::drive(void) {
 
 }
 
-drive::~drive() {
+drive::~drive(void) {
 
 }
+
+/********************************************************************/

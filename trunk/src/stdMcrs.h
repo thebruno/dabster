@@ -32,28 +32,32 @@
 //kolory
 
 #define dabWhite			System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(255)), \
-														 static_cast<System::Int32>(static_cast<System::Byte>(255)), \
-														 static_cast<System::Int32>(static_cast<System::Byte>(255)))
+															 static_cast<System::Int32>(static_cast<System::Byte>(255)), \
+														 	 static_cast<System::Int32>(static_cast<System::Byte>(255)))
 #define dabBlack			System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(0)), \
-														 static_cast<System::Int32>(static_cast<System::Byte>(0)), \
-														 static_cast<System::Int32>(static_cast<System::Byte>(0)))
+														 	 static_cast<System::Int32>(static_cast<System::Byte>(0)), \
+														 	 static_cast<System::Int32>(static_cast<System::Byte>(0)))
 #define dabLightBrown		System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(236)), \
-														 static_cast<System::Int32>(static_cast<System::Byte>(233)), \
-														 static_cast<System::Int32>(static_cast<System::Byte>(216)))
+														 	 static_cast<System::Int32>(static_cast<System::Byte>(233)), \
+														 	 static_cast<System::Int32>(static_cast<System::Byte>(216)))
 #define dabLightBlue		System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(187)), \
-														 static_cast<System::Int32>(static_cast<System::Byte>(211)), \
-														 static_cast<System::Int32>(static_cast<System::Byte>(249)))
+														 	 static_cast<System::Int32>(static_cast<System::Byte>(211)), \
+														 	 static_cast<System::Int32>(static_cast<System::Byte>(249)))
 #define dabDarkBlue			System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(49)), \
-														 static_cast<System::Int32>(static_cast<System::Byte>(106)), \
-														 static_cast<System::Int32>(static_cast<System::Byte>(197)))
+														 	 static_cast<System::Int32>(static_cast<System::Byte>(106)), \
+														 	 static_cast<System::Int32>(static_cast<System::Byte>(197)))
 #define dabTransparent		System::Drawing::Color::Transparent
 
 //czcionki
 
-#define dabSansSerif825			gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(238))
-#define dabSansSerif825Bold		gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(238))
-#define dabArial9				gcnew System::Drawing::Font(L"Arial", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(238))
-#define dabTahoma825			gcnew System::Drawing::Font(L"Tahoma", 8.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(238))
+#define dabSansSerif825			gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Regular, \
+															System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(238))
+#define dabSansSerif825Bold		gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Bold, \
+															System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(238))
+#define dabArial9				gcnew System::Drawing::Font(L"Arial", 9, System::Drawing::FontStyle::Regular, \
+															System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(238))
+#define dabTahoma825			gcnew System::Drawing::Font(L"Tahoma", 8.25F, System::Drawing::FontStyle::Regular, \
+															System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(238))
 
 //konwersje
 
