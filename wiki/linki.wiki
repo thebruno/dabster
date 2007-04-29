@@ -1,10 +1,8 @@
 #summary przydatne linki
 #labels Phase-Design
-doxygen:
-http://www.stack.nl/~dimitri/doxygen/
+  # [http://www.stack.nl/~dimitri/doxygen/ Doxygen]
+    * [ftp://ftp.stack.nl/pub/users/dimitri/doxygen_manual-1.5.2.pdf.zip dokumentacja (PDF)], w szczególności strona 17 i rozdział [http://www.stack.nl/~dimitri/doxygen/docblocks.html 3.1 Special documentation blocks (HTML)]
+    * [http://doxycomment.sourceforge.net/vs2005_addin.html Wtyczka do Visual Studio 2005]
+    * [http://doxymacs.sourceforge.net/ Wtyczka do Emacsa]
 
-dokumentacja (polecam szczególnie stronę 17 i 3.1 Special documentation blocks):
-ftp://ftp.stack.nl/pub/users/dimitri/doxygen_manual-1.5.2.pdf.zip
 
-wtyczka do VS2005:
-http://doxycomment.sourceforge.net/vs2005_addin.html
