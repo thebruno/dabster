@@ -56,17 +56,20 @@ std::ostream & operator << (std::ostream & out, vmstring x) {
 int main() {
 	std::string nazwa = "1.bmp";
 
-	smap plik1_in, plik2_in, plik3_in;
-	smap plik1_inside, plik2_inside, plik3_inside;
-	smap plik1_out, plik2_out, plik3_out;
+	smap plik1_in, plik2_in, plik3_in, plik4_in;
+	smap plik1_inside, plik2_inside, plik3_inside, plik4_inside;
+	smap new_plik1_inside, new_plik2_inside, new_plik3_inside, new_plik4_inside;
+	smap plik1_out, plik2_out, plik3_out, plik4_out;
 
-	vmstring sciezki1, sciezki2, sciezki3, sciezki4, wynik;
+	vmstring sciezki1, sciezki2, sciezki3, sciezki4, sciezki5, wynik;
 	plik1_in["name"] = "1.txt"; plik1_in["length"] = "3128"; plik1_in["realPath"]= "";
 	sciezki1.push_back(plik1_in);
 	plik2_in["name"] = "2.txt"; plik2_in["length"] = "3055"; plik2_in["realPath"]= "";
 	sciezki1.push_back(plik2_in);
 	plik3_in["name"] = "3.txt"; plik3_in["length"] = "4158"; plik3_in["realPath"]= "";
-	//sciezki1.push_back(plik3_in);
+	sciezki1.push_back(plik3_in);
+	plik4_in["name"] = "4.txt"; plik4_in["length"] = "170"; plik4_in["realPath"]= "";
+	sciezki1.push_back(plik4_in);
 
 	plik1_inside["creationTimeUtc"] = "25.04.2007 08:56:33"; plik1_inside["name"] = "1.txtinbmp";
 	plik1_inside["atrReadOnly"] = "true"; plik1_inside["relativePath"] = "";
@@ -81,7 +84,12 @@ int main() {
 	plik3_inside["creationTimeUtc"] = "01.12.2007 20:56:27"; plik3_inside["name"] = "3.txtinbmp";
 	plik3_inside["atrHidden"] = "true"; plik3_inside["relativePath"] = "";
 	//plik3_inside["atrDirectory"] = "true";
-	//sciezki2.push_back(plik3_inside);
+	sciezki2.push_back(plik3_inside);
+
+	plik4_inside["creationTimeUtc"] = "11.12.2007 11:56:27"; plik4_inside["name"] = "4.txtinbmp";
+	plik4_inside["atrHidden"] = "true"; plik4_inside["relativePath"] = "";
+	//plik3_inside["atrDirectory"] = "true";
+	sciezki2.push_back(plik4_inside);
 
 	plik1_out["name"] = "wynik1.txt"; plik1_out["realPath"]= "";
 	sciezki3.push_back(plik1_out);
@@ -92,9 +100,25 @@ int main() {
 	plik3_out["name"] = "wynik3.txt"; plik3_out["realPath"]= "";
 	sciezki3.push_back(plik3_out);
 
+	plik4_out["name"] = "wynik4.txt"; plik4_out["realPath"]= "";
+	sciezki3.push_back(plik4_out);
+
+	new_plik1_inside["name"] = "1";
+	new_plik2_inside["name"] = "2";
+	new_plik3_inside["name"] = "3";
+	new_plik4_inside["name"] = "4";
+
+	sciezki4.push_back(plik1_inside);
+	sciezki5.push_back(new_plik1_inside);
+
 	sciezki4.push_back(plik2_inside);
+	sciezki5.push_back(new_plik2_inside);
 
+	sciezki4.push_back(plik3_inside);
+	sciezki5.push_back(new_plik3_inside);
 
+	sciezki4.push_back(plik4_inside);
+	sciezki5.push_back(new_plik4_inside);
 
 	bmp::BMP * b = 0;
 	sfile sf;
@@ -112,7 +136,8 @@ int main() {
 
 			//b->store(sciezki1,sciezki2);
 			//b->del(sciezki4);
-			 b->extract(sciezki2,sciezki3);
+			 b->extract(sciezki5,sciezki3);
+			//b->modify(sciezki4, sciezki5);
 			t2 = clock();
 			t = t2-t1;
 

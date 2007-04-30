@@ -41,7 +41,7 @@ namespace bmp {
 	using namespace bmptypes;
 
 	const uint16 BMP_CURRENT_VERSION = 1;
-	const uint32 BUFFOR_SIZE = 200; //4 * 1024; // minimum 512 byteow
+	const uint32 BUFFOR_SIZE = 512; //4 * 1024; // minimum 512 byteow
 	const uint32 SYGNATURE = 0x08064b50;
 	const uint32 DABSTER_NAME = 0x35424144;
 	// przeniesc do buffora
