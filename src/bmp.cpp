@@ -1856,6 +1856,7 @@ namespace bmp {
 
 		FILE_HEADER * h;
 		uint64 WritingPos = 0, ReadingPos = 0, temp;
+		uint32 number;
 		std::vector<FILE_HEADER *>::iterator i, j;
 		vmstring::iterator k, m;
 		string path;
@@ -1866,7 +1867,7 @@ namespace bmp {
 			if ((*k)["relativePath"].size())
 				path = (*k)["relativePath"] + '\\';
 			path += (*k)["name"];
-			for (i = FilesHeaders.begin(); i != FilesHeaders.end(); ++i) {
+			for (i = FilesHeaders.begin(), number = 0 ; i != FilesHeaders.end(); ++i, ++number) {
 				if (path == (*i)->FileName) {
 					h = new FILE_HEADER;
 					h->Attributes = (*i)->Attributes;
@@ -1888,7 +1889,7 @@ namespace bmp {
 						h->DataStart = h->HeaderStart +
 							BmpBuf.FileSizeInBmp(8 * (h->FileNameLen + FILE_HEADER_BYTE_SIZE), 
 							h->HeaderStart);
-						FilesHeaders.push_back(h);
+						
 					}
 					else { 
 						delete h;
@@ -1897,7 +1898,10 @@ namespace bmp {
 						// braklo miejsca na skopiowanie:
 						throw BMP_NOT_ENOUGH_SPACE();
 					}
+					FilesHeaders.push_back(h);
 					// dokonaj kopii pliku o naglowku *i w miejsce naglowka *h
+					// co najmniej 2 elemnty na pewno sa!
+					i = FilesHeaders.begin() + number;
 					ReadingPos = (*i)->DataStart;
 					WritingPos = h->DataStart;
 
@@ -1949,7 +1953,7 @@ namespace bmp {
 		}
 		DeleteAllHeaders();
 		ReadAllHeaders();
-		// nie ma zadnego naglowka lub nieprawidlowy parametr
+		// nie ma zadnego naglowka 
 		if (!FilesHeaders.size() && DabOldPath.size() )
 			throw NO_SUCH_FILE();
 		// struktura pomocnicza przy przenoszeniu
@@ -2039,6 +2043,7 @@ namespace bmp {
 			// poczatek nastepnego naglowka
 			temp = (*i)->DataStart + BmpBuf.FileSizeInBmp(8 * (*i)->DataSize, (*i)->DataStart);
 		}
+		// tu jeszcze mozna przerwac operacje
 
 		// przesuwanie danych w lewo poczawszy od lewej strony
 		// i - nowe naglowki, j - stare
