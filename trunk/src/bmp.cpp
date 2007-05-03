@@ -1561,8 +1561,9 @@ namespace bmp {
 		int64 WritingPos, ReadingPos, z;
 		int32 count;
 		string path;
+		DAB_HEADER DabHeaderCopy = DabHeader;
 
-		// zaznaczenie folderow do usuniecia
+		// zaznaczenie plikow do usuniecia
 		for (i = Dabpath.begin(); i != Dabpath.end(); ++i) {
 			path = "";
 			if ((*i)["relativePath"].size())
@@ -1578,6 +1579,14 @@ namespace bmp {
 					++FilesToDel;
 				}
 			}
+		}
+		// przerwano kasowanie:
+		if (bCanceled) {
+			DabHeader = DabHeaderCopy;
+			for (j = FilesHeaders.begin(); j != FilesHeaders.end() ; ++j) {
+				(*j)->PerformAction = false;
+			}
+			return;
 		}
 
 		// ktoregos pliku nie znaleziono
@@ -1614,6 +1623,7 @@ namespace bmp {
 		ReadingPos = (*k)->HeaderStart;
 
 		while (FilesToMove--) {
+			// dodac pasek postepu
 			BmpBuf.SetMode(BUFFOR::BUF_READONLY);
 			BmpBuf.SetReadSize(BUFFOR_SIZE);
 			BmpBuf.BitSeekg(ReadingPos);
@@ -1633,6 +1643,7 @@ namespace bmp {
 					ReadingPos = BmpBuf.BitTellg();
 					BmpBuf.SetMode(BUFFOR::BUF_READ_WRITE);
 					BmpBuf.BitSeekp(WritingPos);
+					// przeniesc fragment pliku
 					while (FileBuf.GetBufState() != BUFFOR::BUF_EMPTY &&
 						FileBuf.GetBufState() != BUFFOR::BUF_BAD) {
 						BmpBuf.PutBit(FileBuf.GetBit());
@@ -1676,7 +1687,7 @@ namespace bmp {
 	}
 
 	void BMP::store(vmstring Dabsrc, vmstring Dabdest) {
-		// dodac bCanceled - w sumie mozna co jeden spakowany plik sprawdzac czy trzeba przerwac
+		// dodac bCanceled - mozna co jeden spakowany plik sprawdzac czy trzeba przerwac
 		// czy odczytano naglowki?
 		BmpBuf.SetCompr(ReadCompr());
 		ReadDabHeader();
@@ -1698,38 +1709,24 @@ namespace bmp {
 				BmpBuf.FileSizeInBmp(8 * FilesHeaders.back()->DataSize, FilesHeaders.back()->DataStart);
 
 		vmstring::iterator i, j;
-		//std::stringstream s;
 		string path;
-		uint32 AllSize = 0, temp;
-		for (i = Dabsrc.begin(), j = Dabdest.begin(); i != Dabsrc.end() && j != Dabdest.end(); ++i, ++j) {  
-			AllSize += FILE_HEADER_BYTE_SIZE;
-			path = "";
-			if ((*j)["relativePath"].size())
-				path = (*j)["relativePath"] + '\\';
-			path += (*j)["name"];
-			AllSize += (uint32)path.size();
-			// czy plik?
-			if ((*i)["atrDirectory"] != "true") {
-				//s.clear();
-				//s << (*i)["length"];
-				//s >> temp;
-				sstr((*i)["length"]) >> temp;
-				AllSize += temp;
-			}
-		}
 
-		if (AllSize > DabHeader.FreeSpc)
-			throw BMP_NOT_ENOUGH_SPACE();
-
-		for (i = Dabsrc.begin(), j = Dabdest.begin(); i != Dabsrc.end() && j != Dabdest.end(); ++i, ++j) {
+		for (i = Dabsrc.begin(), j = Dabdest.begin(); i != Dabsrc.end() && j != Dabdest.end() && !bCanceled; ++i, ++j) {
+			// dodac pasek postepu
 			header = new FILE_HEADER;
-			// FileName = <relativePath> + '\\' + <name> | <name>
+			// FileName ::= <relativePath> + '\\' + <name> | <name>
 			header->HeaderStart = WritingPos;
 			// src jest w rzeczywistosci, dest w BMP
 			if ((*j)["relativePath"].size())
 				header->FileName = (*j)["relativePath"] + '\\';
 			header->FileName += (*j)["name"];
 			header->FileNameLen = uint16(header->FileName.size());
+			// sprawdzenie czy sie zmiesci naglowek + nazwa:
+			if (DabHeader.FreeSpc < header->FileNameLen + FILE_HEADER_BYTE_SIZE) {
+				delete header;
+				throw BMP_NOT_ENOUGH_SPACE();
+			}
+
 			header->PerformAction = false;
 			// atrybuty i date odczytujemy z parametru docelowego
 			header->TimeDate = UTCToBytes((*j)["creationTimeUtc"]);
@@ -1738,11 +1735,11 @@ namespace bmp {
 			header->DataStart = WritingPos;
 			++DabHeader.FilesCount;
 			DabHeader.FreeSpc -= FILE_HEADER_BYTE_SIZE + header->FileNameLen;
+			
 			// pakujemy folder
 			if ((*i)["atrDirectory"] == "true") {
 				// folder nie ma danych!
 				header->DataSize = 0;
-				
 			}
 			// pakujemy plik
 			else {
@@ -1755,6 +1752,11 @@ namespace bmp {
 				FileBuf.OpenFile(path.c_str(), std::ios_base::in, BUFFOR::BUF_READONLY);
 				FileBuf.Fill();
 				header->DataSize = FileBuf.GetFileSize();
+				// czy plik z danymi sie zmiesci?
+				if (DabHeader.FreeSpc < header->FileNameLen + FILE_HEADER_BYTE_SIZE + header->DataSize) {
+					delete header;
+					throw BMP_NOT_ENOUGH_SPACE();
+				}
 				BmpBuf.SetMode(BUFFOR::BUF_READ_WRITE);
 				BmpBuf.SetReadSize(BUFFOR_SIZE);
 				BmpBuf.BitSeekp(header->DataStart);
@@ -1779,9 +1781,7 @@ namespace bmp {
 	}
 
 	void BMP::extract(vmstring Dabsrc, vmstring Dabdest) {
-		// dodac bCanceled - sprawdzanie co jeden wypakowany plik
-		// trzeba sprawdzic jeszcze czy wypakowalismy tyle pliko ile przyszlo w parametrze
-		// Dabsrc.size() == iloscWypakowanychPlikow, jesli nie to zglaszamy blad
+		// bCanceled - sprawdzanie co jeden wypakowany plik
 		BmpBuf.SetCompr(ReadCompr());
 		ReadDabHeader();
 		if (!IsDab()) {
@@ -1796,10 +1796,10 @@ namespace bmp {
 		BmpBuf.SetMode(BUFFOR::BUF_READONLY);
 		BmpBuf.SetReadSize(BUFFOR_SIZE);
 
-		for (i = Dabsrc.begin(), j = Dabdest.begin();	i != Dabsrc.end() && j != Dabdest.end(); ++i, ++j) {
+		for (i = Dabsrc.begin(), j = Dabdest.begin();	i != Dabsrc.end() && j != Dabdest.end()&& !bCanceled; ++i, ++j) {
 			for (k = FilesHeaders.begin(); k != FilesHeaders.end() ; ++k) {
+			// src jest w BMP, dest w rzeczywistosci
 				path = "";
-				// src jest w BMP, dest w rzeczywistosci
 				if ((*i)["relativePath"].size()) 
 					path = (*i)["relativePath"] + '\\';
 				path += (*i)["name"];
@@ -1812,10 +1812,10 @@ namespace bmp {
 					path += (*j)["name"];
 
 					FileBuf.OpenFile(path.c_str(),std::ios_base::out, BUFFOR::BUF_WRITEONLY);
-					// reszta ustawien byla powyzej powyzej 
+					// reszta ustawien byla powyzej  
 					BmpBuf.BitSeekg((*k)->DataStart);
 
-					for (iter = 0; iter < (*k)->DataSize && !bCanceled; ++iter) {
+					for (iter = 0; iter < (*k)->DataSize ; ++iter) {
 						FileBuf.PutBit(BmpBuf.GetBit()); FileBuf.PutBit(BmpBuf.GetBit());
 						FileBuf.PutBit(BmpBuf.GetBit()); FileBuf.PutBit(BmpBuf.GetBit());
 						FileBuf.PutBit(BmpBuf.GetBit()); FileBuf.PutBit(BmpBuf.GetBit());
@@ -1829,7 +1829,7 @@ namespace bmp {
 	}
 
 	void BMP::copyInside(vmstring DabSrc, vmstring DabDest) {
-		// bCanceled - co jeden wypakowany plik 
+		// bCanceled - co jeden kopiowany plik 
 		// czy odczytano naglowki?
 		BmpBuf.SetCompr(ReadCompr());
 		ReadDabHeader();
@@ -1850,7 +1850,7 @@ namespace bmp {
 		string path;
 
 		for (k = DabSrc.begin(), m = DabDest.begin();
-			k != DabSrc.end() && m != DabDest.end(); ++k, ++m) {
+			k != DabSrc.end() && m != DabDest.end()&& !bCanceled; ++k, ++m) {
 			path = "";
 			if ((*k)["relativePath"].size())
 				path = (*k)["relativePath"] + '\\';
@@ -1966,6 +1966,7 @@ namespace bmp {
 		std::vector<R_W_Pos>::reverse_iterator rr;
 		vmstring::iterator k, m;
 
+
 		// kopiowanie naglowkow i pierwszy etap zmian - nowe nazwy
 		for (i = FilesHeaders.begin(); i != FilesHeaders.end(); ++i) {
 			h = new FILE_HEADER;
@@ -2031,7 +2032,16 @@ namespace bmp {
 			// poczatek nastepnego naglowka
 			temp = (*i)->DataStart + BmpBuf.FileSizeInBmp(8 * (*i)->DataSize, (*i)->DataStart);
 		}
+
 		// tu jeszcze mozna przerwac operacje
+		if(bCanceled) {
+			while (NewFilesHeaders.size()) {
+				h = NewFilesHeaders.back();
+				FilesHeaders.pop_back();
+				delete h;
+			}
+			return;
+		}
 
 		// przesuwanie danych w lewo poczawszy od lewej strony
 		// i - nowe naglowki, j - stare
@@ -2095,6 +2105,7 @@ namespace bmp {
 					BmpBuf.Flush();
 				}
 				else {
+					// jeden raz przenosimy niepelny bufor, wymiar w bitach
 					temp = 8 * ((*ri)->DataSize % BUFFOR_SIZE);
 					// ile przeniesien wykonanych pelnymi buforami, co najmniej jeden raz
 					changes.resize((*ri)->DataSize / BUFFOR_SIZE);
@@ -2107,6 +2118,9 @@ namespace bmp {
 						r->WritingPos = Pos.WritingPos = Pos.WritingPos + 
 							BmpBuf.FileSizeInBmp(8 * BUFFOR_SIZE, Pos.WritingPos);
 					}
+					// ustalenie pozycji ostatniego fragmentu pliku:
+					Pos.ReadingPos = Pos.ReadingPos + BmpBuf.FileSizeInBmp(8 * BUFFOR_SIZE, Pos.ReadingPos);
+					Pos.WritingPos = Pos.WritingPos + BmpBuf.FileSizeInBmp(8 * BUFFOR_SIZE, Pos.WritingPos);
 					// skopiowanie ostatniej czesci pliku
 					BmpBuf.SetMode(BUFFOR::BUF_READONLY);
 					BmpBuf.SetReadSize(BUFFOR_SIZE);
@@ -2114,7 +2128,7 @@ namespace bmp {
 					FileBuf.SetMode(BUFFOR::BUF_TRANSFER);
 					// ReadingPos i WritingPos wskazuja na ostatni fagment pliku do przeniesienia
 					BmpBuf.BitSeekg(Pos.ReadingPos);
-					for (temp = 0; temp < 8 * (*ri)->DataSize ; ++temp) {
+					while (temp--) {
 						FileBuf.PutBit(BmpBuf.GetBit());
 					}
 					BmpBuf.SetMode(BUFFOR::BUF_READ_WRITE);
@@ -2131,7 +2145,7 @@ namespace bmp {
 						FileBuf.BufReset();
 						FileBuf.SetMode(BUFFOR::BUF_TRANSFER);
 						BmpBuf.BitSeekg(rr->ReadingPos);
-						for (temp = 0; temp < 8 * (*ri)->DataSize ; ++temp) {
+						while (FileBuf.GetBufState() != BUFFOR::BUF_FULL) {
 							FileBuf.PutBit(BmpBuf.GetBit());
 						}
 						BmpBuf.SetMode(BUFFOR::BUF_READ_WRITE);
