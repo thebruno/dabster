@@ -52,7 +52,8 @@ namespace bmptypes
 	typedef std::string string;
 	typedef std::map<string, string> smap;
 	typedef std::vector<smap> vmstring;
-	typedef std::basic_fstream<char> fstream;
+	typedef std::fstream fstream;
+	typedef std::stringstream sstr;
 
 	class DAB_EXCEPTION: public std::exception {
 	};
