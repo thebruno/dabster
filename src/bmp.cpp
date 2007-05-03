@@ -123,9 +123,9 @@ namespace bmp {
 	}
 
 	/*inline*/ uint8 BUFFOR::GetBit() {
-		switch (BufMode) {
+		switch (BufMode) { 
 			// tryb tylko odczyt
-			case BUF_READONLY: {
+			case BUF_READONLY: 
 				// w srodku bufora
 				if (BufBitPosg + 1 < BitDataCount) {
 					if (Buf[BufBytePosg] & One[BufBitPosg % 8 ]) {
@@ -142,7 +142,7 @@ namespace bmp {
 						}
 						return BitNSet;
 					}
-				} 
+				}
 				// na ostatniej pozycji danych w buforze
 				else if (BufBitPosg + 1 == BitDataCount) {
 					uint8 Result;
@@ -168,10 +168,10 @@ namespace bmp {
 					return Result;
 				}
 				// tu nie powinien buffor nigdy dojsc!
-				throw BMP_INTERNAL_ERROR();
-			}
+			throw BMP_INTERNAL_ERROR();
+			
 			// tryb transfer
-			case BUF_TRANSFER: {
+			case BUF_TRANSFER: 
 				// w srodku bufora
 				if (BufBitPosg + 1 < BitDataCount){
 					if (Buf[BufBytePosg] & One[BufBitPosg % 8 ]) {
@@ -208,17 +208,15 @@ namespace bmp {
 					BufState = BUF_BAD;
 					throw BMP_INTERNAL_ERROR();
 				}
-			}
-			default: {
+			default: 
 				// inny tryb niedozwolony
 				throw BMP_INTERNAL_ERROR();
-			}
 		}
 	}
 
 	void BUFFOR::PutBit(uint8 DabBit) {
 		switch (BufMode) {
-			case BUF_TRANSFER: {
+			case BUF_TRANSFER: 
 				// w srodku bufora
 				if (BufBitPosp + 1 < BufBitSize) {
 					Buf[BufBytePosp] = (Buf[BufBytePosp] & ExOne[BufBitPosp % 8]) | (DabBit & One[BufBitPosp % 8]);
@@ -244,8 +242,7 @@ namespace bmp {
 					BufState = BUF_BAD;
 					throw BMP_INTERNAL_ERROR();
 				}
-			}
-			case BUF_WRITEONLY:	{
+			case BUF_WRITEONLY:	
 				// w srodku bufora
 				if (BufBitPosp + 1 < BufBitSize) {
 					Buf[BufBytePosp] = (Buf[BufBytePosp] & ExOne[BufBitPosp % 8]) | (DabBit & One[BufBitPosp % 8]);
@@ -274,17 +271,15 @@ namespace bmp {
 					BufState = BUF_BAD;
 					throw BMP_INTERNAL_ERROR();
 				}
-			}
-			default: {
+			default: 
 				// nie mozna wysylac w innym trybie na Bufor!!
 				throw BMP_INTERNAL_ERROR();
-			}
 		}
 	}
 
 	/*inline*/ uint8 BUFFOR::GetByte() {
 		switch (BufMode) {
-			case BUF_READONLY: {
+			case BUF_READONLY: 
 				// w srodku bufora
 				if (BufBytePosg + 1 < DataCount) {
 					BufBitPosg += 8;
@@ -312,8 +307,8 @@ namespace bmp {
 				}
 				// tu nie powinien buffor nigdy dojsc!
 				throw BMP_INTERNAL_ERROR();
-			}
-			case BUF_TRANSFER: {
+			
+			case BUF_TRANSFER: 
 				// w srodku bufora
 				if (BufBytePosg + 1 < DataCount){
 					BufBitPosg += 8;
@@ -334,17 +329,17 @@ namespace bmp {
 					BufState = BUF_BAD;
 					throw BMP_INTERNAL_ERROR();
 				}
-			}
-			default: {
+			
+			default: 
 				// inny tryb niedozwolony
 				throw BMP_INTERNAL_ERROR();
-			}
+			
 		}
 	}
 
 	void BUFFOR::PutByte(uint8 DabByte) {
 		switch (BufMode) {
-			case BUF_TRANSFER: {
+			case BUF_TRANSFER: 
 				// w srodku bufora
 				if (BufBytePosp + 1 < BufSize) {
 					Buf[BufBytePosp++] = DabByte;
@@ -367,8 +362,7 @@ namespace bmp {
 					BufState = BUF_BAD;
 					throw BMP_INTERNAL_ERROR();
 				}
-			}
-			case BUF_WRITEONLY:	{
+			case BUF_WRITEONLY:	
 				// w srodku bufora
 				if (BufBytePosp + 1 < BufSize) {
 					Buf[BufBytePosp++] = DabByte;
@@ -393,12 +387,9 @@ namespace bmp {
 					BufState = BUF_BAD;
 					throw BMP_INTERNAL_ERROR();
 				}
-				break;
-			}
-			default: {
+			default: 
 				// nie mozna wysylac w innym trybie na Bufor!!
 				throw BMP_INTERNAL_ERROR();
-			}
 		}
 	}
 
@@ -1175,7 +1166,7 @@ namespace bmp {
 
 	uint32 BMP::UTCToBytes(string Dabs) {
 		// dd.mm.rrrr hh:mm:ss
-		uint8 dd, mm , hh, min, ss;
+		uint16 dd, mm , hh, min, ss;
 		uint16 rrrr;
 		uint8 i, p;
 		if (Dabs.size() == 19) {
@@ -1188,7 +1179,6 @@ namespace bmp {
 			hh = Dabs[11] - '0'; hh *= 10; hh += Dabs[12] - '0';
 			min = Dabs[14] - '0'; min *= 10; min += Dabs[15] - '0';
 			ss = Dabs[17] - '0'; ss *= 10; ss += Dabs[18] - '0';
-
 		}
 		else 
 			return 0;
@@ -1231,7 +1221,6 @@ namespace bmp {
 	string BMP::BytesToUTC(uint32 DabBytes) {
 		char temp [] = "0000";
 		string result;
-		std::stringstream s;
 		uint16 dd = 0, mm = 0, hh = 0 , min = 0, ss = 0;
 		uint16 rrrr = 0;
 		uint8 i, p = 0;
@@ -1268,7 +1257,7 @@ namespace bmp {
 			p = (p & BUFFOR::ExOne[i % 8]) | (FileBuf.GetBit() & BUFFOR::One[i % 8]);
 		}
 		ss = p;
-
+		sstr s;
 		s.clear(); dd < 10 ? s << "0" << dd : s << dd; s >> temp; result += temp; result +=  ".";
 		s.clear(); mm < 10 ? s << "0" << mm : s << mm;  s >> temp; result += temp; result +=  ".";
 		s.clear(); s << rrrr; s >> temp; result += temp; result +=  " ";
@@ -1278,8 +1267,6 @@ namespace bmp {
 		s.clear(); ss < 10 ? s << "0" << ss : s << ss;  s >> temp; result += temp;
 
 
-		// napisac
-		
 		return result;
 
 	}
@@ -1711,7 +1698,7 @@ namespace bmp {
 				BmpBuf.FileSizeInBmp(8 * FilesHeaders.back()->DataSize, FilesHeaders.back()->DataStart);
 
 		vmstring::iterator i, j;
-		std::stringstream s;
+		//std::stringstream s;
 		string path;
 		uint32 AllSize = 0, temp;
 		for (i = Dabsrc.begin(), j = Dabdest.begin(); i != Dabsrc.end() && j != Dabdest.end(); ++i, ++j) {  
@@ -1723,9 +1710,10 @@ namespace bmp {
 			AllSize += (uint32)path.size();
 			// czy plik?
 			if ((*i)["atrDirectory"] != "true") {
-				s.clear();
-				s << (*i)["length"];
-				s >> temp;
+				//s.clear();
+				//s << (*i)["length"];
+				//s >> temp;
+				sstr((*i)["length"]) >> temp;
 				AllSize += temp;
 			}
 		}
@@ -2186,7 +2174,6 @@ namespace bmp {
 		smap temp;
 		std::vector<FILE_HEADER*>::iterator i;
 		std::stringstream s;
-		char buf [11];
 		for (i = FilesHeaders.begin(); i!= FilesHeaders.end(); ++i) {
 			if (!Dabpath.size() || (*i)->FileName.substr(0, Dabpath.size()) == Dabpath) {
 				temp.clear();
@@ -2210,16 +2197,14 @@ namespace bmp {
 				 
 					s.clear();
 					s << DabHeader.FreeSpc;
-					s >> buf;
-					temp["availableFreeSpace"] = buf;
+					s >> temp["availableFreeSpace"];
 					s.clear();
 					s << DabHeader.FilesSize;
-					s >> buf;
-					temp["totalSize"] = buf;
+					s >> temp["totalSize"];
 					s.clear();
-					s << DabHeader.Compr * (BmpHeader.biUsefulData - 3 - DAB_HEADER_BYTE_SIZE) / 8;
-					s >> buf;
-					temp["totalFreeSpace"] = buf;
+					//s << DabHeader.Compr * (BmpHeader.biUsefulData - 3 - DAB_HEADER_BYTE_SIZE) / 8;
+					s << DabHeader.Compr * (BmpHeader.biUsefulData - 3) / 8 - DAB_HEADER_BYTE_SIZE;
+					s >> temp["totalFreeSpace"];
 					temp["isReady"] = "true";
 					// dd.mm.rrrr hh:mm:ss
 					temp["creationTimeUtc"] = BytesToUTC((*i)->TimeDate);
@@ -2228,8 +2213,7 @@ namespace bmp {
 			
 					s.clear();
 					s << (*i)->DataSize;
-					s >> buf;
-					temp["length"] = buf;  
+					s >> temp["length"];
 					result.push_back(temp);
 				}
 			}
