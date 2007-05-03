@@ -54,8 +54,22 @@ std::ostream & operator << (std::ostream & out, vmstring x) {
 
 
 int main() {
-	std::string nazwa = "1.bmp";
+/*
+	std::vector<int> a;
+	std::vector<int>::reverse_iterator ri;
+	a.push_back(1);
+	a.push_back(2);
+	a.push_back(3);
+	a.push_back(4);
 
+
+	ri = a.rbegin();
+	std::cout << *ri;
+	ri++;
+	std::cout << *ri;
+*/
+	std::string nazwa = "1.bmp";
+	
 	smap plik1_in, plik2_in, plik3_in, plik4_in;
 	smap plik1_inside, plik2_inside, plik3_inside, plik4_inside;
 	smap new_plik1_inside, new_plik2_inside, new_plik3_inside, new_plik4_inside;
@@ -105,7 +119,7 @@ int main() {
 
 	new_plik1_inside["name"] = "1";
 	new_plik2_inside["name"] = "2";
-	new_plik3_inside["name"] = "3";
+	new_plik3_inside["name"] = "3333333333333333333333333333";
 	new_plik4_inside["name"] = "4";
 
 	sciezki4.push_back(plik1_inside);
@@ -134,10 +148,10 @@ int main() {
 			double t1,t2, t;
 			t1 = clock();
 
-			b->store(sciezki1,sciezki2);
+			//b->store(sciezki1,sciezki2);
 			//b->del(sciezki4);
-			//b->extract(sciezki5,sciezki3);
-			//b->modify(sciezki4, sciezki5);
+			b->extract(sciezki5,sciezki3);
+			//b->modify(sciezki2, sciezki5);
 			//b->copyInside(sciezki4, sciezki5);
 			t2 = clock();
 			t = t2-t1;
