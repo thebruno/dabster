@@ -41,14 +41,14 @@ public:
 	};
 
 	static path splitPath(std::string p, const std::string delimiter = sDelimiter);
-	static std::string fixDelims(std::string, std::string = sDelimiter);
+	static std::string fixDelims(std::string path, std::string delimiter = sDelimiter);
 	static void setDelimiter(const std::string delimiter);
 	static void setAppPath(path appPath);
 	static path getAppPath(void);
 	static str::path fixAppPath(void);
 
 	static std::string sysStrToCppStr(System::String^ sysStr);
-	static char* strToChar(const std::string);
+	static char* strToChar(const std::string s);
 	static std::string charToStr(const char c);
 	static long stringToLong(const std::string s);
 //	static std::string longToString(const long);

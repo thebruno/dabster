@@ -68,6 +68,9 @@
 !SFL4d Cannot delete file/folder '<param0>'
 !SFL4h Path incorrect, file in use or access denied
 
+!SFL5d Cannot move file/folder '<param0>' do '<param1>'
+!SFL5h Path incorrect, file in use or access denied
+
 
 
 ##  Main controls substance  ##
