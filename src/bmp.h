@@ -140,8 +140,8 @@ namespace bmp {
 	 */
 	class BUFFOR {
 	public:
-		enum BUFFOR_STATE {BUF_GOOD=0, BUF_FAIL=1, BUF_BAD=2, BUF_EOF=4, BUF_EMPTY =8, BUF_FULL = 16};
-		enum BUFFOR_MODE {BUF_READONLY=0, BUF_WRITEONLY=1, BUF_READ_WRITE=2, BUF_TRANSFER = 4};
+		enum BUFFOR_STATE {BUF_GOOD=0, BUF_FAIL=1, BUF_BAD=2, BUF_EOF=4, BUF_EMPTY =8, BUF_FULL = 16}; /*!< Deklaracja dozwolonych stanow, w ktorych moze znajdowac sie bufor. */
+		enum BUFFOR_MODE {BUF_READONLY=0, BUF_WRITEONLY=1, BUF_READ_WRITE=2, BUF_TRANSFER = 4}; /*!< Deklaracja dozwolonych trybow, w ktorych moze pracowac bufor. */
 
 		static const uint8 One [8]; /*!<  Ustawiony jeden bit. */
 		static const uint8 ExOne [8]; /*!<  Ustawione wszystkie POZA jednym bitem. */
@@ -167,7 +167,7 @@ namespace bmp {
 	public:
 		const uint32 GetFileSize() const;
 		const BUFFOR_STATE GetBufState() const;
-		void BufReset(); /*!< zeruje wszystkie wskazniki bufora.*/
+		void BufReset(); 
 
 		void OpenFile(string path, std::ios_base::open_mode DabFileMode, BUFFOR_MODE DabBufMode);
 
