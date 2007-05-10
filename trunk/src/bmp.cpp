@@ -34,6 +34,16 @@ namespace bmp {
 	const uint8 BUFFOR::ExOne  [8] = {0x7F, 0xBF, 0xDF, 0xEF, 0xF7, 0xFB, 0xFD, 0xFE};
 
 //********************class DabHeader********************//
+	/*!
+	 * \brief
+	 * Write brief comment for BMP_HEADER here.
+	 * 
+	 * \throws <exception class>
+	 * Description of criteria for throwing this exception.
+	 * 
+	 * Write detailed description for BMP_HEADER here.
+	 */
+
 	BMP_HEADER::BMP_HEADER() {
 		bfType = 0; 
 		bfSize = 0; 
@@ -57,6 +67,15 @@ namespace bmp {
 	}
 //********************end of class DabHeader********************//
 //********************class DabHeader********************//
+	/*!
+	 * \brief
+	 * Write brief comment for DAB_HEADER here.
+	 * 
+	 * \throws <exception class>
+	 * Description of criteria for throwing this exception.
+	 * 
+	 * Write detailed description for DAB_HEADER here.
+	 */
 	DAB_HEADER::DAB_HEADER() {
 		Sygn = 0;
 		DabName = 0;
@@ -69,11 +88,19 @@ namespace bmp {
 		FirstFileStart = 0;
 		CompressionStart = 0;
 	}
-
 	DAB_HEADER::~DAB_HEADER() {
 	}
 //********************end of class DabHeader********************//
 //********************class FILE_HEADER********************//
+	/*!
+	 * \brief
+	 * Write brief comment for FILE_HEADER here.
+	 * 
+	 * \throws <exception class>
+	 * Description of criteria for throwing this exception.
+	 * 
+	 * Write detailed description for FILE_HEADER here.
+	 */
 	FILE_HEADER::FILE_HEADER(){
 		DataSize = 0;
 		TimeDate = 0;
@@ -108,6 +135,24 @@ namespace bmp {
 		File.close();
 	}
 
+	/*!
+	 * \brief
+	 * Write brief comment for OpenFile here.
+	 * 
+	 * \param path
+	 * Description of parameter path.
+	 * 
+	 * \param DabFileMode
+	 * Description of parameter DabFileMode.
+	 * 
+	 * \param DabBufMode
+	 * Description of parameter DabBufMode.
+	 * 
+	 * \throws <exception class>
+	 * Description of criteria for throwing this exception.
+	 * 
+	 * Write detailed description for OpenFile here.
+	 */
 	void BUFFOR::OpenFile(std::string DabPath, std::ios_base::open_mode DabFileMode, BUFFOR_MODE DabBufMode) {
 		File.open(DabPath.c_str(), DabFileMode | std::ios_base::binary);
 		if (!File) {
@@ -122,7 +167,19 @@ namespace bmp {
 		File.seekg(0L,std::ios_base::beg);
 	}
 
-	/*inline*/ uint8 BUFFOR::GetBit() {
+	/*!
+	 * \brief
+	 * Write brief comment for GetBit here.
+	 * 
+	 * \returns
+	 * Write description of return value here.
+	 * 
+	 * \throws <exception class>
+	 * Description of criteria for throwing this exception.
+	 * 
+	 * Write detailed description for GetBit here.
+	 */
+	uint8 BUFFOR::GetBit() {
 		switch (BufMode) { 
 			// tryb tylko odczyt
 			case BUF_READONLY: 
@@ -214,6 +271,18 @@ namespace bmp {
 		}
 	}
 
+	/*!
+	 * \brief
+	 * Write brief comment for PutBit here.
+	 * 
+	 * \param DabBit
+	 * Description of parameter DabBit.
+	 * 
+	 * \throws <exception class>
+	 * Description of criteria for throwing this exception.
+	 * 
+	 * Write detailed description for PutBit here.
+	 */
 	void BUFFOR::PutBit(uint8 DabBit) {
 		switch (BufMode) {
 			case BUF_TRANSFER: 
@@ -277,7 +346,19 @@ namespace bmp {
 		}
 	}
 
-	/*inline*/ uint8 BUFFOR::GetByte() {
+	/*!
+	 * \brief
+	 * Write brief comment for GetByte here.
+	 * 
+	 * \returns
+	 * Write description of return value here.
+	 * 
+	 * \throws <exception class>
+	 * Description of criteria for throwing this exception.
+	 * 
+	 * Write detailed description for GetByte here.
+	 */
+	uint8 BUFFOR::GetByte() {
 		switch (BufMode) {
 			case BUF_READONLY: 
 				// w srodku bufora
@@ -337,6 +418,18 @@ namespace bmp {
 		}
 	}
 
+	/*!
+	 * \brief
+	 * Write brief comment for PutByte here.
+	 * 
+	 * \param DabByte
+	 * Description of parameter DabByte.
+	 * 
+	 * \throws <exception class>
+	 * Description of criteria for throwing this exception.
+	 * 
+	 * Write detailed description for PutByte here.
+	 */
 	void BUFFOR::PutByte(uint8 DabByte) {
 		switch (BufMode) {
 			case BUF_TRANSFER: 
@@ -393,14 +486,39 @@ namespace bmp {
 		}
 	}
 
+	/*!
+	 * \brief
+	 * Write brief comment for GetFileSize here.
+	 * 
+	 * \returns
+	 * Write description of return value here.
+	 * 
+	 * Write detailed description for GetFileSize here.
+	 */
 	inline const uint32 BUFFOR::GetFileSize() const {
 		return FileSize;
 	}
 
+	/*!
+	 * \brief
+	 * Write brief comment for GetBufState here.
+	 * 
+	 * \returns
+	 * Write description of return value here.
+	 * Write detailed description for GetBufState here.
+	 */
 	inline const BUFFOR::BUFFOR_STATE BUFFOR::GetBufState() const {
 		return BufState;
 	}
 
+	/*!
+	 * \brief
+	 * Write brief comment for SetMode here.
+	 * 
+	 * \param DabbufMode
+	 * Description of parameter DabbufMode.
+	 * Write detailed description for SetMode here.
+	 */
 	void BUFFOR::SetMode(BUFFOR_MODE DabBufMode) {
 		BufMode = DabBufMode;
 		// nie wiadomo w jakim trybie zostaly umieszczone dane wiec trzeba wyzerowac bufor
@@ -414,12 +532,24 @@ namespace bmp {
 			BufState= BUF_BAD;
 	}
 
+	/*!
+	 * \brief
+	 * Write brief comment for CloseFile here.
+
+	 * Write detailed description for CloseFile here.
+	 */
 	void BUFFOR::CloseFile() {
 		BufReset();
 		File.close();
 	}
 
 	// zeruje calkowice bufor
+	/*!
+	 * \brief
+	 * Write brief comment for BufReset here.
+	 * 
+	 * Write detailed description for BufReset here.
+	 */
 	void BUFFOR::BufReset()	{
 		File.clear();
 		FileSize = 0;
@@ -497,14 +627,38 @@ namespace bmp {
 		return ModWidth;
 	}
 
+	/*!
+	 * \brief
+	 * Write brief comment for GetModReminder here.
+	 * 
+	 * \returns
+	 * Write description of return value here.
+	 *
+	 * Write detailed description for GetModReminder here.
+	 */
 	inline const uint32 & BMP_BUFFOR::GetModReminder() const {
 		return ModReminder;
 	}
 
+	/*!
+	 * \brief
+	 * Write brief comment for GetModWidth here.
+	 * 
+	 * \returns
+	 * Write description of return value here.
+	 * 
+	 * Write detailed description for GetModWidth here.
+	 */
 	inline const uint32 & BMP_BUFFOR::GetModWidth() const {
 		return ModWidth;
 	}
 
+	/*!
+	 * \brief
+	 * Write brief comment for Fill here.
+	 * 
+	 * Write detailed description for Fill here.
+	 */
 	void BUFFOR::Fill() {
 		switch (BufMode) {
 			case BUF_READONLY: {
@@ -529,6 +683,13 @@ namespace bmp {
 		}
 	}
 
+	/*!
+	 * \brief
+	 * Write brief comment for Flush here.
+	 * 
+	 * Write detailed description for Flush here.
+	 * 
+	 */
 	void BUFFOR::Flush() {
 		switch (BufMode) {
 			case BUF_WRITEONLY: {
@@ -547,6 +708,12 @@ namespace bmp {
 	}
 //********************end of class BUFFOR********************//
 //********************class BMP_BUFFOR********************//
+	/*!
+	 * \brief
+	 * Write brief comment for BMP_BUFFOR here.
+	 * 
+	 * Write detailed description for BMP_BUFFOR here.
+	 */
 	BMP_BUFFOR::BMP_BUFFOR() {
 		BmpHeader = 0;
 		// domyslnie kompresja = 1
@@ -560,6 +727,15 @@ namespace bmp {
 		ModWidth = 0;
 	}
 
+	/*!
+	 * \brief
+	 * Write brief comment for BMP_BUFFOR here.
+	 * 
+	 * \param DabBmpHeader
+	 * Description of parameter DabBmpHeader.
+	 *
+	 * Write detailed description for BMP_BUFFOR here.
+	 */
 	BMP_BUFFOR::BMP_BUFFOR(BMP_HEADER* DabBmpHeader) {
 		BmpHeader = DabBmpHeader;
 		Compr = 1;
@@ -579,7 +755,21 @@ namespace bmp {
 	// posprawdzac czy dobrze oblicza wszsytkie przesuniecia - funkcja FileSizeInBmp itp.
 	// powinno byc bez tej jednynki! - stracimy 1 bit przez to
 	// if (BufBitPosg + 8 * (ModWidth - ModSeek) + 1 < BitDataCount) {
-	/*inline*/ uint8 BMP_BUFFOR::GetBit() {
+
+	/*!
+	 * \brief
+	 * Write brief comment for GetBit here.
+	 * 
+	 * \returns
+	 * Write description of return value here.
+	 * 
+	 * \throws <exception class>
+	 * Description of criteria for throwing this exception.
+	 * 
+	 * Write detailed description for GetBit here.
+	 * 
+	 */
+	uint8 BMP_BUFFOR::GetBit() {
 		switch (BufMode) {
 			case BUF_READONLY: {
 // pojawi sie problem gdy ktos ustawi pozycje w bitach na czesc bajtu ktorej nie odczytujemy
@@ -698,7 +888,20 @@ namespace bmp {
 		}
 	}
 
-	/*inline*/ void BMP_BUFFOR::PutBit(uint8 DabBit) {
+	/*!
+	 * \brief
+	 * Write brief comment for PutBit here.
+	 * 
+	 * \param DabBit
+	 * Description of parameter DabBit.
+	 * 
+	 * \throws <exception class>
+	 * Description of criteria for throwing this exception.
+	 * 
+	 * Write detailed description for PutBit here.
+	 * 
+	 */
+	void BMP_BUFFOR::PutBit(uint8 DabBit) {
 		switch (BufMode) {
 			// to bardziej przypomina read tylko ze z zapisujemy przed odczytem
 			case BUF_READ_WRITE: {
@@ -815,6 +1018,12 @@ namespace bmp {
 	}
 
 	// zeruje bufor BMP
+	/*!
+	 * \brief
+	 * Write brief comment for BufReset here.
+	 * 
+	 * Write detailed description for BufReset here.
+	 */
 	void BMP_BUFFOR::BufReset() {
 		BUFFOR::BufReset();
 		BufMode = BUF_READONLY;
@@ -828,14 +1037,41 @@ namespace bmp {
 		ModWidth = 0;
 	}
 
+	/*!
+	 * \brief
+	 * Write brief comment for SetCompr here.
+	 * 
+	 * \param Dabcompr
+	 * Description of parameter Dabcompr.
+	 * 
+	 * Write detailed description for SetCompr here.
+	 */
 	void BMP_BUFFOR::SetCompr(uint8 Dabcompr) {
 		Compr = Dabcompr;
 		Seek = uint8 (8 - Compr);
 	}
+	/*!
+	 * \brief
+	 * Write brief comment for GetCompr here.
+	 * 
+	 * \returns
+	 * Write description of return value here.
+	 * 
+	 * Write detailed description for GetCompr here.
+	 */
 	inline const uint8 BMP_BUFFOR::GetCompr() const {
 		return Compr;
 	}
 
+	/*!
+	 * \brief
+	 * Write brief comment for SetReadSize here.
+	 * 
+	 * \param DabNewSize
+	 * Description of parameter DabNewSize.
+	 * 
+	 * Write detailed description for SetReadSize here.
+	 */
 	void BUFFOR::SetReadSize(uint32 DabNewSize) {
 		if (DabNewSize <= BufSize)
 			ReadSize = DabNewSize;
@@ -844,6 +1080,22 @@ namespace bmp {
 	// nalezy ustawic dobra pozycjie - nie bierze pod uwage kompresji i zer
 	// dopelniajacych, trzeba trafic w dane!
 
+	/*!
+	 * \brief
+	 * Write brief comment for BitSeekg here.
+	 * 
+	 * \param DabnewPos
+	 * Description of parameter DabnewPos.
+	 * 
+	 * \param DabSeekWay
+	 * Description of parameter DabSeekWay.
+	 * 
+	 * \throws <exception class>
+	 * Description of criteria for throwing this exception.
+	 * 
+	 * Write detailed description for BitSeekg here.
+	 * 
+	 */
 	void BMP_BUFFOR::BitSeekg(uint64 DabnewPos, SEEKWAY DabSeekWay) {
 		switch (DabSeekWay) {
 			case BEGINING: {
@@ -883,6 +1135,27 @@ namespace bmp {
 	}
 
 
+	/*!
+	 * \brief
+	 * Write brief comment for BitSeekp here.
+	 * 
+	 * \param DabnewPos
+	 * Description of parameter DabnewPos.
+	 * 
+	 * \param DabSeekWay
+	 * Description of parameter DabSeekWay.
+	 * 
+	 * \throws <exception class>
+	 * Description of criteria for throwing this exception.
+	 * 
+	 * Write detailed description for BitSeekp here.
+	 * 
+	 
+	 BitSeekp here.
+	 * 
+	 
+	 
+	 */
 	void BMP_BUFFOR::BitSeekp(uint64 DabnewPos, SEEKWAY DabSeekWay) {
 		switch (DabSeekWay) {
 			case BEGINING: {
@@ -926,6 +1199,25 @@ namespace bmp {
 		}
 	}
 
+	/*!
+	 * \brief
+	 * Write brief comment for FileSizeInBmp here.
+	 * 
+	 * \param DabSize
+	 * Description of parameter DabSize.
+	 * 
+	 * \param DabCurPos
+	 * Description of parameter DabCurPos.
+	 * 
+	 * \param DabDirection
+	 * Description of parameter DabDirection.
+	 * 
+	 * \returns
+	 * Write description of return value here.
+	 * 
+	 * Write detailed description for FileSizeInBmp here.
+	 * 
+	 */
 	uint64 BMP_BUFFOR::FileSizeInBmp(uint64 DabSize,  uint64 DabCurPos, bool DabDirection) {
 		if (DabDirection) { // == Forward
 			if (!DabSize)
@@ -968,6 +1260,16 @@ namespace bmp {
 		return BitPosp + BufBitPosp;
 	}
 
+	/*!
+	 * \brief
+	 * Write brief comment for Fill here.
+	 * 
+	 * \throws <exception class>
+	 * Description of criteria for throwing this exception.
+	 * 
+	 * Write detailed description for Fill here.
+	 * 
+	 */
 	void BMP_BUFFOR::Fill() {
 		// powinna byc wersja niemodyfikujaca pozycji glowic - np. gdy bedzie skok do jakiejs pozycji
 		// to nalezy zaczac czytac od tego ustawionego bita a nie od pierwszego w kompresji
@@ -1018,6 +1320,16 @@ namespace bmp {
 
 	}
 
+	/*!
+	 * \brief
+	 * Write brief comment for Flush here.
+	 * 
+	 * \throws <exception class>
+	 * Description of criteria for throwing this exception.
+	 * 
+	 * Write detailed description for Flush here.
+	 * 
+	 */
 	void BMP_BUFFOR::Flush() {
 		switch (BufMode) {
 			case BUF_READ_WRITE: {
@@ -1044,6 +1356,18 @@ namespace bmp {
 	}
 //********************end of class FILE_BUFFOR********************//
 //********************class BMP********************//
+	/*!
+	 * \brief
+	 * Write brief comment for BMP here.
+	 * 
+	 * \param DabFile
+	 * Description of parameter DabFile.
+	 * 
+	 * \throws <exception class>
+	 * Description of criteria for throwing this exception.
+	 * 
+	 * Write detailed description for BMP here.
+	 */
 	BMP::BMP(sfile DabFile):BmpBuf(&BmpHeader) {
 		PreferedCompr = 1;
 		BmpBuf.BufReset();
@@ -1063,6 +1387,15 @@ namespace bmp {
 		DeleteAllHeaders();
 	}
 
+	/*!
+	 * \brief
+	 * Write brief comment for ReadBmpHeader here.
+	 * 
+	 * \throws <exception class>
+	 * Description of criteria for throwing this exception.
+	 * 
+	 * Write detailed description for ReadBmpHeader here.
+	 */
 	void BMP::ReadBmpHeader() {
 		uint32 i;
 		uint8 * p = reinterpret_cast<uint8*> (&BmpHeader);
@@ -1073,6 +1406,21 @@ namespace bmp {
 	}
 
 
+	/*!
+	 * \brief
+	 * Write brief comment for AttribToBytes here.
+	 * 
+	 * \param Dabsmap
+	 * Description of parameter Dabsmap.
+	 * 
+	 * \returns
+	 * Write description of return value here.
+	 * 
+	 * \throws <exception class>
+	 * Description of criteria for throwing this exception.
+	 * 
+	 * Write detailed description for AttribToBytes here.
+	 */
 
 	uint16 BMP::AttribToBytes(smap Dabsmap) {
 		FileBuf.BufReset();
@@ -1120,6 +1468,19 @@ namespace bmp {
 		return result;
 	}
 
+	/*!
+	 * \brief
+	 * Write brief comment for BytesToAttrib here.
+	 * 
+	 * \param DabBytes
+	 * Description of parameter DabBytes.
+	 * 
+	 * \returns
+	 * Write description of return value here.
+	 * 
+	 * Write detailed description for BytesToAttrib here.
+	 * 
+	 */
 	smap BMP::BytesToAttrib(uint16 DabBytes) {
 		FileBuf.BufReset();
 		FileBuf.SetMode(BUFFOR::BUF_TRANSFER);
@@ -1164,6 +1525,18 @@ namespace bmp {
 		return result;
 	}
 
+	/*!
+	 * \brief
+	 * Write brief comment for UTCToBytes here.
+	 * 
+	 * \param Dabs
+	 * Description of parameter Dabs.
+	 * 
+	 * \returns
+	 * Write description of return value here.
+	 * 
+	 * Write detailed description for UTCToBytes here.
+	 */
 	uint32 BMP::UTCToBytes(string Dabs) {
 		// dd.mm.rrrr hh:mm:ss
 		uint16 dd, mm , hh, min, ss;
@@ -1218,6 +1591,19 @@ namespace bmp {
 		return result;
 
 	}
+	/*!
+	 * \brief
+	 * Write brief comment for BytesToUTC here.
+	 * 
+	 * \param DabBytes
+	 * Description of parameter DabBytes.
+	 * 
+	 * \returns
+	 * Write description of return value here.
+	 * 
+
+	 * Write detailed description for BytesToUTC here.
+	 */
 	string BMP::BytesToUTC(uint32 DabBytes) {
 		char temp [] = "0000";
 		string result;
@@ -1271,6 +1657,15 @@ namespace bmp {
 
 	}
 
+	/*!
+	 * \brief
+	 * Write brief comment for IsBmp here.
+	 * 
+	 * \returns
+	 * Write description of return value here.
+	 * 
+	 * Write detailed description for IsBmp here.
+	 */
 	bool BMP::IsBmp() {
 		// 19778 = "BM", 24 bit bitmapa, 14 + BmpHeader.biSize - wielkosc naglowka
 		if (!(BmpHeader.bfType == 19778 && BmpHeader.bfSize == BmpBuf.GetFileSize() &&
@@ -1287,6 +1682,15 @@ namespace bmp {
 		}
 	}
 
+	/*!
+	 * \brief
+	 * Write brief comment for IsDab here.
+	 * 
+	 * \returns
+	 * Write description of return value here.
+	 * 
+	 * Write detailed description for IsDab here.
+	 */
 	bool BMP::IsDab() {
 		// obligatoryjnie
 		if (DabHeader.Sygn == SYGNATURE && DabHeader.DabName == DABSTER_NAME &&
@@ -1301,6 +1705,15 @@ namespace bmp {
 		}
 	}
 
+	/*!
+	 * \brief
+	 * Write brief comment for ReadDabHeader here.
+	 * 
+	 * \throws <exception class>
+	 * Description of criteria for throwing this exception.
+	 * 
+	 * Write detailed description for ReadDabHeader here.
+	 */
 	void BMP::ReadDabHeader() {
 		uint32 i;
 		// ustawienie na pierwszy bit danych, Seek = 8 - Compr;
@@ -1350,6 +1763,16 @@ namespace bmp {
 		DabHeader.FreeSpc += FileBuf.GetByte() << 24;
 	}
 
+	/*!
+	 * \brief
+	 * Write brief comment for WriteDabHeader here.
+	 * 
+	 * \throws <exception class>
+	 * Description of criteria for throwing this exception.
+	 * 
+	 * Write detailed description for WriteDabHeader here.
+	 * 
+	 */
 	void BMP::WriteDabHeader() {
 		uint32 i;
 		BmpBuf.SetMode(BUFFOR::BUF_READ_WRITE);
@@ -1396,6 +1819,18 @@ namespace bmp {
 		BmpBuf.Flush();
 	}
 
+	/*!
+	 * \brief
+	 * Write brief comment for ReadCompr here.
+	 * 
+	 * \returns
+	 * Write description of return value here.
+	 * 
+	 * \throws <exception class>
+	 * Description of criteria for throwing this exception.
+	 * 
+	 * Write detailed description for ReadCompr here.
+	 */
 	const uint8 BMP::ReadCompr() {
 		// ustawienie na 1 bicie kompresji
 		uint8 i;
@@ -1413,6 +1848,15 @@ namespace bmp {
 		return FileBuf.GetByte();
 	}
 
+	/*!
+	 * \brief
+	 * Write brief comment for WriteCompr here.
+	 * 
+	 * \throws <exception class>
+	 * Description of criteria for throwing this exception.
+	 * 
+	 * Write detailed description for WriteCompr here.
+	 */
 	void BMP::WriteCompr() {
 		uint8 i;
 		FileBuf.BufReset();
@@ -1428,6 +1872,16 @@ namespace bmp {
 		BmpBuf.Flush();
 	}
 
+	/*!
+	 * \brief
+	 * Write brief comment for ReadAllHeaders here.
+	 * 
+	 * \throws <exception class>
+	 * Description of criteria for throwing this exception.
+	 * 
+	 * Write detailed description for ReadAllHeaders here.
+	 * 
+	 */
 	void BMP::ReadAllHeaders() {
 		uint64 ReadingPos = DabHeader.FirstFileStart;
 		FILE_HEADER* header = 0;
@@ -1442,6 +1896,16 @@ namespace bmp {
 		}
 	}
 
+	/*!
+	 * \brief
+	 * Write brief comment for DeleteAllHeaders here.
+	 * 
+	 * \throws <exception class>
+	 * Description of criteria for throwing this exception.
+	 * 
+	 * Write detailed description for DeleteAllHeaders here.
+	 * 
+	 */
 	void BMP::DeleteAllHeaders() {
 		// kasowanie wektora wskaznikow na naglowki
 		FILE_HEADER * h;
@@ -1452,6 +1916,18 @@ namespace bmp {
 		}
     }
 
+	/*!
+	 * \brief
+	 * Write brief comment for ReadFileHeader here.
+	 * 
+	 * \returns
+	 * Write description of return value here.
+	 * 
+	 * \throws <exception class>
+	 * Description of criteria for throwing this exception.
+	 * 
+	 * Write detailed description for ReadFileHeader here.
+	 */
 	FILE_HEADER* BMP::ReadFileHeader() {
 		uint16 i;
 		FILE_HEADER * header = new FILE_HEADER;
@@ -1501,6 +1977,19 @@ namespace bmp {
 		return header;
 	}
 
+	/*!
+	 * \brief
+	 * Write brief comment for WriteFileHeader here.
+	 * 
+	 * \param DabHeader
+	 * Description of parameter DabHeader.
+	 * 
+	 * \throws <exception class>
+	 * Description of criteria for throwing this exception.
+	 * 
+	 * Write detailed description for WriteFileHeader here.
+	 * 
+	 */
 	void BMP::WriteFileHeader(FILE_HEADER* Dabheader) {
 		uint32 i;
 		BmpBuf.SetMode(BUFFOR::BUF_READ_WRITE);
@@ -1543,6 +2032,19 @@ namespace bmp {
 
 	}
 
+	/*!
+	 * \brief
+	 * Write brief comment for del here.
+	 * 
+	 * \param path
+	 * Description of parameter path.
+	 * 
+	 * \throws <exception class>
+	 * Description of criteria for throwing this exception.
+	 * 
+	 * Write detailed description for del here.
+	 * 
+	 */
 	void BMP::del(vmstring Dabpath) {
 		// przerywanie - mozna przerwac do momentu zaznaczania plikow do skasowania
 		// potem trzeba juz wszystko wykonac
@@ -1686,6 +2188,22 @@ namespace bmp {
 		WriteDabHeader();
 	}
 
+	/*!
+	 * \brief
+	 * Write brief comment for store here.
+	 * 
+	 * \param src
+	 * Description of parameter src.
+	 * 
+	 * \param dest
+	 * Description of parameter dest.
+	 * 
+	 * \throws <exception class>
+	 * Description of criteria for throwing this exception.
+	 * 
+	 * Write detailed description for store here.
+	 * 
+	 */
 	void BMP::store(vmstring Dabsrc, vmstring Dabdest) {
 		// dodac bCanceled - mozna co jeden spakowany plik sprawdzac czy trzeba przerwac
 		// czy odczytano naglowki?
@@ -1780,6 +2298,22 @@ namespace bmp {
 		}
 	}
 
+	/*!
+	 * \brief
+	 * Write brief comment for extract here.
+	 * 
+	 * \param src
+	 * Description of parameter src.
+	 * 
+	 * \param dest
+	 * Description of parameter dest.
+	 * 
+	 * \throws <exception class>
+	 * Description of criteria for throwing this exception.
+	 * 
+	 * Write detailed description for extract here.
+	 * 
+	 */
 	void BMP::extract(vmstring Dabsrc, vmstring Dabdest) {
 		// bCanceled - sprawdzanie co jeden wypakowany plik
 		BmpBuf.SetCompr(ReadCompr());
@@ -1828,6 +2362,22 @@ namespace bmp {
 		}
 	}
 
+	/*!
+	 * \brief
+	 * Write brief comment for copyInside here.
+	 * 
+	 * \param src
+	 * Description of parameter src.
+	 * 
+	 * \param dest
+	 * Description of parameter dest.
+	 * 
+	 * \throws <exception class>
+	 * Description of criteria for throwing this exception.
+	 * 
+	 * Write detailed description for copyInside here.
+	 * 
+	 */
 	void BMP::copyInside(vmstring DabSrc, vmstring DabDest) {
 		// bCanceled - co jeden kopiowany plik 
 		// czy odczytano naglowki?
@@ -1926,6 +2476,22 @@ namespace bmp {
 		WriteDabHeader();
 	}
 
+	/*!
+	 * \brief
+	 * Write brief comment for modify here.
+	 * 
+	 * \param oldPath
+	 * Description of parameter oldPath.
+	 * 
+	 * \param newPath
+	 * Description of parameter newPath.
+	 * 
+	 * \throws <exception class>
+	 * Description of criteria for throwing this exception.
+	 * 
+	 * Write detailed description for modify here.
+	 * 
+	 */
 	void BMP::modify(vmstring DabOldPath, vmstring DabNewPath) {
 		// bCanceled - mozna przerwac tylko do momentu ustalenia nowego polozenia plikow
 		// potem wszystko trzeba juz poprzesuwac
@@ -2175,6 +2741,22 @@ namespace bmp {
 		WriteDabHeader();
 	}
 
+	/*!
+	 * \brief
+	 * Write brief comment for getContent here.
+	 * 
+	 * \param path
+	 * Description of parameter path.
+	 * 
+	 * \returns
+	 * Write description of return value here.
+	 * 
+	 * \throws <exception class>
+	 * Description of criteria for throwing this exception.
+	 * 
+	 * Write detailed description for getContent here.
+	 * 
+	 */
 	vmstring BMP::getContent(string Dabpath) {
 		BmpBuf.SetCompr(ReadCompr());
 		ReadDabHeader();
@@ -2234,6 +2816,19 @@ namespace bmp {
 		return result;
 	}
 
+	/*!
+	 * \brief
+	 * Write brief comment for getCapacity here.
+	 * 
+	 * \returns
+	 * Write description of return value here.
+	 * 
+	 * \throws <exception class>
+	 * Description of criteria for throwing this exception.
+	 * 
+	 * Write detailed description for getCapacity here.
+	 * 
+	 */
 	uint64 BMP::getCapacity(void) {
 		BmpBuf.SetCompr(ReadCompr());
 		ReadDabHeader();
@@ -2243,6 +2838,19 @@ namespace bmp {
 			return 0;
 	}
 
+	/*!
+	 * \brief
+	 * Write brief comment for setCompression here.
+	 * 
+	 * \param DabDegree
+	 * Description of parameter DabDegree.
+	 * 
+	 * \throws <exception class>
+	 * Description of criteria for throwing this exception.
+	 * 
+	 * Write detailed description for setCompression here.
+	 * 
+	 */
 	void BMP::setCompression(uint8 DabnewCompr) {
 		PreferedCompr = DabnewCompr;
 		CreateDabHeader();
@@ -2250,6 +2858,19 @@ namespace bmp {
 		WriteDabHeader();
 	}
 
+	/*!
+	 * \brief
+	 * Write brief comment for getCompression here.
+	 * 
+	 * \returns
+	 * Write description of return value here.
+	 * 
+	 * \throws <exception class>
+	 * Description of criteria for throwing this exception.
+	 * 
+	 * Write detailed description for getCompression here.
+	 * 
+	 */
 	const uint8 BMP::getCompression()  {
 		BmpBuf.SetCompr(ReadCompr());	
 		ReadDabHeader();
@@ -2259,6 +2880,16 @@ namespace bmp {
 			return 0;
 	}
 
+	/*!
+	 * \brief
+	 * Write brief comment for CreateDabHeader here.
+	 * 
+	 * \throws <exception class>
+	 * Description of criteria for throwing this exception.
+	 * 
+	 * Write detailed description for CreateDabHeader here.
+	 * 
+	 */
 	void BMP::CreateDabHeader() {
 		DabHeader.CompressionStart = 8 * BmpHeader.bfOffBits + 7;
 		DabHeader.Sygn = SYGNATURE;
@@ -2282,6 +2913,22 @@ namespace bmp {
 	}
 
 //********************end of class BMP********************//
+	/*!
+	 * \brief
+	 * Write brief comment for isBmp here.
+	 * 
+	 * \param DabFile
+	 * Description of parameter DabFile.
+	 * 
+	 * \returns
+	 * Write description of return value here.
+	 * 
+	 * \throws <exception class>
+	 * Description of criteria for throwing this exception.
+	 * 
+	 * Write detailed description for isBmp here.
+	 * 
+	 */
 	int isBmp(sfile DabFile)  {
 		BMP_HEADER BmpHeader;
 		FILE_BUFFOR file;
