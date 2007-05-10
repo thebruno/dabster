@@ -147,6 +147,25 @@
 #define dabTrue			"true"
 #define dabUnknown		"unknown"
 
+//Typy elementow drzewa
+
+static const int dabFile =		0x200;
+static const int dabFolder =	0x400;
+static const int dabDrive =		0x800;
+
+static const int dabTypeMask =	0xFF;
+
+static const int dabSFile =		1 + dabFile;
+static const int dabSFoder =	2			+ dabFolder;
+static const int dabSDrive =	3						+ dabDrive;
+static const int dabBmp =		4 + dabFile + dabFolder + dabDrive;
+static const int dabAes =		5 + dabFile + dabFolder;
+static const int dabBwt =		6 + dabFile + dabFolder;
+static const int dabWav =		7 + dabFile + dabFolder + dabDrive;
+static const int dabTwfsh =		8 + dabFile + dabFolder;
+static const int dabFtp =		9			+ dabFolder + dabDrive;
+static const int dabMldrv =		10			+ dabFolder + dabDrive;
+
 #endif
 
 /********************************************************************/
