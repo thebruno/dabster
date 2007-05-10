@@ -73,6 +73,13 @@
 
 
 
+##  DrvLst module errors  ##
+
+!DLT0d Cannot return object type
+!DLT0h Type unknown
+
+
+
 ##  Main controls substance  ##
 
 @MNI0 File
