@@ -156,7 +156,7 @@ static const int dabDrive =		0x800;
 static const int dabTypeMask =	0xFF;
 
 static const int dabSFile =		1 + dabFile;
-static const int dabSFoder =	2			+ dabFolder;
+static const int dabSFolder =	2			+ dabFolder;
 static const int dabSDrive =	3						+ dabDrive;
 static const int dabBmp =		4 + dabFile + dabFolder + dabDrive;
 static const int dabAes =		5 + dabFile + dabFolder;

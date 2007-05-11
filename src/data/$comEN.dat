@@ -80,6 +80,13 @@
 
 
 
+##  oStck module errors  ##
+
+!OSK0d Cannot return object type
+!OSK0h Type unknown
+
+
+
 ##  Main controls substance  ##
 
 @MNI0 File

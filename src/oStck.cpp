@@ -27,42 +27,89 @@
 *********************************************************************/
 
 #include <string>
+
 #include "item.h"
+#include "drive.h"
+
+#include "sfile.h"
+#include "sfolder.h"
+#include "sdrive.h"
+
+#include "ftp.h"
+#include "mldrv.h"
+#include "bmp.h"
+#include "aes.h"
+#include "bwt.h"
+#include "wav.h"
+#include "twfsh.h"
+
+#include "stdMcrs.h"
+#include "err.h"
 #include "oStck.h"
 
-item* oStck::get(int index) {
-	return static_cast< item* >(0);
+/* UWAGA! Stos "lezy" poziomo, tak ze przypomina sciezke.
+Stad nie ma gory ani spodu, tylko lewy i prawy koniec.
+Prawy koniec pelni role gory stosu. */
+
+/* Wrzuca nowy element na prawy koniec stosu */
+void oStck::push(item* newItem) {
+	vStack.push_back(newItem);
 }
 
-int oStck::type(int index) {
-	return 0;
+/* Sciaga element z prawego konca stosu */
+item* oStck::pop(void) {
+	item *iTemp = vStack[vStack.size() - 1];
+	vStack.pop_back();
+	return iTemp;
+}
+
+/* Usuwa wszystkie elementy ze stosu */
+void oStck::clear(void) {
+	vStack.clear();
+}
+
+/* Zwraca element z lewego konca stosu */
+item* oStck::left(void) {
+	return vStack.erase(vStack.begin());
+}
+
+/* Zwraca element z prawego konca stosu */
+item* oStck::right(void) {
+	return vStack.erase(vStack.end());
+}
+
+/* Zwraca element o wybranym numerze */
+item* oStck::get(int index) {
+	return vStack[index];
+}
+
+/* Zwraca wielkosc stosu */
+int oStck::size(void) {
+	return vStack.size();
 }
 
 int oStck::parent(int index) {
 	return 0;
 }
 
+/* Zwraca typ obiektu o wybranym numerze */
+int oStck::type(int index) {
+	if (dynamic_cast< sdrive* >(vStack[index])) return dabSDrive;
+	if (dynamic_cast< sfile* >(vStack[index])) return dabSFile;
+	if (dynamic_cast< sfolder* >(vStack[index])) return dabSFolder;
+	if (dynamic_cast< ftp* >(vStack[index])) return dabFtp;
+	if (dynamic_cast< bmp::BMP* >(vStack[index])) return dabBmp;
+	if (dynamic_cast< aes* >(vStack[index])) return dabAes;
+	if (dynamic_cast< bwt* >(vStack[index])) return dabBwt;
+	if (dynamic_cast< mldrv* >(vStack[index])) return dabMldrv;
+	if (dynamic_cast< wav* >(vStack[index])) return dabWav;
+	if (dynamic_cast< twfsh* >(vStack[index])) return dabTwfsh;
+
+	throw err("!OSK0");
+}
+
 std::string oStck::relativePath(int index) {
 	return "";
-}
-
-item* oStck::left(void) {
-	return static_cast< item* >(0);
-}
-
-item* oStck::right(void) {
-	return static_cast< item* >(0);
-}
-
-int oStck::size(void) {
-	return 0;
-}
-
-void oStck::push(item* newItem) {
-}
-
-item* oStck::pop(void) {
-	return static_cast< item* >(0);
 }
 
 /********************************************************************/
