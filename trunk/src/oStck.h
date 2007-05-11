@@ -35,15 +35,18 @@
 
 class oStck {
 public:
-	item* get(int index);
-	int type(int index);
-	int parent(int index);
-	std::string relativePath(int index);
-	item* left(void);
-	item* right(void);
-	int size(void);
 	void push(item* newItem);
 	item* pop(void);
+	void clear(void);
+
+	item* left(void);
+	item* right(void);
+	item* get(int index);
+	int size(void);
+	int parent(int index);
+
+	int type(int index);
+	std::string relativePath(int index);
 
 private:
 	std::vector< item* > vStack;

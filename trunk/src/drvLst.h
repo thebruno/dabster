@@ -30,15 +30,21 @@
 #define _DRV_LST_H
 
 #include <vector>
+#include <string>
 #include "drive.h"
 
 class drvLst {
 public:
 	void add(drive* newDrive);
 	void remove(int index);
+
 	drive* get(int index);
+
 	int type(int index);
 	void refresh(void);
+	int find(std::string name);
+
+	static const int iNOT_FOUND = -1;
 
 private:
 	std::vector< drive* > vDrives;

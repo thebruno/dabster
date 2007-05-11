@@ -27,25 +27,32 @@
 *********************************************************************/
 
 #include <vector>
+#include <string>
+#include <iterator>
+
 #include "drive.h"
 #include "sdrive.h"
 #include "ftp.h"
 #include "mldrv.h"
+
 #include "stdMcrs.h"
+#include "str.h"
 #include "err.h"
 #include "drvLst.h"
 
 /* Dodaje nowy dysk do listy */
 void drvLst::add(drive* newDrive) {
+	vDrives.push_back(newDrive);
 }
 
 /* Usuwa dysk o wybranym numerze */
 void drvLst::remove(int index) {
+	vDrives.erase(vDrives.begin() + index);
 }
 
 /* Zwraca dysk o wybranym numerze */
 drive* drvLst::get(int index) {
-	return &sdrive();
+	return vDrives[index];
 }
 
 /* Zwraca typ dysku o wybranym numerze */
@@ -59,9 +66,34 @@ int drvLst::type(int index) {
 
 /* Odœwie¿a informacje o dyskach twardych */
 void drvLst::refresh(void) {
-	for (unsigned int i = 0; i < vDrives.size(); i++) {
-		//if (vDrives
+	unsigned int i;
+
+	/* Usuwamy wszystkie dyski logiczne */
+	for (i = 0; i < vDrives.size(); i++) {
+		if (type(i) == dabSDrive) {
+			vDrives.erase(vDrives.begin() + i);
+		}
 	}
+	
+	/* Dodajemy dyski logiczne */
+	cli::array< System::String^ > ^lDrives = dabDir::GetLogicalDrives();
+	for (i = 0; i < static_cast< unsigned int >(lDrives->Length); i++) {
+		drive *dTemp;
+		std::string sTemp;
+		dTemp = new sdrive();
+		sTemp = str::sysStrToCppStr(lDrives[i]);
+		dTemp->setRealPath(sTemp);
+		dTemp->setName(sTemp.substr(0, sTemp.size() - 2));
+		vDrives.push_back(dTemp);
+	}
+}
+
+/* Zwraca index elementu o podanej nazwie */
+int drvLst::find(std::string name) {
+	for (unsigned int i = 0; i < vDrives.size(); i++) {
+		if (vDrives[i]->getRealPath() == name) return i;
+	}
+	return iNOT_FOUND;
 }
 
 /********************************************************************/
