@@ -48,7 +48,8 @@ void sdrive::store(std::vector< std::map< std::string, std::string > > src,
 					std::vector< std::map< std::string, std::string > > dest) {
 	long len = 0, made = 0;
 
-	/* TODO: Zapisywanie atrybutow plikow/folderow */
+	/* TODO: Zapisywanie atrybutow plikow/folderow
+			 Sprawdzanie zgodnosci nazwa plik - realPath/relativePath */
 
 	/* Szacowanie calkowitego czasu kopiowania */
 	try {
@@ -72,21 +73,21 @@ void sdrive::store(std::vector< std::map< std::string, std::string > > src,
 
 		if (src[i][dabKeyAtrDirectory] == dabFalse) {
 			/* Zapisywanie pliku */
-			made += str::stringToLong(src[i][dabKeyLength]);
-
-			std::string sPath1 = src[i][dabKeyRealPath];
-			if (sPath1[sPath1.size() - 1] != '\\') sPath1.push_back('\\');
-			sPath1 += src[i][dabKeyName];
-			sPath1 = str::fixDelims(sPath1);
-
-			std::string sPath2 = sRealPath;
-			if (sPath2[sPath2.size() - 1] != '\\') sPath2.push_back('\\');
-			sPath2 += dest[i][dabKeyRelativePath];
-			if (sPath2[sPath2.size() - 1] != '\\') sPath2.push_back('\\');
-			sPath2 += dest[i][dabKeyName];
-			sPath2 = str::fixDelims(sPath2);
-
+			std::string sPath1;
+			std::string sPath2;
 			try {
+				made += str::stringToLong(src[i][dabKeyLength]);
+
+				sPath1 = src[i][dabKeyRealPath];
+				if (sPath1[sPath1.size() - 1] == '\\') sPath1.erase(sPath1.size() - 1, 1);
+				sPath1 = str::fixDelims(sPath1);
+
+				sPath2 = sRealPath;
+				if (sPath2[sPath2.size() - 1] != '\\') sPath2.push_back('\\');
+				sPath2 += dest[i][dabKeyRelativePath];
+				if (sPath2[sPath2.size() - 1] == '\\') sPath2.erase(sPath2.size() - 1, 1);
+				sPath2 = str::fixDelims(sPath2);
+
 				dabFile::Copy(dabToSysStr(sPath1.c_str()), dabToSysStr(sPath2.c_str()), true);
 			}
 			catch (...) {
@@ -96,16 +97,16 @@ void sdrive::store(std::vector< std::map< std::string, std::string > > src,
 			}
 		} else {
 			/* Tworzenie folderu */
-			made += iDIR_CREATING_TIME;
-
-			std::string sPath = sRealPath;
-			if (sPath[sPath.size() - 1] != '\\') sPath.push_back('\\');
-			sPath += dest[i][dabKeyRelativePath];
-			if (sPath[sPath.size() - 1] != '\\') sPath.push_back('\\');
-			sPath += dest[i][dabKeyName];
-			sPath = str::fixDelims(sPath);
-
+			std::string sPath;
 			try {
+				made += iDIR_CREATING_TIME;
+
+				sPath = sRealPath;
+				if (sPath[sPath.size() - 1] != '\\') sPath.push_back('\\');
+				sPath += dest[i][dabKeyRelativePath];
+				if (sPath[sPath.size() - 1] == '\\') sPath.erase(sPath.size() - 1, 1);
+				sPath = str::fixDelims(sPath);
+
 				if (!dabDir::Exists(dabToSysStr(sPath.c_str()))) {
 					dabDir::CreateDirectory(dabToSysStr(sPath.c_str()));
 				}
@@ -129,7 +130,8 @@ void sdrive::extract(std::vector< std::map< std::string, std::string > > src,
 	long len = 0, made = 0;
 	dabFileInfo^ fInfo;
 
-	/* TODO: Zapisywanie atrybutow plikow/folderow */
+	/* TODO: Zapisywanie atrybutow plikow/folderow
+			 Sprawdzanie zgodnosci nazwa plik - realPath/relativePath */
 
 	/* Szacowanie calkowitego czasu kopiowania */
 	try {
@@ -140,8 +142,7 @@ void sdrive::extract(std::vector< std::map< std::string, std::string > > src,
 				std::string sPath = sRealPath;
 				if (sPath[sPath.size() - 1] != '\\') sPath.push_back('\\');
 				sPath += src[i][dabKeyRelativePath];
-				if (sPath[sPath.size() - 1] != '\\') sPath.push_back('\\');
-				sPath += src[i][dabKeyName];
+				if (sPath[sPath.size() - 1] == '\\') sPath.erase(sPath.size() - 1, 1);
 				sPath = str::fixDelims(sPath);
 
 				fInfo = gcnew dabFileInfo(dabToSysStr(sPath.c_str()));
@@ -162,23 +163,23 @@ void sdrive::extract(std::vector< std::map< std::string, std::string > > src,
 
 		if (src[i][dabKeyAtrDirectory] == dabFalse) {
 			/* Zapisywanie pliku */
-			std::string sPath1 = sRealPath;
-			if (sPath1[sPath1.size() - 1] != '\\') sPath1.push_back('\\');
-			sPath1 += src[i][dabKeyRelativePath];
-			if (sPath1[sPath1.size() - 1] != '\\') sPath1.push_back('\\');
-			sPath1 += src[i][dabKeyName];
-			sPath1 = str::fixDelims(sPath1);
-
-			std::string sPath2 = dest[i][dabKeyRealPath];
-			if (sPath2[sPath2.size() - 1] != '\\') sPath2.push_back('\\');
-			sPath2 += dest[i][dabKeyName];
-			sPath2 = str::fixDelims(sPath2);
-
-			fInfo = gcnew dabFileInfo(dabToSysStr(sPath1.c_str()));
-			made += str::stringToLong(str::sysStrToCppStr(fInfo->Length.ToString()));
-			delete fInfo;
-
+			std::string sPath1;
+			std::string sPath2;
 			try {
+				sPath1 = sRealPath;
+				if (sPath1[sPath1.size() - 1] != '\\') sPath1.push_back('\\');
+				sPath1 += src[i][dabKeyRelativePath];
+				if (sPath1[sPath1.size() - 1] == '\\') sPath1.erase(sPath1.size() - 1, 1);
+				sPath1 = str::fixDelims(sPath1);
+
+				sPath2 = dest[i][dabKeyRealPath];
+				if (sPath2[sPath2.size() - 1] == '\\') sPath2.erase(sPath2.size() - 1, 1);
+				sPath2 = str::fixDelims(sPath2);
+
+				fInfo = gcnew dabFileInfo(dabToSysStr(sPath1.c_str()));
+				made += str::stringToLong(str::sysStrToCppStr(fInfo->Length.ToString()));
+				delete fInfo;
+
 				dabFile::Copy(dabToSysStr(sPath1.c_str()), dabToSysStr(sPath2.c_str()), true);
 			}
 			catch (...) {
@@ -190,12 +191,12 @@ void sdrive::extract(std::vector< std::map< std::string, std::string > > src,
 			/* Tworzenie folderu */
 			made += iDIR_CREATING_TIME;
 
-			std::string sPath = dest[i][dabKeyRealPath];
-			if (sPath[sPath.size() - 1] != '\\') sPath.push_back('\\');
-			sPath += dest[i][dabKeyName];
-			sPath = str::fixDelims(sPath);
-
+			std::string sPath;
 			try {
+				sPath = dest[i][dabKeyRealPath];
+				if (sPath[sPath.size() - 1] == '\\') sPath.erase(sPath.size() - 1, 1);
+				sPath = str::fixDelims(sPath);
+
 				if (!dabDir::Exists(dabToSysStr(sPath.c_str()))) {
 					dabDir::CreateDirectory(dabToSysStr(sPath.c_str()));
 				}
@@ -217,6 +218,8 @@ void sdrive::extract(std::vector< std::map< std::string, std::string > > src,
 void sdrive::del(std::vector< std::map< std::string, std::string > > path) {
 	long len, made = 0;
 
+	/* TODO: Sprawdzanie zgodnosci nazwa plik - realPath/relativePath */
+
 	/* Szacowanie calkowitego czasu usuwania */
 	pProgress.show(0);
 	len = iDIR_CREATING_TIME * path.size();
@@ -225,16 +228,16 @@ void sdrive::del(std::vector< std::map< std::string, std::string > > path) {
 	for (unsigned int i = 0; i < path.size(); i++) {
 		if (bCanceled) return;
 
-		made += iDIR_CREATING_TIME;
-
-		std::string sPath = sRealPath;
-		if (sPath[sPath.size() - 1] != '\\') sPath.push_back('\\');
-		sPath += path[i][dabKeyRelativePath];
-		if (sPath[sPath.size() - 1] != '\\') sPath.push_back('\\');
-		sPath += path[i][dabKeyName];
-		sPath = str::fixDelims(sPath);
-
+		std::string sPath;
 		try {
+			made += iDIR_CREATING_TIME;
+
+			sPath = sRealPath;
+			if (sPath[sPath.size() - 1] != '\\') sPath.push_back('\\');
+			sPath += path[i][dabKeyRelativePath];
+			if (sPath[sPath.size() - 1] == '\\') sPath.erase(sPath.size() - 1, 1);
+			sPath = str::fixDelims(sPath);
+
 			if (path[i][dabKeyAtrDirectory] == dabFalse) {
 				/* Usuwanie pliku */
 				dabFile::Delete(dabToSysStr(sPath.c_str()));
@@ -263,7 +266,8 @@ void sdrive::modify(std::vector< std::map< std::string, std::string > > src,
 					 std::vector< std::map< std::string, std::string > > dest) {
 	long len = 0, made = 0;
 
-	/* TODO: Zapisywanie atrybutow plikow/folderow */
+	/* TODO: Zapisywanie atrybutow plikow/folderow
+			 Sprawdzanie zgodnosci nazwa plik - realPath/relativePath */
 
 	/* Szacowanie calkowitego czasu kopiowania */
 	try {
@@ -287,23 +291,23 @@ void sdrive::modify(std::vector< std::map< std::string, std::string > > src,
 
 		if (src[i][dabKeyAtrDirectory] == dabFalse) {
 			/* Zapisywanie pliku i/lub atrybutow pliku */
-			made += str::stringToLong(src[i][dabKeyLength]);
-
-			std::string sPath1 = sRealPath;
-			if (sPath1[sPath1.size() - 1] != '\\') sPath1.push_back('\\');
-			sPath1 += src[i][dabKeyRelativePath];
-			if (sPath1[sPath1.size() - 1] != '\\') sPath1.push_back('\\');
-			sPath1 += src[i][dabKeyName];
-			sPath1 = str::fixDelims(sPath1);
-
-			std::string sPath2 = sRealPath;
-			if (sPath2[sPath2.size() - 1] != '\\') sPath2.push_back('\\');
-			sPath2 += dest[i][dabKeyRelativePath];
-			if (sPath2[sPath2.size() - 1] != '\\') sPath2.push_back('\\');
-			sPath2 += dest[i][dabKeyName];
-			sPath2 = str::fixDelims(sPath2);
-
+			std::string sPath1;
+			std::string sPath2;
 			try {
+				made += str::stringToLong(src[i][dabKeyLength]);
+
+				sPath1 = sRealPath;
+				if (sPath1[sPath1.size() - 1] != '\\') sPath1.push_back('\\');
+				sPath1 += src[i][dabKeyRelativePath];
+				if (sPath1[sPath1.size() - 1] == '\\') sPath1.erase(sPath1.size() - 1, 1);
+				sPath1 = str::fixDelims(sPath1);
+
+				sPath2 = sRealPath;
+				if (sPath2[sPath2.size() - 1] != '\\') sPath2.push_back('\\');
+				sPath2 += dest[i][dabKeyRelativePath];
+				if (sPath2[sPath2.size() - 1] == '\\') sPath2.erase(sPath2.size() - 1, 1);
+				sPath2 = str::fixDelims(sPath2);
+
 				if ((dest[i][dabKeyName] != "") && (sPath1 != sPath2)) {
 					if (!dabFile::Exists(dabToSysStr(sPath2.c_str()))) {
 						dabFile::Move(dabToSysStr(sPath1.c_str()), dabToSysStr(sPath2.c_str()));
@@ -318,23 +322,23 @@ void sdrive::modify(std::vector< std::map< std::string, std::string > > src,
 			}
 		} else {
 			/* Tworzenie folderu i/lub zapisywanie atrybutow folderu */
-			made += iDIR_CREATING_TIME;
-
-			std::string sPath1 = sRealPath;
-			if (sPath1[sPath1.size() - 1] != '\\') sPath1.push_back('\\');
-			sPath1 += src[i][dabKeyRelativePath];
-			if (sPath1[sPath1.size() - 1] != '\\') sPath1.push_back('\\');
-			sPath1 += src[i][dabKeyName];
-			sPath1 = str::fixDelims(sPath1);
-
-			std::string sPath2 = sRealPath;
-			if (sPath2[sPath2.size() - 1] != '\\') sPath2.push_back('\\');
-			sPath2 += dest[i][dabKeyRelativePath];
-			if (sPath2[sPath2.size() - 1] != '\\') sPath2.push_back('\\');
-			sPath2 += dest[i][dabKeyName];
-			sPath2 = str::fixDelims(sPath2);
-
+			std::string sPath1;
+			std::string sPath2;
 			try {
+				made += iDIR_CREATING_TIME;
+
+				sPath1 = sRealPath;
+				if (sPath1[sPath1.size() - 1] != '\\') sPath1.push_back('\\');
+				sPath1 += src[i][dabKeyRelativePath];
+				if (sPath1[sPath1.size() - 1] == '\\') sPath1.erase(sPath1.size() - 1, 1);
+				sPath1 = str::fixDelims(sPath1);
+
+				sPath2 = sRealPath;
+				if (sPath2[sPath2.size() - 1] != '\\') sPath2.push_back('\\');
+				sPath2 += dest[i][dabKeyRelativePath];
+				if (sPath2[sPath2.size() - 1] == '\\') sPath2.erase(sPath2.size() - 1, 1);
+				sPath2 = str::fixDelims(sPath2);
+
 				if ((dest[i][dabKeyName] != "") && (sPath1 != sPath2)) {
 					if (!dabDir::Exists(dabToSysStr(sPath2.c_str()))) {
 						dabDir::CreateDirectory(dabToSysStr(sPath2.c_str()));
@@ -361,7 +365,8 @@ void sdrive::copyInside(std::vector< std::map< std::string, std::string > > src,
 						 std::vector< std::map< std::string, std::string > > dest) {
 	long len = 0, made = 0;
 
-	/* TODO: Zapisywanie atrybutow plikow/folderow */
+	/* TODO: Zapisywanie atrybutow plikow/folderow
+			 Sprawdzanie zgodnosci nazwa plik - realPath/relativePath */
 
 	/* Szacowanie calkowitego czasu kopiowania */
 	try {
@@ -385,23 +390,23 @@ void sdrive::copyInside(std::vector< std::map< std::string, std::string > > src,
 
 		if (src[i][dabKeyAtrDirectory] == dabFalse) {
 			/* Zapisywanie pliku */
-			made += str::stringToLong(src[i][dabKeyLength]);
-
-			std::string sPath1 = sRealPath;
-			if (sPath1[sPath1.size() - 1] != '\\') sPath1.push_back('\\');
-			sPath1 += src[i][dabKeyRelativePath];
-			if (sPath1[sPath1.size() - 1] != '\\') sPath1.push_back('\\');
-			sPath1 += src[i][dabKeyName];
-			sPath1 = str::fixDelims(sPath1);
-
-			std::string sPath2 = sRealPath;
-			if (sPath2[sPath2.size() - 1] != '\\') sPath2.push_back('\\');
-			sPath2 += dest[i][dabKeyRelativePath];
-			if (sPath2[sPath2.size() - 1] != '\\') sPath2.push_back('\\');
-			sPath2 += dest[i][dabKeyName];
-			sPath2 = str::fixDelims(sPath2);
-
+			std::string sPath1;
+			std::string sPath2;
 			try {
+				made += str::stringToLong(src[i][dabKeyLength]);
+
+				sPath1 = sRealPath;
+				if (sPath1[sPath1.size() - 1] != '\\') sPath1.push_back('\\');
+				sPath1 += src[i][dabKeyRelativePath];
+				if (sPath1[sPath1.size() - 1] == '\\') sPath1.erase(sPath1.size() - 1, 1);
+				sPath1 = str::fixDelims(sPath1);
+
+				sPath2 = sRealPath;
+				if (sPath2[sPath2.size() - 1] != '\\') sPath2.push_back('\\');
+				sPath2 += dest[i][dabKeyRelativePath];
+				if (sPath2[sPath2.size() - 1] == '\\') sPath2.erase(sPath2.size() - 1, 1);
+				sPath2 = str::fixDelims(sPath2);
+
 				dabFile::Copy(dabToSysStr(sPath1.c_str()), dabToSysStr(sPath2.c_str()), true);
 			}
 			catch (...) {
@@ -411,16 +416,16 @@ void sdrive::copyInside(std::vector< std::map< std::string, std::string > > src,
 			}
 		} else {
 			/* Tworzenie folderu */
-			made += iDIR_CREATING_TIME;
-
-			std::string sPath = sRealPath;
-			if (sPath[sPath.size() - 1] != '\\') sPath.push_back('\\');
-			sPath += dest[i][dabKeyRelativePath];
-			if (sPath[sPath.size() - 1] != '\\') sPath.push_back('\\');
-			sPath += dest[i][dabKeyName];
-			sPath = str::fixDelims(sPath);
-
+			std::string sPath;
 			try {
+				made += iDIR_CREATING_TIME;
+
+				sPath = sRealPath;
+				if (sPath[sPath.size() - 1] != '\\') sPath.push_back('\\');
+				sPath += dest[i][dabKeyRelativePath];
+				if (sPath[sPath.size() - 1] == '\\') sPath.erase(sPath.size() - 1, 1);
+				sPath = str::fixDelims(sPath);
+
 				if (!dabDir::Exists(dabToSysStr(sPath.c_str()))) {
 					dabDir::CreateDirectory(dabToSysStr(sPath.c_str()));
 				}
@@ -442,7 +447,8 @@ void sdrive::copyInside(std::vector< std::map< std::string, std::string > > src,
 std::vector< std::map< std::string, std::string > > sdrive::getContent(std::string path) {
 	std::vector< std::map< std::string, std::string > > content(0);
 
-	/* TODO: Pobieranie informacji o atrybutach plikow/folderow */
+	/* TODO: Pobieranie informacji o atrybutach plikow/folderow
+			 Sprawdzanie zgodnosci nazwa plik - realPath/relativePath */
 	
 	/* Przygotowywanie listy plikow i folderow */
 	System::String^ fullPath;
@@ -482,13 +488,23 @@ std::vector< std::map< std::string, std::string > > sdrive::getContent(std::stri
 				fSysInfo = gcnew dabFileInfo(subDirs[i]->ToString());
 			}
 
+			//Folder
+			if (((fSysInfo->Attributes) & (dabFAtr::Directory)) == dabFAtr::Directory) {
+				dirEntry[dabKeyAtrDirectory] = dabTrue;
+			} else {
+				dirEntry[dabKeyAtrDirectory] = dabFalse;
+			}
+
 			//Nazwa i sciezka rzeczywista
 			sTemp = str::sysStrToCppStr(dabIoPath::GetDirectoryName(subDirs[i]->ToString()));
-			std::string::size_type pos = sTemp.length() - 1;
-			if (sTemp[pos] != '\\') sTemp.push_back('\\');
+			if (sTemp[sTemp.length() - 1] != '\\') sTemp.push_back('\\');
 			sTemp = str::fixDelims(sTemp);
 			dirEntry[dabKeyName] = str::sysStrToCppStr(dabIoPath::GetFileName(subDirs[i]->ToString()));
-			dirEntry[dabKeyRealPath] = sTemp;
+			dirEntry[dabKeyRealPath] = sTemp + dirEntry[dabKeyName];
+			int iTemp = (dirEntry[dabKeyRealPath]).size();
+			if ((dirEntry[dabKeyAtrDirectory] == dabTrue) && (dirEntry[dabKeyRealPath][iTemp - 1] != '\\')) {
+				dirEntry[dabKeyRealPath] += "\\";
+			}
 
 			//Data utworzenia
 			sTemp = str::sysStrToCppStr(fSysInfo->CreationTimeUtc.Day.ToString()) + ".";
@@ -578,13 +594,6 @@ std::vector< std::map< std::string, std::string > > sdrive::getContent(std::stri
 				dirEntry[dabKeyAtrReadOnly] = dabTrue;
 			} else {
 				dirEntry[dabKeyAtrReadOnly] = dabFalse;
-			}
-
-			//Folder
-			if (((fSysInfo->Attributes) & (dabFAtr::Directory)) == dabFAtr::Directory) {
-				dirEntry[dabKeyAtrDirectory] = dabTrue;
-			} else {
-				dirEntry[dabKeyAtrDirectory] = dabFalse;
 			}
 
 			delete fSysInfo;
