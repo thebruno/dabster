@@ -50,6 +50,14 @@ void drvLst::remove(int index) {
 	vDrives.erase(vDrives.begin() + index);
 }
 
+/* Czysci liste usuwajac wskazywane przez liste elementy */
+void drvLst::clear(void) {
+	for (int i = 0; i < vDrives.size(); i++) {
+		if (vDrives[i]) delete vDrives[i];
+	}
+	vDrives.clear();
+}
+
 /* Zwraca dysk o wybranym numerze */
 drive* drvLst::get(int index) {
 	return vDrives[index];
@@ -89,9 +97,9 @@ void drvLst::refresh(void) {
 }
 
 /* Zwraca index elementu o podanej nazwie */
-int drvLst::find(std::string name) {
+int drvLst::find(std::string path) {
 	for (unsigned int i = 0; i < vDrives.size(); i++) {
-		if (vDrives[i]->getRealPath() == name) return i;
+		if (vDrives[i]->getRealPath() == path) return i;
 	}
 	return iNOT_FOUND;
 }

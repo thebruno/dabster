@@ -32,10 +32,12 @@
 #include "com.h"
 #include "set.h"
 #include "str.h"
+
 #include "sfolder.h"
-#include "file.h"
-#include "drive.h"
-#include "bmp.h"
+#include "sfile.h"
+#include "sdrive.h"
+#include "drvLst.h"
+#include "oStck.h"
 
 const int iMENU_ITEMS = 7;
 const int iTOOLS_PANELS = 10;
@@ -84,6 +86,8 @@ System::Void dabster::frmMain::frmMain_Load(System::Object^ sender,
 	loadTools();
 	loadStat();
 
+	/* Testy klasy sfolder */
+
 	sfolder p;
 	p.setRealPath("D:\\");
 	std::vector< std::map< std::string, std::string > > y = p.getContent("Metzger\\");
@@ -127,6 +131,46 @@ System::Void dabster::frmMain::frmMain_Load(System::Object^ sender,
 	vmTempSrc[1][dabKeyAtrDirectory] = dabTrue;
 
 	p.del(vmTempSrc);
+
+	vmTempDst.resize(3);
+	vmTempDst[2] = vmTempDst[0];
+	vmTempDst[0] = vmTempDst[1];
+	vmTempDst[1] = vmTempDst[2];
+	vmTempDst.resize(2);
+
+	p.del(vmTempDst);
+
+	/* Testy oStck */
+
+	oStck s;
+	drvLst dl;
+	folder *f;
+	int i;
+
+	/* D:\ */
+	dl.refresh();
+	if ((i = dl.find("D:\\")) == drvLst::iNOT_FOUND) return;
+	s.push(dl.get(i));
+
+	/* Metzger\ */
+	if ((s.type(0) & dabFolder) == dabFolder) f = dynamic_cast< folder* >(s.get(0));
+	std::vector< std::map< std::string, std::string > > cntnt = f->getContent();
+	i = 0;
+	while (i < static_cast< int >(cntnt.size())) {
+		if (cntnt[i][dabKeyName] == "Metzger") break;
+		i++;
+	}
+	if (i == cntnt.size()) return;
+	f = new sfolder();
+	f->setName("Metzger");
+	f->setRealPath("D:\\Metzger\\");
+	s.push(dynamic_cast< item* >(f));
+
+	i = s.parent(1);
+
+	dl.clear();
+	s.clear();
+
 }
 
 /* Zmiana rozmiaru frmMain */

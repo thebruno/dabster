@@ -46,7 +46,7 @@ public:
 	virtual void modify(std::vector< std::map< std::string, std::string > > src, std::vector< std::map< std::string, std::string > > dest) = 0;
 	virtual void copyInside(std::vector< std::map< std::string, std::string > > src, std::vector< std::map< std::string, std::string > > dest) = 0;
 
-	virtual std::vector< std::map< std::string, std::string > > getContent(std::string path) = 0;
+	virtual std::vector< std::map< std::string, std::string > > getContent(std::string path = "") = 0;
 };
 
 #endif
