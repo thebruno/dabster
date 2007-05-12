@@ -894,7 +894,7 @@ namespace bmp {
 				if ((BufBitPosp + 1 < BitDataCount)) {
 					Buf[BufBytePosp] = (Buf[BufBytePosp] & ExOne[BufBitPosp % 8]) | (DabBit & One[BufBitPosp % 8]);
 					++BufBitPosp;
-					// nie zwiekszamy liczebnosci danych, bo dane bitmapy s¹ ju¿ w buforze!!
+					// nie zwiekszamy liczebnosci danych, bo dane bitmapy sa juz w buforze!!
 					if (!(BufBitPosp % 8)) {
 						++BufBytePosp;
 						BufBitPosp += Seek;
@@ -1025,7 +1025,7 @@ namespace bmp {
 	 * Ustawienie noewej kompresji.
 	 * 
 	 * \param Dabcompr
-	 * Nowa kompresja, dozwolone wartoœæi od 1 do 7.
+	 * Nowa kompresja, dozwolone wartosci od 1 do 7.
 	 *
 	 */
 	void BMP_BUFFOR::SetCompr(uint8 Dabcompr) {
@@ -2019,7 +2019,7 @@ namespace bmp {
 		// 1 - na operacje dodatkowe
 		PrgrsTask = FilesToDel + 1;
 		PrgrsFin = 1; 
-		pProgress.show((100 * PrgrsFin) /PrgrsTask);
+		pProgress.show((100 * PrgrsFin) / PrgrsTask);
 		// przerwano kasowanie:
 		if (bCanceled) {
 			DabHeader = DabHeaderCopy;
@@ -2148,7 +2148,7 @@ namespace bmp {
 	 */
 	void BMP::store(vmstring Dabsrc, vmstring Dabdest) {
 		pProgress.show(0);
-		int PrgrsTask = 0, PrgrsFin = (int)Dabsrc.size() + 1;
+		int PrgrsFin = 0, PrgrsTask = (int)Dabsrc.size() + 1;
 		// czy odczytano naglowki?
 		BmpBuf.SetCompr(ReadCompr());
 		ReadDabHeader();
@@ -2264,7 +2264,7 @@ namespace bmp {
 	 */
 	void BMP::extract(vmstring Dabsrc, vmstring Dabdest) {
 		pProgress.show(0);
-		int PrgrsTask = 0, PrgrsFin = (int) Dabsrc.size() + 1;
+		int PrgrsFin = 0, PrgrsTask = (int) Dabsrc.size() + 1;
 		BmpBuf.SetCompr(ReadCompr());
 		ReadDabHeader();
 		if (!IsDab()) {
@@ -2331,7 +2331,7 @@ namespace bmp {
 	 */
 	void BMP::copyInside(vmstring DabSrc, vmstring DabDest) {
 		pProgress.show(0);
-		int PrgrsTask = 0, PrgrsFin = (int) DabSrc.size() + 1;
+		int PrgrsFin = 0, PrgrsTask = (int) DabSrc.size() + 1;
 		// czy odczytano naglowki?
 		BmpBuf.SetCompr(ReadCompr());
 		ReadDabHeader();
@@ -2447,7 +2447,7 @@ namespace bmp {
 	 */
 	void BMP::modify(vmstring DabOldPath, vmstring DabNewPath) {
 		pProgress.show(0);
-		int PrgrsTask = 0, PrgrsFin = (int) DabOldPath.size() + 2;
+		int PrgrsFin = 0, PrgrsTask = (int) DabOldPath.size() + 2;
 		// czy odczytano naglowki?
 		BmpBuf.SetCompr(ReadCompr());
 		ReadDabHeader();
@@ -2723,7 +2723,7 @@ namespace bmp {
 		std::vector<FILE_HEADER*>::iterator i;
 		std::stringstream s;
 		pProgress.show(0);
-		int PrgrsTask = 0, PrgrsFin = (int) FilesHeaders.size() + 1;
+		int PrgrsFin = 0, PrgrsTask = (int) FilesHeaders.size() + 1;
 		for (i = FilesHeaders.begin(); i!= FilesHeaders.end(); ++i) {
 		pProgress.show((100 * PrgrsFin++) / PrgrsTask);
 			if (!Dabpath.size() || (*i)->FileName.substr(0, Dabpath.size()) == Dabpath) {

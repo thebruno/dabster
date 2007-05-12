@@ -43,7 +43,8 @@ namespace bmp {
 	const uint32 BUFFOR_SIZE = 512; /*!< Wielkosc bufora, minimum 512 byteow. */
 	const uint32 SYGNATURE = 0x08064b50; /*!< Sygnatura, zapisywana do pliku. */
 	const uint32 DABSTER_NAME = 0x35424144; /*!< Nazwa = "DAB5". */
-	const uint8 BitSet = 0xFF, BitNSet = 0x00; /*!< Bit ustawiony, bit nieustawiony. */
+	const uint8 BitSet = 0xFF; /*!< Bit ustawiony. */
+	const uint8  BitNSet = 0x00; /*!< Bit nieustawiony. */
 	
 	const uint32 BMP_HEADER_BYTE_SIZE = 54; /*!< Wielkosc naglowka BMP. */
 	const uint32 DAB_HEADER_BYTE_SIZE = 21; /*!< Wielkosc naglowka DAB. */
