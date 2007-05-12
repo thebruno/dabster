@@ -34,16 +34,15 @@
 #include "drive.h"
 #include "sfile.h"
 
-
 #pragma pack(push, BMP_DABSTER_PACKING)
 
 namespace bmp {
 	using namespace bmptypes;
 
 	const uint16 BMP_CURRENT_VERSION = 1; /*!< Aktualna wersja. */
-	const uint32 BUFFOR_SIZE = 512; /*!< Wielkosc bufora Minimum 512 byteow. */
+	const uint32 BUFFOR_SIZE = 512; /*!< Wielkosc bufora, minimum 512 byteow. */
 	const uint32 SYGNATURE = 0x08064b50; /*!< Sygnatura, zapisywana do pliku. */
-	const uint32 DABSTER_NAME = 0x35424144; /*!< Nazwa = DAB5. */
+	const uint32 DABSTER_NAME = 0x35424144; /*!< Nazwa = "DAB5". */
 	const uint8 BitSet = 0xFF, BitNSet = 0x00; /*!< Bit ustawiony, bit nieustawiony. */
 	
 	const uint32 BMP_HEADER_BYTE_SIZE = 54; /*!< Wielkosc naglowka BMP. */
@@ -55,7 +54,7 @@ namespace bmp {
 	 * \brief
 	 * Naglowek bitmapy.
 	 * 
-	 * Zawiera naglowek standordowej bitmapy w wersji 5.
+	 * Zawiera naglowek standardowej bitmapy w wersji 5.
 	 */
 	struct BMP_HEADER {
 	public:
@@ -78,7 +77,7 @@ namespace bmp {
 		uint8 biCrlRotation; /*!<  Flaga sygnalizujaca czy ma nastepowaæ rotacja palety. */
 		uint16 biReserved; /*!< Nie uzywane. */
 	public:
-		uint32 biUsefulData; /*!<  = biWidth * biHeight * 3 B. */
+		uint32 biUsefulData; /*!< = biWidth * biHeight * 3 B. */
 		BMP_HEADER();
 	};
 
@@ -86,9 +85,9 @@ namespace bmp {
 	 * \brief
 	 * Naglowek Dabstera.
 	 * 
-	 * Naglowek Dabstera zapisywany do plikow bmp.
+	 * Naglowek Dabstera zapisywany do plikow bmp. Wielkosc 21 bajtow
 	 */
-	class DAB_HEADER { //  4+2+4+4+2+4 = 20bajtow
+	class DAB_HEADER { //  4+4+2+1+2+4+4 = 21 bajtow
 	private:
 		uint32 Sygn; /*!<  sygnatura ustawiana przez program. */
 		uint32 DabName; /*!<  "DAB5" - na dysku 4 bajty. */
@@ -103,7 +102,6 @@ namespace bmp {
 		uint64 CompressionStart; /*!<  pierszy bit kompresji. */
 	public:
 		DAB_HEADER();
-		~DAB_HEADER();
 		friend class BMP;
 	};
 
@@ -111,9 +109,9 @@ namespace bmp {
 	 * \brief
 	 * Naglowek kazdego pliku lub folderu w bitmapie.
 	 * 
-	 * Naglowek kazdego pliku lub folderu w bitmapie.zapisywany do plikow bmp.
+	 * Naglowek kazdego pliku lub folderu w bitmapie. Zapisywany do plikow bmp. Wielkosc 12B + dlugosc nazwy
 	 */
-	class FILE_HEADER { // 4 + 4 + 2 + x = 10 B + x B
+	class FILE_HEADER { // 4 + 4 + 2 + 2 + x = 12 B + x B
 	private:
 		uint32 DataSize; /*!< Ilosc danych (w bajtach) zapisana w pliku. */
 		uint32 TimeDate; /*!<  Data i czas spakowania. */
@@ -128,7 +126,6 @@ namespace bmp {
 		//pozycje plikow w bitmapie
 	public:
 		FILE_HEADER();
-		~FILE_HEADER();
 		friend class BMP;
 	};
 
@@ -136,7 +133,7 @@ namespace bmp {
 	 * \brief
 	 * Klasa bufor zarzadzajaca operacjami na plikach.
 	 * 
-	 * Klasa bufor ktora umozliwia operacje na plikach i ich buforowanie.
+	 * Klasa bufor ktora dostarczajaca operacji na plikach, wraz z ich buforowaniem. Umozliwia odczyt, zapis po jednym bicie do pliku oraz wygodne poruszanie sie po nim.
 	 */
 	class BUFFOR {
 	public:
@@ -147,19 +144,19 @@ namespace bmp {
 		static const uint8 ExOne [8]; /*!<  Ustawione wszystkie POZA jednym bitem. */
 	protected:
 		fstream File; /*!< Plik. */
-		uint8 Buf[BUFFOR_SIZE]; /*!< unsigned char buffor. */
+		uint8 Buf[BUFFOR_SIZE]; /*!< Unsigned char buffor. */
 
-		uint32 BufSize; /*!<  wielkosc bufora. */
-		uint64 BufBitSize ; /*!<  wielkosc bufora w bitach. */
-		uint32 FileSize; /*!<  wielkosc otwartego pliku typu std::fstream. */
+		uint32 BufSize; /*!< Wielkosc bufora. */
+		uint64 BufBitSize ; /*!< Wielkosc bufora w bitach. */
+		uint32 FileSize; /*!< Wielkosc otwartego pliku typu std::fstream. */
 
-		uint32 DataCount; /*!<  ilosc danych. */
-		uint64 BitDataCount; /*!<  ilosc danych w bitach. */
+		uint32 DataCount; /*!< Ilosc danych w bajtach. */
+		uint64 BitDataCount; /*!< Ilosc danych w bitach. */
 
-		uint32 BufBytePosp; /*!<  pozycja wskaznika w buforze put. */
-		uint32 BufBitPosp; /*!<  pozycja bitu w bajcie wskazywanym przez bufBytePos put. */
-		uint32 BufBytePosg; /*!<  pozycja wskaznika w buforze get. */
-		uint32 BufBitPosg; /*!<  pozycja bitu w bajcie wskazywanym przez bufBytePos get. */
+		uint32 BufBytePosp; /*!< Pozycja wskaznika w buforze put. */
+		uint32 BufBitPosp; /*!< Pozycja bitu w bajcie wskazywanym przez bufBytePos put. */
+		uint32 BufBytePosg; /*!< Pozycja wskaznika w buforze get. */
+		uint32 BufBitPosg; /*!< Pozycja bitu w bajcie wskazywanym przez bufBytePos get. */
 
 		BUFFOR_MODE BufMode; /*!< Tryb pracy buforwa. */
 		BUFFOR_STATE BufState; /*!< Aktualny stan. */
@@ -171,7 +168,6 @@ namespace bmp {
 
 		void OpenFile(string path, std::ios_base::open_mode DabFileMode, BUFFOR_MODE DabBufMode);
 
-		// do przegladniecia
 		uint8 GetBit();
 		void PutBit(uint8 DabBit);
 		uint8 GetByte();
@@ -188,10 +184,9 @@ namespace bmp {
 		const uint32 BufBitTellp() const;
 
 		void Fill();
-
 		void Flush();
-		void SetReadSize(uint32 DabNewSize = BUFFOR_SIZE);
 
+		void SetReadSize(uint32 DabNewSize = BUFFOR_SIZE);
 		void SetMode(BUFFOR_MODE DabbufMode);
 		void CloseFile();
 
@@ -211,10 +206,10 @@ namespace bmp {
 		enum SEEKWAY {BEGINING, FORWARD, BACKWARD};
 	private:
 		BMP_HEADER* BmpHeader;
-		uint32 BytePosg; /*!< pozycja w pliku glowicy odczytujacej (w bajtach). */
-		uint32 BytePosp; /*!< pozycja w pliku glowicy zapisujacej (w bajtach). */
-		uint64 BitPosg; /*!< pozycja w pliku glowicy odczytujacej (w bitach). */
-		uint64 BitPosp; /*!< pozycja w pliku glowicy zapisujacej (w bitach). */
+		uint32 BytePosg; /*!< Pozycja w pliku glowicy odczytujacej (w bajtach). */
+		uint32 BytePosp; /*!< Pozycja w pliku glowicy zapisujacej (w bajtach). */
+		uint64 BitPosg; /*!< Pozycja w pliku glowicy odczytujacej (w bitach). */
+		uint64 BitPosp; /*!< Pozycja w pliku glowicy zapisujacej (w bitach). */
 
 		uint32 ModReminder; /*!<  = BmpWidth % 4 = tylma zerami jest dopelniany wiersz aby dzielil sie przez 4. */
 		uint32 ModWidth; /*!<  = 3 * bmpwidth + reminder = dlugosc wiersza, liczac dopelniajace zera. */
@@ -227,13 +222,8 @@ namespace bmp {
 		void BufBitSeekg(uint32 DabNewPos){}
 		void BufBitSeekp(uint32 DabNewPos){}
 	public:
-		uint64 FileSizeInBmp(uint64 DabSize,  uint64 DabCurPos, bool DabDirection = true); //  konwertuje wielkosc pliku w bitach na wielkosc tego pliku w bitach w bitmapie
-		// bierze pod uwage kompresje, oraz ilosc zer wyrownujacych
-
-		// czy to odzwierciedla pozycje po przeczytaniu czy nie??:/
-		// co gdyby zakomentowac naglowek funkcji??
-		// jak to sie ma do dziedziczenia?
-
+		uint64 FileSizeInBmp(uint64 DabSize,  uint64 DabCurPos);
+		
 		void BitSeekg(uint64 DabnewPos, SEEKWAY DabSeekWay = BEGINING);		
 		void BitSeekp(uint64 DabnewPos, SEEKWAY DabSeekWay = BEGINING);
 
@@ -260,7 +250,6 @@ namespace bmp {
 
 		BMP_BUFFOR();
 		BMP_BUFFOR(BMP_HEADER* DabBmpHeader);
-		~BMP_BUFFOR();
 	};
 
 	/*!
@@ -270,23 +259,14 @@ namespace bmp {
 	 * Uzytecznosc taka jak dla klasy podstawowej.
 	 */
 	class FILE_BUFFOR: public BUFFOR {
-	public:
-		FILE_BUFFOR();
-		~FILE_BUFFOR();
 	};
 
-	/*!
-	 * \brief
-	 * Sprawdza czy plik jest bitmapa
-	 * 
-	 * Funkcja sprawdzajaca czy plik jest prawidlowa i obslugiwana bitmapa.
-	 */
 	int isBmp(sfile DabFile);
 
 	/*!
 	 * \brief
 	 * Klasa BMP.
-	 * 
+	 *
 	 * Wykonuje wszyskie operacje na bitmapach i plikach.
 	 */
 	class BMP: public drive, public file {

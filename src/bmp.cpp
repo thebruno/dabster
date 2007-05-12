@@ -32,18 +32,13 @@
 namespace bmp {
 	const uint8 BUFFOR::One [8] = {0x80, 0x40, 0x20, 0x10, 0x08, 0x04, 0x02, 0x01};
 	const uint8 BUFFOR::ExOne  [8] = {0x7F, 0xBF, 0xDF, 0xEF, 0xF7, 0xFB, 0xFD, 0xFE};
-
 //********************class DabHeader********************//
 	/*!
 	 * \brief
-	 * Write brief comment for BMP_HEADER here.
+	 * Konstruktor naglowka bitmapy.
 	 * 
-	 * \throws <exception class>
-	 * Description of criteria for throwing this exception.
-	 * 
-	 * Write detailed description for BMP_HEADER here.
+	 * BMP_HEADER wykonuje inicjalizacjie (zerowanie) struktury przechowujacej informacjie o aktualnym pliku bmp.
 	 */
-
 	BMP_HEADER::BMP_HEADER() {
 		bfType = 0; 
 		bfSize = 0; 
@@ -69,12 +64,9 @@ namespace bmp {
 //********************class DabHeader********************//
 	/*!
 	 * \brief
-	 * Write brief comment for DAB_HEADER here.
+	 * Konstruktor naglowka Dabstera.
 	 * 
-	 * \throws <exception class>
-	 * Description of criteria for throwing this exception.
-	 * 
-	 * Write detailed description for DAB_HEADER here.
+	 * DAB_HEADER wykonuje inicjalizacjie (zerowanie) struktury przechowujacej naglowek Dbastera w plikach bmp.
 	 */
 	DAB_HEADER::DAB_HEADER() {
 		Sygn = 0;
@@ -88,18 +80,13 @@ namespace bmp {
 		FirstFileStart = 0;
 		CompressionStart = 0;
 	}
-	DAB_HEADER::~DAB_HEADER() {
-	}
 //********************end of class DabHeader********************//
 //********************class FILE_HEADER********************//
 	/*!
 	 * \brief
-	 * Write brief comment for FILE_HEADER here.
+	 * Konstruktor naglowka pliku lub folderu.
 	 * 
-	 * \throws <exception class>
-	 * Description of criteria for throwing this exception.
-	 * 
-	 * Write detailed description for FILE_HEADER here.
+	 * FILE_HEADER wykonuje inicjalizacjie (zerowanie) struktury przechowujacej naglowek kazdego pliku lub folderu zapisanego w pliku bmp.
 	 */
 	FILE_HEADER::FILE_HEADER(){
 		DataSize = 0;
@@ -111,11 +98,14 @@ namespace bmp {
 		HeaderStart = 0;
 		DataStart = 0;
 	}
-
-	FILE_HEADER::~FILE_HEADER() {
-	}
 //********************end of class FILE_HEADER********************//
 //********************class BUFFOR********************//
+	/*!
+	 * \brief
+	 * Konstruktor klasy BUFFOR.
+	 *
+	 * BUFFOR wykonuje inicjalizacjie (zerowanie) bufora.
+	 */
 	BUFFOR::BUFFOR() {
 		FileSize = 0;
 		BufSize = BUFFOR_SIZE;
@@ -130,28 +120,33 @@ namespace bmp {
 		BufState = BUF_BAD;
 		BufMode = BUF_TRANSFER;
 	}
-
+	/*!
+	 * \brief
+	 * Destruktor ~BUFFOR.
+	 *
+	 * ~BUFFOR zamyka plik.
+	 */
 	BUFFOR::~BUFFOR() {
 		File.close();
 	}
 
 	/*!
 	 * \brief
-	 * Write brief comment for OpenFile here.
+	 * OpenFile otwiera plik i ustawia tryb pracy.
 	 * 
 	 * \param path
-	 * Description of parameter path.
+	 * Rzeczywista sciezka dostepu.
 	 * 
 	 * \param DabFileMode
-	 * Description of parameter DabFileMode.
+	 * Tryb otwarcia pliku.
 	 * 
 	 * \param DabBufMode
-	 * Description of parameter DabBufMode.
+	 * Tryb pracy bufora.
 	 * 
 	 * \throws <exception class>
-	 * Description of criteria for throwing this exception.
+	 * Gdy plik nie istnieje.
 	 * 
-	 * Write detailed description for OpenFile here.
+	 * Otwiera plik, ustawia tryb pracy i oblicza jego wielkosc.
 	 */
 	void BUFFOR::OpenFile(std::string DabPath, std::ios_base::open_mode DabFileMode, BUFFOR_MODE DabBufMode) {
 		File.open(DabPath.c_str(), DabFileMode | std::ios_base::binary);
@@ -169,15 +164,15 @@ namespace bmp {
 
 	/*!
 	 * \brief
-	 * Write brief comment for GetBit here.
+	 * Pobranie jednego bita z bufora.
 	 * 
 	 * \returns
-	 * Write description of return value here.
+	 * Zwraca 0xFF lub 0x00.
 	 * 
 	 * \throws <exception class>
-	 * Description of criteria for throwing this exception.
+	 * Rzuca wyjatek, gdy nastepuje proba wykonania niedozwolonej operacji na buforze.
 	 * 
-	 * Write detailed description for GetBit here.
+	 * Zwraca wartosc aktualnego bitu w buforze.
 	 */
 	uint8 BUFFOR::GetBit() {
 		switch (BufMode) { 
@@ -209,7 +204,7 @@ namespace bmp {
 						Result = BitNSet;
 					//wczytanie
 					File.clear();
-					File.read((char *)Buf,ReadSize);
+					File.read((char *)Buf, ReadSize);
 					DataCount = File.gcount();
 					BitDataCount = 8 * DataCount;
 					if (!DataCount) {
@@ -273,15 +268,15 @@ namespace bmp {
 
 	/*!
 	 * \brief
-	 * Write brief comment for PutBit here.
+	 * Zapis jednego bita do bufora.
 	 * 
 	 * \param DabBit
-	 * Description of parameter DabBit.
+	 * Wartosc zapisywanego bita 0xFF lub 0x00.
 	 * 
 	 * \throws <exception class>
-	 * Description of criteria for throwing this exception.
+	 * Rzuca wyjatek, gdy nastepuje proba wykonania niedozwolonej operacji na buforze.
 	 * 
-	 * Write detailed description for PutBit here.
+	 * Zapisuje wartosc bitu przeslanego w prametrze pod aktualna pozycje w buforze.
 	 */
 	void BUFFOR::PutBit(uint8 DabBit) {
 		switch (BufMode) {
@@ -348,15 +343,15 @@ namespace bmp {
 
 	/*!
 	 * \brief
-	 * Write brief comment for GetByte here.
+	 * Pobranie jednego bajta z bufora.
 	 * 
 	 * \returns
-	 * Write description of return value here.
+	 * Zwraca 0xFF lub 0x00.
 	 * 
 	 * \throws <exception class>
-	 * Description of criteria for throwing this exception.
+	 * Rzuca wyjatek, gdy nastepuje proba wykonania niedozwolonej operacji na buforze.
 	 * 
-	 * Write detailed description for GetByte here.
+	 * Zwraca wartosc aktualnego bajtu w buforze.
 	 */
 	uint8 BUFFOR::GetByte() {
 		switch (BufMode) {
@@ -420,15 +415,15 @@ namespace bmp {
 
 	/*!
 	 * \brief
-	 * Write brief comment for PutByte here.
+	 * Zapis jednego bajtu do bufora.
 	 * 
 	 * \param DabByte
-	 * Description of parameter DabByte.
+	 * Wartosc zapisywanego bajtu 0xFF lub 0x00.
 	 * 
 	 * \throws <exception class>
-	 * Description of criteria for throwing this exception.
+	 * Rzuca wyjatek, gdy nastepuje proba wykonania niedozwolonej operacji na buforze.
 	 * 
-	 * Write detailed description for PutByte here.
+	 * Zapisuje wartosc bajtu przeslanego w prametrze pod aktualna pozycje w buforze.
 	 */
 	void BUFFOR::PutByte(uint8 DabByte) {
 		switch (BufMode) {
@@ -488,12 +483,11 @@ namespace bmp {
 
 	/*!
 	 * \brief
-	 * Write brief comment for GetFileSize here.
+	 * Pobiera wielkosc pliku.
 	 * 
 	 * \returns
-	 * Write description of return value here.
+	 * Zwraca wielkosc pliku w bajtach.
 	 * 
-	 * Write detailed description for GetFileSize here.
 	 */
 	inline const uint32 BUFFOR::GetFileSize() const {
 		return FileSize;
@@ -501,11 +495,11 @@ namespace bmp {
 
 	/*!
 	 * \brief
-	 * Write brief comment for GetBufState here.
+	 * Pobiera stan bufora.
 	 * 
 	 * \returns
-	 * Write description of return value here.
-	 * Write detailed description for GetBufState here.
+	 * Zwraca aktualny stan bufora.
+	 * 
 	 */
 	inline const BUFFOR::BUFFOR_STATE BUFFOR::GetBufState() const {
 		return BufState;
@@ -513,11 +507,12 @@ namespace bmp {
 
 	/*!
 	 * \brief
-	 * Write brief comment for SetMode here.
+	 * Ustawia tryb bufora.
 	 * 
 	 * \param DabbufMode
-	 * Description of parameter DabbufMode.
-	 * Write detailed description for SetMode here.
+	 * Okresla nowy stan bufora.
+	 *
+	 * Zmienia stan bufora na ten przyslany w parametrze.
 	 */
 	void BUFFOR::SetMode(BUFFOR_MODE DabBufMode) {
 		BufMode = DabBufMode;
@@ -534,21 +529,18 @@ namespace bmp {
 
 	/*!
 	 * \brief
-	 * Write brief comment for CloseFile here.
-
-	 * Write detailed description for CloseFile here.
+	 * Zamkniecie pliku.
+	 *
 	 */
 	void BUFFOR::CloseFile() {
 		BufReset();
 		File.close();
 	}
-
-	// zeruje calkowice bufor
 	/*!
 	 * \brief
-	 * Write brief comment for BufReset here.
+	 * Zerowanie bufora.
 	 * 
-	 * Write detailed description for BufReset here.
+	 * Resetuje bufor i ustawia stan poczatkowy.
 	 */
 	void BUFFOR::BufReset()	{
 		File.clear();
@@ -565,8 +557,14 @@ namespace bmp {
 	}
 
 //**************** "chodzenie po buforze"*******************//
-// przy getach i Putach poprawic - dodac zmiane pozycji posg i posp
-// dodac warunek dla danych
+	/*!
+	 * \brief
+	 * Ustawienie pozycji w bajtach do odczytu.
+	 *
+	 * \throws <exception class>
+	 * Rzuca wyjatek, gdy nastepuje proba wykonania niedozwolonej operacji na buforze.
+	 *
+	 */
 	void BUFFOR::BufByteSeekg(uint32 DabnewPos) {
 		if (DabnewPos >= 0 && DabnewPos < DataCount) {
 			BufBytePosg = DabnewPos;
@@ -575,7 +573,14 @@ namespace bmp {
 		else 
 			throw BMP_INTERNAL_ERROR();
 	}
-
+	/*!
+	 * \brief
+	 * Ustawienie pozycji w bajtach do zapisu.
+	 *
+	 * \throws <exception class>
+	 * Rzuca wyjatek, gdy nastepuje proba wykonania niedozwolonej operacji na buforze.
+	 *
+	 */
 	void BUFFOR::BufByteSeekp(uint32 DabnewPos) {
 		if (DabnewPos >= 0 && DabnewPos < DataCount) {
 			BufBytePosp = DabnewPos;
@@ -584,7 +589,14 @@ namespace bmp {
 		else 
 			throw BMP_INTERNAL_ERROR();
 	}
-
+	/*!
+	 * \brief
+	 * Ustawienie pozycji w bitach do odczytu.
+	 *
+	 * \throws <exception class>
+	 * Rzuca wyjatek, gdy nastepuje proba wykonania niedozwolonej operacji na buforze.
+	 *
+	 */
 	void BUFFOR::BufBitSeekg(uint32 DabnewPos) {
 		if (DabnewPos >= 0 && DabnewPos < BitDataCount) {
 			BufBitPosg = DabnewPos;
@@ -593,7 +605,14 @@ namespace bmp {
 		else 
 			throw BMP_INTERNAL_ERROR();
 	}
-
+	/*!
+	 * \brief
+	 * Ustawienie pozycji w bitach do zapisu.
+	 *
+	 * \throws <exception class>
+	 * Rzuca wyjatek, gdy nastepuje proba wykonania niedozwolonej operacji na buforze.
+	 *
+	 */
 	void BUFFOR::BufBitSeekp(uint32 DabnewPos) {
 		if (DabnewPos >= 0 && DabnewPos < BitDataCount) {
 			BufBitPosp = DabnewPos;
@@ -602,66 +621,46 @@ namespace bmp {
 		else 
 			throw BMP_INTERNAL_ERROR();
 	}
-
+	/*!
+	 * \brief
+	 * Pobranie aktualnej pozycji do odczytu w buforze w bajtach.
+	 */
 	const uint32 BUFFOR::BufByteTellg() const {
 		return BufBytePosg;
 	}
-
+	/*!
+	 * \brief
+	 * Pobranie aktualnej pozycji do zapisu w buforze w bajtach.
+	 */
 	const uint32 BUFFOR::BufByteTellp() const {
 		return BufBytePosp;
 	}
-
+	/*!
+	 * \brief
+	 * Pobranie aktualnej pozycji do odczytu w buforze w bitach.
+	 */
 	const uint32 BUFFOR::BufBitTellg() const {
 		return BufBitPosg;
 	}
-
+	/*!
+	 * \brief
+	 * Pobranie aktualnej pozycji do zapisu w buforze w bitach.
+	 */
 	const uint32 BUFFOR::BufBitTellp() const {
 		return BufBitPosp;
 	}
-
-	inline uint32 & BMP_BUFFOR::GetModReminder() {
-		return ModReminder;
-	}
-
-	inline uint32 & BMP_BUFFOR::GetModWidth() {
-		return ModWidth;
-	}
-
 	/*!
 	 * \brief
-	 * Write brief comment for GetModReminder here.
-	 * 
-	 * \returns
-	 * Write description of return value here.
+	 * Napelnienie bufora.
 	 *
-	 * Write detailed description for GetModReminder here.
-	 */
-	inline const uint32 & BMP_BUFFOR::GetModReminder() const {
-		return ModReminder;
-	}
-
-	/*!
-	 * \brief
-	 * Write brief comment for GetModWidth here.
+	 * \throws <exception class>
+	 * Rzuca wyjatek przy bledach odczytu zapisu.
 	 * 
-	 * \returns
-	 * Write description of return value here.
-	 * 
-	 * Write detailed description for GetModWidth here.
-	 */
-	inline const uint32 & BMP_BUFFOR::GetModWidth() const {
-		return ModWidth;
-	}
-
-	/*!
-	 * \brief
-	 * Write brief comment for Fill here.
-	 * 
-	 * Write detailed description for Fill here.
+	 * Odczyt danych z dysku do bufora. 
 	 */
 	void BUFFOR::Fill() {
 		switch (BufMode) {
-			case BUF_READONLY: {
+			case BUF_READONLY: 
 				File.clear();
 				File.read((char *)Buf, ReadSize);
 				DataCount = File.gcount();
@@ -676,23 +675,21 @@ namespace bmp {
 				BufBytePosg = 0;
 				BufBitPosg = 0;
 				break;
-			}
-			default: {
+			default: 
 				throw BMP_INTERNAL_ERROR();
-			}
 		}
 	}
 
 	/*!
 	 * \brief
-	 * Write brief comment for Flush here.
+	 * Oproznienie bufora.
 	 * 
-	 * Write detailed description for Flush here.
+	 * Zapis danych z bufora na dysk.
 	 * 
 	 */
 	void BUFFOR::Flush() {
 		switch (BufMode) {
-			case BUF_WRITEONLY: {
+			case BUF_WRITEONLY: 
 				File.clear();
 				File.write((char *)Buf,DataCount);
 				File.flush();
@@ -700,19 +697,17 @@ namespace bmp {
 				BufBytePosg = BufBitPosg = 0;
 				BitDataCount = DataCount = 0;
 				break;
-			}
-			default: {
+			default: 
 				throw BMP_INTERNAL_ERROR();
-			}
 		}
 	}
 //********************end of class BUFFOR********************//
 //********************class BMP_BUFFOR********************//
 	/*!
 	 * \brief
-	 * Write brief comment for BMP_BUFFOR here.
-	 * 
-	 * Write detailed description for BMP_BUFFOR here.
+	 * Konstruktor klasy BMP_BUFFOR.
+	 *
+	 * BMP_BUFFOR wykonuje inicjalizacjie (zerowanie) bufora.
 	 */
 	BMP_BUFFOR::BMP_BUFFOR() {
 		BmpHeader = 0;
@@ -729,12 +724,12 @@ namespace bmp {
 
 	/*!
 	 * \brief
-	 * Write brief comment for BMP_BUFFOR here.
+	 * Konstruktor klasy BMP_BUFFOR.
 	 * 
 	 * \param DabBmpHeader
-	 * Description of parameter DabBmpHeader.
+	 * Wskaznik na obiekt BMP_HEADER, przechowujacy informacjie o aktualnej bitmapie.
 	 *
-	 * Write detailed description for BMP_BUFFOR here.
+	 * BMP_BUFFOR wykonuje inicjalizacjie (zerowanie) bufora.
 	 */
 	BMP_BUFFOR::BMP_BUFFOR(BMP_HEADER* DabBmpHeader) {
 		BmpHeader = DabBmpHeader;
@@ -748,26 +743,17 @@ namespace bmp {
 		ModReminder = 0;
 		ModWidth = 0;
 	}
-
-	BMP_BUFFOR::~BMP_BUFFOR() {
-	}
-
-	// posprawdzac czy dobrze oblicza wszsytkie przesuniecia - funkcja FileSizeInBmp itp.
-	// powinno byc bez tej jednynki! - stracimy 1 bit przez to
-	// if (BufBitPosg + 8 * (ModWidth - ModSeek) + 1 < BitDataCount) {
-
 	/*!
 	 * \brief
-	 * Write brief comment for GetBit here.
+	 * Pobranie jednego bita z bufora.
 	 * 
 	 * \returns
-	 * Write description of return value here.
+	 * Zwraca 0xFF lub 0x00.
 	 * 
 	 * \throws <exception class>
-	 * Description of criteria for throwing this exception.
+	 * Rzuca wyjatek, gdy nastepuje proba wykonania niedozwolonej operacji na buforze.
 	 * 
-	 * Write detailed description for GetBit here.
-	 * 
+	 * Zwraca wartosc aktualnego bitu w buforze.
 	 */
 	uint8 BMP_BUFFOR::GetBit() {
 		switch (BufMode) {
@@ -890,16 +876,15 @@ namespace bmp {
 
 	/*!
 	 * \brief
-	 * Write brief comment for PutBit here.
+	 * Zapis jednego bita do bufora.
 	 * 
 	 * \param DabBit
-	 * Description of parameter DabBit.
+	 * Wartosc zapisywanego bita 0xFF lub 0x00.
 	 * 
 	 * \throws <exception class>
-	 * Description of criteria for throwing this exception.
+	 * Rzuca wyjatek, gdy nastepuje proba wykonania niedozwolonej operacji na buforze.
 	 * 
-	 * Write detailed description for PutBit here.
-	 * 
+	 * Zapisuje wartosc bitu przeslanego w prametrze pod aktualna pozycje w buforze.
 	 */
 	void BMP_BUFFOR::PutBit(uint8 DabBit) {
 		switch (BufMode) {
@@ -1017,12 +1002,11 @@ namespace bmp {
 		}
 	}
 
-	// zeruje bufor BMP
 	/*!
 	 * \brief
-	 * Write brief comment for BufReset here.
+	 * Zerowanie bufora.
 	 * 
-	 * Write detailed description for BufReset here.
+	 * Resetuje bufor i ustawia stan poczatkowy.
 	 */
 	void BMP_BUFFOR::BufReset() {
 		BUFFOR::BufReset();
@@ -1036,15 +1020,13 @@ namespace bmp {
 		ModReminder = 0;
 		ModWidth = 0;
 	}
-
 	/*!
 	 * \brief
-	 * Write brief comment for SetCompr here.
+	 * Ustawienie noewej kompresji.
 	 * 
 	 * \param Dabcompr
-	 * Description of parameter Dabcompr.
-	 * 
-	 * Write detailed description for SetCompr here.
+	 * Nowa kompresja, dozwolone wartoœæi od 1 do 7.
+	 *
 	 */
 	void BMP_BUFFOR::SetCompr(uint8 Dabcompr) {
 		Compr = Dabcompr;
@@ -1052,48 +1034,90 @@ namespace bmp {
 	}
 	/*!
 	 * \brief
-	 * Write brief comment for GetCompr here.
+	 * Pobiera wartosc aktualnej kompresji.
 	 * 
 	 * \returns
-	 * Write description of return value here.
+	 * Wartosc aktualnej komrpesji.
 	 * 
-	 * Write detailed description for GetCompr here.
 	 */
 	inline const uint8 BMP_BUFFOR::GetCompr() const {
 		return Compr;
 	}
+	/*!
+	 * \brief
+	 * Pobiera wartosc aktualnej reszty modulo.
+	 * 
+	 * \returns
+	 * Wartosc aktualnej reszty modulo.
+	 *
+	 * Reszta modulo = BmpWidth % 4 - ilosc zer dopelniajacych w bitmapie. Wartosci od 0 do 3. Udostepnia na zawnatrz pole ModReminder.
+	 */
+	inline uint32 & BMP_BUFFOR::GetModReminder(){
+		return ModReminder;
+	}
+	/*!
+	 * \brief
+	 * Pobiera wartosc aktualnej szerokosci modulo bitmapy.
+	 * 
+	 * \returns
+	 * Wartosc aktualnej szerokosci modulo bitmapy.
+	 *
+	 * Szerokosc modulo = 3 * bmpwidth + ModReminder - Dlugosc wiersza bitmapy. Udostepnia na zawnatrz pole ModWidth.
+	 */
+	inline uint32 & BMP_BUFFOR::GetModWidth(){
+		return ModWidth;
+	}
+	/*!
+	 * \brief
+	 * Pobiera wartosc aktualnej reszty modulo.
+	 * 
+	 * \returns
+	 * Wartosc aktualnej reszty modulo.
+	 *
+	 * Reszta modulo = BmpWidth % 4 - ilosc zer dopelniajacych w bitmapie. Wartosci od 0 do 3. Udostepnia na zawnatrz pole ModReminder.
+	 */
+	inline const uint32 & BMP_BUFFOR::GetModReminder() const {
+		return ModReminder;
+	}
+	/*!
+	 * \brief
+	 * Pobiera wartosc aktualnej szerokosci modulo bitmapy.
+	 * 
+	 * \returns
+	 * Wartosc aktualnej szerokosci modulo bitmapy.
+	 *
+	 * Szerokosc modulo = 3 * bmpwidth + ModReminder - Dlugosc wiersza bitmapy. Udostepnia na zawnatrz pole ModWidth.
+	 */
+	inline const uint32 & BMP_BUFFOR::GetModWidth() const {
+		return ModWidth;
+	}
 
 	/*!
 	 * \brief
-	 * Write brief comment for SetReadSize here.
+	 * Ustawia wielkosc blokow doczytywanych z dysku.
 	 * 
 	 * \param DabNewSize
-	 * Description of parameter DabNewSize.
+	 * Ilosc danych w bajtach doczytywanych z dysku przez bufor .
 	 * 
-	 * Write detailed description for SetReadSize here.
 	 */
 	void BUFFOR::SetReadSize(uint32 DabNewSize) {
 		if (DabNewSize <= BufSize)
 			ReadSize = DabNewSize;
 	}
-
-	// nalezy ustawic dobra pozycjie - nie bierze pod uwage kompresji i zer
-	// dopelniajacych, trzeba trafic w dane!
-
 	/*!
 	 * \brief
-	 * Write brief comment for BitSeekg here.
+	 * Ustawienie glowicy odczytujacej na okreslony bit.
 	 * 
 	 * \param DabnewPos
-	 * Description of parameter DabnewPos.
+	 * Przedstawia ilosc bitow.
 	 * 
 	 * \param DabSeekWay
-	 * Description of parameter DabSeekWay.
+	 * Wartosci: BEGINING albo FORWARD.
 	 * 
 	 * \throws <exception class>
-	 * Description of criteria for throwing this exception.
+	 * Rzuca wyjatek przy bledach odczytu zapisu.
 	 * 
-	 * Write detailed description for BitSeekg here.
+	 * Gdy parametr == BEGINING, ustawiamy pozycje na bit przyslany w parametrze liczac od poczatku pliku. Gdy parametr == FORWARD, ustawiamy przesuwamy pozycje o DabnewPos w przod.
 	 * 
 	 */
 	void BMP_BUFFOR::BitSeekg(uint64 DabnewPos, SEEKWAY DabSeekWay) {
@@ -1137,30 +1161,24 @@ namespace bmp {
 
 	/*!
 	 * \brief
-	 * Write brief comment for BitSeekp here.
+	 * Ustawienie glowicy zapisujacej na okreslony bit.
 	 * 
 	 * \param DabnewPos
-	 * Description of parameter DabnewPos.
+	 * Przedstawia ilosc bitow.
 	 * 
 	 * \param DabSeekWay
-	 * Description of parameter DabSeekWay.
+	 * Wartosci: BEGINING albo FORWARD.
 	 * 
 	 * \throws <exception class>
-	 * Description of criteria for throwing this exception.
+	 * Rzuca wyjatek przy bledach odczytu zapisu.
 	 * 
-	 * Write detailed description for BitSeekp here.
+	 * Gdy parametr == BEGINING, ustawiamy pozycje na bit przyslany w parametrze liczac od poczatku pliku. Gdy parametr == FORWARD, ustawiamy przesuwamy pozycje o DabnewPos w przod.
 	 * 
-	 
-	 BitSeekp here.
-	 * 
-	 
-	 
 	 */
 	void BMP_BUFFOR::BitSeekp(uint64 DabnewPos, SEEKWAY DabSeekWay) {
 		switch (DabSeekWay) {
 			case BEGINING: {
 				// czy dane w buforze?
-				// poprawic na BitDataSize
 				if (DabnewPos >= BitPosp && DabnewPos < BitDataCount + BitPosp) {
 					BufBytePosp = uint32(DabnewPos / 8 - BytePosp);
 					BufBitPosp = uint32(DabnewPos - BitPosp);
@@ -1201,82 +1219,79 @@ namespace bmp {
 
 	/*!
 	 * \brief
-	 * Write brief comment for FileSizeInBmp here.
+	 * Wielkosc pliku w bitmapie.
 	 * 
 	 * \param DabSize
-	 * Description of parameter DabSize.
+	 * Wielkosc rzeczywistego pliku w BITACH.
 	 * 
 	 * \param DabCurPos
-	 * Description of parameter DabCurPos.
-	 * 
-	 * \param DabDirection
-	 * Description of parameter DabDirection.
+	 * Aktualna pozycja w buforze w BITACH.
 	 * 
 	 * \returns
-	 * Write description of return value here.
+	 * Zwraca wielkosc przyslanego pliku w bitmapie w bitach.
 	 * 
-	 * Write detailed description for FileSizeInBmp here.
+	 * Konwertuje wielkosc pliku w bitach na wielkosc tego pliku w bitach ALE W BITMAPIE. Bierze pod uwage kompresje oraz ilosc zer wyrownujacych.
 	 * 
 	 */
-	uint64 BMP_BUFFOR::FileSizeInBmp(uint64 DabSize,  uint64 DabCurPos, bool DabDirection) {
-		if (DabDirection) { // == Forward
-			if (!DabSize)
-				return 0;
-			// wielkosc przesunieca 
-			// podstawowe przesuniecie - calkowity rozmiar pliku w bitmapie (nie uwzgledniajacy dopelniajacych zer):
-			uint64 NewSize = (DabSize / Compr) * 8 + DabSize % Compr;
-			if (DabCurPos % 8 + DabSize % Compr >= 8) {
-				NewSize += Seek;
-				NewSize += DabSize % Compr + DabCurPos % 8;
-				NewSize -= 8;
-			}
-			// dodanie zer!!
-			uint64 ModSeek = 8 * ModReminder * ( NewSize / (24 * BmpHeader->biWidth));
-			// >= czy samo >
-			if ((DabCurPos - 8 * BmpHeader->bfOffBits) % (8 * ModWidth) + NewSize % (24 * BmpHeader->biWidth) >= 24 * BmpHeader->biWidth ) {
-				NewSize+= 8 * ModReminder; //ModWidth - NewSize % (24 * BmpHeader->biWidth);
-			}
-			return (NewSize + ModSeek);
+	uint64 BMP_BUFFOR::FileSizeInBmp(uint64 DabSize,  uint64 DabCurPos) {
+		if (!DabSize)
+			return 0;
+		// wielkosc przesunieca 
+		// podstawowe przesuniecie - calkowity rozmiar pliku w bitmapie (nie uwzgledniajacy dopelniajacych zer):
+		uint64 NewSize = (DabSize / Compr) * 8 + DabSize % Compr;
+		if (DabCurPos % 8 + DabSize % Compr >= 8) {
+			NewSize += Seek;
+			NewSize += DabSize % Compr + DabCurPos % 8;
+			NewSize -= 8;
 		}
-		else {
-			//dopisac!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		// dodanie zer!!
+		uint64 ModSeek = 8 * ModReminder * ( NewSize / (24 * BmpHeader->biWidth));
+		// >= czy samo >
+		if ((DabCurPos - 8 * BmpHeader->bfOffBits) % (8 * ModWidth) + NewSize % (24 * BmpHeader->biWidth) >= 24 * BmpHeader->biWidth ) {
+			NewSize+= 8 * ModReminder; //ModWidth - NewSize % (24 * BmpHeader->biWidth);
 		}
-		return 0;
+		return (NewSize + ModSeek);
 	}
-
+	/*!
+	 * \brief
+	 * Pobranie aktualnej pozycji do odczytu w buforze w bajtach.
+	 */
 	const uint32 BMP_BUFFOR::ByteTellg() const {
 		return BytePosg + BufBytePosg;
 	}
-
+	/*!
+	 * \brief
+	 * Pobranie aktualnej pozycji do zapisu w buforze w bajtach.
+	 */
 	const uint32 BMP_BUFFOR::ByteTellp() const {
 		return BytePosp + BufBytePosp;
 	}
-
+	/*!
+	 * \brief
+	 * Pobranie aktualnej pozycji do odczytu w buforze w bitach.
+	 */
 	const uint64 BMP_BUFFOR::BitTellg() const {
 		return BitPosg + BufBitPosg;
 	}
-
+	/*!
+	 * \brief
+	 * Pobranie aktualnej pozycji do zapisu w buforze w bitach.
+	 */
 	const uint64 BMP_BUFFOR::BitTellp() const{
 		return BitPosp + BufBitPosp;
 	}
-
 	/*!
 	 * \brief
-	 * Write brief comment for Fill here.
-	 * 
+	 * Napelnienie bufora.
+	 *
 	 * \throws <exception class>
-	 * Description of criteria for throwing this exception.
+	 * Rzuca wyjatek przy bledach odczytu zapisu.
 	 * 
-	 * Write detailed description for Fill here.
-	 * 
+	 * Odczyt danych z dysku do bufora. Wersja niemodyfikujaca pozycji glowic - np. gdy bedzie skok do jakiejs pozycji to nalezy zaczac czytac od tego ustawionego bita a nie od pierwszego w kompresjiUstawienia glowic zaleza od trybu.
 	 */
 	void BMP_BUFFOR::Fill() {
-		// powinna byc wersja niemodyfikujaca pozycji glowic - np. gdy bedzie skok do jakiejs pozycji
-		// to nalezy zaczac czytac od tego ustawionego bita a nie od pierwszego w kompresji
-		// trzeba to poprawic zeby sprawdzal czy pierwszy bit to nie 000
-		// ustawienia glowic zaleza od trybu
 		switch (BufMode) {
-			case BUF_READONLY: {
+			case BUF_READONLY: 
 				// pierwszy odczyt - z dokladnie tego okreslonego miejsca
 				File.clear();
 				File.seekg(BytePosg,std::ios_base::beg);
@@ -1293,9 +1308,8 @@ namespace bmp {
 				}
 				BufState = BUF_GOOD;
 				break;
-			}
 			// pierwszy odczyt, bez zapisu
-			case BUF_READ_WRITE: {
+			case BUF_READ_WRITE: 
 				File.clear();
 				// czytamy z pozycji gdzie bedziemy zapisuwac
 				File.seekg(BytePosp, std::ios_base::beg);
@@ -1312,23 +1326,20 @@ namespace bmp {
 				}
 				BufState = BUF_GOOD;
 				break;
-			}
-			default: {
+			default: 
 				throw BMP_INTERNAL_ERROR();
-			}
 		}
 
 	}
 
 	/*!
 	 * \brief
-	 * Write brief comment for Flush here.
-	 * 
+	 * Oproznienie bufora.
+	 *
 	 * \throws <exception class>
-	 * Description of criteria for throwing this exception.
-	 * 
-	 * Write detailed description for Flush here.
-	 * 
+	 * Rzuca wyjatek przy bledach odczytu zapisu.
+	 *  
+	 * Zapis danych z bufora na dysk.
 	 */
 	void BMP_BUFFOR::Flush() {
 		switch (BufMode) {
@@ -1348,25 +1359,18 @@ namespace bmp {
 		}
 	}
 //********************end of class BMP_BUFFOR********************//
-//********************class FILE_BUFFOR********************//
-	FILE_BUFFOR::FILE_BUFFOR() {
-	}
-
-	FILE_BUFFOR::~FILE_BUFFOR() {
-	}
-//********************end of class FILE_BUFFOR********************//
 //********************class BMP********************//
 	/*!
 	 * \brief
-	 * Write brief comment for BMP here.
+	 * Konstruktor klasy BMP.
 	 * 
 	 * \param DabFile
-	 * Description of parameter DabFile.
+	 * Rzeczywisty plik.
 	 * 
 	 * \throws <exception class>
-	 * Description of criteria for throwing this exception.
+	 * Rzuca wyjatek w przypadku bledu odczytu zapisu.
 	 * 
-	 * Write detailed description for BMP here.
+	 * Otwarcie bitmapy i odczyt naglowka.
 	 */
 	BMP::BMP(sfile DabFile):BmpBuf(&BmpHeader) {
 		PreferedCompr = 1;
@@ -1378,23 +1382,25 @@ namespace bmp {
 		if (!IsBmp()) 
 			throw BMP_WRONG_FILE();
 	}
-
+	/*!
+	 * \brief
+	 * Konstruktor klasy BMP
+	 */
 	BMP::BMP():BmpBuf(&BmpHeader) {
 		PreferedCompr = 1; // najmniejsza kompresja
 	}
-
+	/*!
+	 * \brief
+	 * Destruktor klasy BMP.
+	 *
+	 * Kasuje naglowki.
+	 */
 	BMP::~BMP() {
 		DeleteAllHeaders();
 	}
-
 	/*!
 	 * \brief
-	 * Write brief comment for ReadBmpHeader here.
-	 * 
-	 * \throws <exception class>
-	 * Description of criteria for throwing this exception.
-	 * 
-	 * Write detailed description for ReadBmpHeader here.
+	 * Odczyt naglowko pliku bmp.
 	 */
 	void BMP::ReadBmpHeader() {
 		uint32 i;
@@ -1404,24 +1410,10 @@ namespace bmp {
 		}
 		BmpHeader.biUsefulData = BmpHeader.biWidth * BmpHeader.biHeight * 3; // w bajtach
 	}
-
-
 	/*!
 	 * \brief
-	 * Write brief comment for AttribToBytes here.
-	 * 
-	 * \param Dabsmap
-	 * Description of parameter Dabsmap.
-	 * 
-	 * \returns
-	 * Write description of return value here.
-	 * 
-	 * \throws <exception class>
-	 * Description of criteria for throwing this exception.
-	 * 
-	 * Write detailed description for AttribToBytes here.
+	 * Konwersja Atrybutow na format binarny.
 	 */
-
 	uint16 BMP::AttribToBytes(smap Dabsmap) {
 		FileBuf.BufReset();
 		FileBuf.SetMode(BUFFOR::BUF_TRANSFER);
@@ -1470,16 +1462,7 @@ namespace bmp {
 
 	/*!
 	 * \brief
-	 * Write brief comment for BytesToAttrib here.
-	 * 
-	 * \param DabBytes
-	 * Description of parameter DabBytes.
-	 * 
-	 * \returns
-	 * Write description of return value here.
-	 * 
-	 * Write detailed description for BytesToAttrib here.
-	 * 
+	 * Konwersja Atrybutow na format slowny.
 	 */
 	smap BMP::BytesToAttrib(uint16 DabBytes) {
 		FileBuf.BufReset();
@@ -1527,15 +1510,7 @@ namespace bmp {
 
 	/*!
 	 * \brief
-	 * Write brief comment for UTCToBytes here.
-	 * 
-	 * \param Dabs
-	 * Description of parameter Dabs.
-	 * 
-	 * \returns
-	 * Write description of return value here.
-	 * 
-	 * Write detailed description for UTCToBytes here.
+	 * Konwersja Daty na format binarny.
 	 */
 	uint32 BMP::UTCToBytes(string Dabs) {
 		// dd.mm.rrrr hh:mm:ss
@@ -1593,16 +1568,7 @@ namespace bmp {
 	}
 	/*!
 	 * \brief
-	 * Write brief comment for BytesToUTC here.
-	 * 
-	 * \param DabBytes
-	 * Description of parameter DabBytes.
-	 * 
-	 * \returns
-	 * Write description of return value here.
-	 * 
-
-	 * Write detailed description for BytesToUTC here.
+	 * Konwersja Daty na format slowny.
 	 */
 	string BMP::BytesToUTC(uint32 DabBytes) {
 		char temp [] = "0000";
@@ -1651,20 +1617,14 @@ namespace bmp {
 		s.clear(); hh < 10 ? s << "0" << hh : s << hh;  s >> temp; result += temp; result +=  ":";
 		s.clear(); min < 10 ? s << "0" << min : s << min;  s >> temp; result += temp; result +=  ":";
 		s.clear(); ss < 10 ? s << "0" << ss : s << ss;  s >> temp; result += temp;
-
-
 		return result;
 
 	}
-
 	/*!
 	 * \brief
-	 * Write brief comment for IsBmp here.
+	 * Sprawdzenie bitmapy
 	 * 
-	 * \returns
-	 * Write description of return value here.
-	 * 
-	 * Write detailed description for IsBmp here.
+	 * Sprawdzenie czy bitmapa jest plikiem obslugiwanym przez program.
 	 */
 	bool BMP::IsBmp() {
 		// 19778 = "BM", 24 bit bitmapa, 14 + BmpHeader.biSize - wielkosc naglowka
@@ -1681,15 +1641,11 @@ namespace bmp {
 			return true;
 		}
 	}
-
 	/*!
 	 * \brief
-	 * Write brief comment for IsDab here.
-	 * 
-	 * \returns
-	 * Write description of return value here.
-	 * 
-	 * Write detailed description for IsDab here.
+	 * Sprawdzenie naglowka.
+	 *
+	 * Sprawdzenie czy bitapa zawiera poprawny naglowek dabstera.
 	 */
 	bool BMP::IsDab() {
 		// obligatoryjnie
@@ -1704,15 +1660,14 @@ namespace bmp {
 			return false;
 		}
 	}
-
 	/*!
 	 * \brief
-	 * Write brief comment for ReadDabHeader here.
-	 * 
+	 * Odczytuje naglowek Dabstera.
+	 *	
 	 * \throws <exception class>
-	 * Description of criteria for throwing this exception.
+	 * Rzuca wyjatek w przypadku bledu odczytu zapisu.
 	 * 
-	 * Write detailed description for ReadDabHeader here.
+	 * Odczyt naglowka bez interpretacji jego zawartosci.
 	 */
 	void BMP::ReadDabHeader() {
 		uint32 i;
@@ -1765,13 +1720,10 @@ namespace bmp {
 
 	/*!
 	 * \brief
-	 * Write brief comment for WriteDabHeader here.
+	 * Zapisuje naglowek Dabstera.
 	 * 
 	 * \throws <exception class>
-	 * Description of criteria for throwing this exception.
-	 * 
-	 * Write detailed description for WriteDabHeader here.
-	 * 
+	 * Rzuca wyjatek w przypadku bledu odczytu zapisu.
 	 */
 	void BMP::WriteDabHeader() {
 		uint32 i;
@@ -1821,15 +1773,15 @@ namespace bmp {
 
 	/*!
 	 * \brief
-	 * Write brief comment for ReadCompr here.
+	 * Odczyt stopnia kompresji z dysku.
 	 * 
 	 * \returns
-	 * Write description of return value here.
+	 * Wartosc odczytanej kompresji.
 	 * 
 	 * \throws <exception class>
-	 * Description of criteria for throwing this exception.
+	 * Rzuca wyjatek w przypadku bledu odczytu zapisu.
 	 * 
-	 * Write detailed description for ReadCompr here.
+	 * Nie interpretuje odczytanej wartosci.
 	 */
 	const uint8 BMP::ReadCompr() {
 		// ustawienie na 1 bicie kompresji
@@ -1847,15 +1799,12 @@ namespace bmp {
 		}
 		return FileBuf.GetByte();
 	}
-
 	/*!
 	 * \brief
-	 * Write brief comment for WriteCompr here.
-	 * 
+	 * Zapis stopnia kompresji na dysku.
+	 *
 	 * \throws <exception class>
-	 * Description of criteria for throwing this exception.
-	 * 
-	 * Write detailed description for WriteCompr here.
+	 * Rzuca wyjatek w przypadku bledu odczytu zapisu.
 	 */
 	void BMP::WriteCompr() {
 		uint8 i;
@@ -1871,16 +1820,14 @@ namespace bmp {
 			BmpBuf.PutBit(FileBuf.GetBit());
 		BmpBuf.Flush();
 	}
-
 	/*!
 	 * \brief
-	 * Write brief comment for ReadAllHeaders here.
-	 * 
+	 * Odczyt Wszystkich naglowkow z pliku.
+	 *
 	 * \throws <exception class>
-	 * Description of criteria for throwing this exception.
+	 * Rzuca wyjatek w przypadku bledu odczytu zapisu.
 	 * 
-	 * Write detailed description for ReadAllHeaders here.
-	 * 
+	 * Nie interpretuje odczytanej wartosci.
 	 */
 	void BMP::ReadAllHeaders() {
 		uint64 ReadingPos = DabHeader.FirstFileStart;
@@ -1895,16 +1842,10 @@ namespace bmp {
 			ReadingPos = header->DataStart + BmpBuf.FileSizeInBmp(8 * header->DataSize, header->DataStart);
 		}
 	}
-
 	/*!
 	 * \brief
-	 * Write brief comment for DeleteAllHeaders here.
-	 * 
-	 * \throws <exception class>
-	 * Description of criteria for throwing this exception.
-	 * 
-	 * Write detailed description for DeleteAllHeaders here.
-	 * 
+	 * Kasuje pamiec przydzielona pod naglowki plikow lub folderow.
+	 *
 	 */
 	void BMP::DeleteAllHeaders() {
 		// kasowanie wektora wskaznikow na naglowki
@@ -1915,18 +1856,17 @@ namespace bmp {
 			delete h;
 		}
     }
-
 	/*!
 	 * \brief
-	 * Write brief comment for ReadFileHeader here.
+	 * Odczyt pojedynczego naglowka.
 	 * 
 	 * \returns
-	 * Write description of return value here.
+	 * Wskaznik na nowy naglowek.
 	 * 
 	 * \throws <exception class>
-	 * Description of criteria for throwing this exception.
+	 * Rzuca wyjatek w przypadku bledu odczytu zapisu.
 	 * 
-	 * Write detailed description for ReadFileHeader here.
+	 * Nie interpretuje odczytanej wartosci.
 	 */
 	FILE_HEADER* BMP::ReadFileHeader() {
 		uint16 i;
@@ -1970,24 +1910,20 @@ namespace bmp {
 		while(FileBuf.GetBufState() != BUFFOR::BUF_EMPTY) {
 			header->FileName += FileBuf.GetByte();
 		}
-
 		header->DataStart = header->HeaderStart +
 			BmpBuf.FileSizeInBmp(8 * (header->FileNameLen + FILE_HEADER_BYTE_SIZE), header->HeaderStart);
 		header->PerformAction = false;
 		return header;
 	}
-
 	/*!
 	 * \brief
-	 * Write brief comment for WriteFileHeader here.
-	 * 
+	 * Zapis pojedynczego naglowka.
+	 *
 	 * \param DabHeader
-	 * Description of parameter DabHeader.
-	 * 
+	 * Wskaznik na naglowek do zapisu. 
+	 *
 	 * \throws <exception class>
-	 * Description of criteria for throwing this exception.
-	 * 
-	 * Write detailed description for WriteFileHeader here.
+	 * Rzuca wyjatek w przypadku bledu odczytu zapisu.
 	 * 
 	 */
 	void BMP::WriteFileHeader(FILE_HEADER* Dabheader) {
@@ -2034,21 +1970,19 @@ namespace bmp {
 
 	/*!
 	 * \brief
-	 * Write brief comment for del here.
+	 * Kasuje pliki w bmp.
 	 * 
 	 * \param path
-	 * Description of parameter path.
+	 * Przechowuje nazwy plikow do skasowania.
 	 * 
 	 * \throws <exception class>
-	 * Description of criteria for throwing this exception.
+	 * Rzuca wyjatek w przypadku bledu odczytu zapisu.
 	 * 
-	 * Write detailed description for del here.
-	 * 
+	 * Kasowanie mozna przerwac tylko do momentu zaznaczenia plikow do skasowania. Nie mozna cofnac kasowania juz zamazanego pliku, ani zostawic niespojnych danych w bmp.
 	 */
 	void BMP::del(vmstring Dabpath) {
-		// przerywanie - mozna przerwac do momentu zaznaczania plikow do skasowania
-		// potem trzeba juz wszystko wykonac
-
+		pProgress.show(0);
+		int PrgrsTask = 0, PrgrsFin = 0;
 		// czy odczytano naglowki?
 		BmpBuf.SetCompr(ReadCompr());
 		ReadDabHeader();
@@ -2064,7 +1998,7 @@ namespace bmp {
 		int32 count;
 		string path;
 		DAB_HEADER DabHeaderCopy = DabHeader;
-
+		pProgress.show(2);
 		// zaznaczenie plikow do usuniecia
 		for (i = Dabpath.begin(); i != Dabpath.end(); ++i) {
 			path = "";
@@ -2082,6 +2016,10 @@ namespace bmp {
 				}
 			}
 		}
+		// 1 - na operacje dodatkowe
+		PrgrsTask = FilesToDel + 1;
+		PrgrsFin = 1; 
+		pProgress.show((100 * PrgrsFin) /PrgrsTask);
 		// przerwano kasowanie:
 		if (bCanceled) {
 			DabHeader = DabHeaderCopy;
@@ -2091,9 +2029,10 @@ namespace bmp {
 			return;
 		}
 
-		// ktoregos pliku nie znaleziono
+		// ktoregos pliku nie znaleziono, niepotrzebne sprawdzanie, do usuniecia w wersji finalnej
 		if (FilesToDel != Dabpath.size())
 			throw NO_SUCH_FILE();
+
 		// wszystkie naglowki zaznaczone do usuniecia:
 		if (FilesToDel == FilesHeaders.size()) {
 			WriteDabHeader();
@@ -2120,12 +2059,14 @@ namespace bmp {
 		// nie trzeba nic przenosic, np. kasownie 2 ostatnich plikow
 		if (!FilesToMove) {
 			WriteDabHeader();
+			pProgress.show(100);
 			return;
 		}
 		ReadingPos = (*k)->HeaderStart;
 
 		while (FilesToMove--) {
-			// dodac pasek postepu
+			// pasek postepu
+			pProgress.show((100 * PrgrsFin++) / PrgrsTask);
 			BmpBuf.SetMode(BUFFOR::BUF_READONLY);
 			BmpBuf.SetReadSize(BUFFOR_SIZE);
 			BmpBuf.BitSeekg(ReadingPos);
@@ -2145,7 +2086,7 @@ namespace bmp {
 					ReadingPos = BmpBuf.BitTellg();
 					BmpBuf.SetMode(BUFFOR::BUF_READ_WRITE);
 					BmpBuf.BitSeekp(WritingPos);
-					// przeniesc fragment pliku
+					// przenies fragment pliku
 					while (FileBuf.GetBufState() != BUFFOR::BUF_EMPTY &&
 						FileBuf.GetBufState() != BUFFOR::BUF_BAD) {
 						BmpBuf.PutBit(FileBuf.GetBit());
@@ -2186,26 +2127,28 @@ namespace bmp {
 		}
 		// zastosuj zmiany
 		WriteDabHeader();
+		pProgress.show(100);
 	}
 
 	/*!
 	 * \brief
-	 * Write brief comment for store here.
+	 * Ukrywa pliki w bmp.
 	 * 
 	 * \param src
-	 * Description of parameter src.
+	 * Nazwy plikow do spakowania.
 	 * 
 	 * \param dest
-	 * Description of parameter dest.
+	 * Nazwy pod jakimi beda one spakowane w bmp.
 	 * 
 	 * \throws <exception class>
-	 * Description of criteria for throwing this exception.
+	 * Rzuca wyjatek w przypadku bledu odczytu zapisu oraz gdy zabraklo miejsca.
 	 * 
-	 * Write detailed description for store here.
+	 * Przerwanie moze nastapic co jeden spakowany plik.
 	 * 
 	 */
 	void BMP::store(vmstring Dabsrc, vmstring Dabdest) {
-		// dodac bCanceled - mozna co jeden spakowany plik sprawdzac czy trzeba przerwac
+		pProgress.show(0);
+		int PrgrsTask = 0, PrgrsFin = (int)Dabsrc.size() + 1;
 		// czy odczytano naglowki?
 		BmpBuf.SetCompr(ReadCompr());
 		ReadDabHeader();
@@ -2230,7 +2173,10 @@ namespace bmp {
 		string path;
 
 		for (i = Dabsrc.begin(), j = Dabdest.begin(); i != Dabsrc.end() && j != Dabdest.end() && !bCanceled; ++i, ++j) {
-			// dodac pasek postepu
+
+			// pasek postepu
+			pProgress.show((100 * PrgrsFin++) / PrgrsTask);
+
 			header = new FILE_HEADER;
 			// FileName ::= <relativePath> + '\\' + <name> | <name>
 			header->HeaderStart = WritingPos;
@@ -2292,30 +2238,33 @@ namespace bmp {
 				// miejsce na naglowek juz odjelismy, odejmujemy tylko miejsce na dane
 				DabHeader.FreeSpc -= header->DataSize;
 			}
+			// zapisujemy na biezaco
 			FilesHeaders.push_back(header);
 			WriteFileHeader(header);
 			WriteDabHeader();
 		}
+		pProgress.show(100);
 	}
 
 	/*!
 	 * \brief
-	 * Write brief comment for extract here.
+	 * Wypakowuje pliki z bmp.
 	 * 
 	 * \param src
-	 * Description of parameter src.
+	 * Nazwy plikow w bmp.
 	 * 
 	 * \param dest
-	 * Description of parameter dest.
+	 * Nazwy pod jakimi zostana one wypakowane.
 	 * 
 	 * \throws <exception class>
-	 * Description of criteria for throwing this exception.
+	 * Rzuca wyjatek w przypadku bledu odczytu zapisu.
 	 * 
-	 * Write detailed description for extract here.
+	 * Przerwanie moze nastapic co jeden wypakowany plik.
 	 * 
 	 */
 	void BMP::extract(vmstring Dabsrc, vmstring Dabdest) {
-		// bCanceled - sprawdzanie co jeden wypakowany plik
+		pProgress.show(0);
+		int PrgrsTask = 0, PrgrsFin = (int) Dabsrc.size() + 1;
 		BmpBuf.SetCompr(ReadCompr());
 		ReadDabHeader();
 		if (!IsDab()) {
@@ -2331,6 +2280,7 @@ namespace bmp {
 		BmpBuf.SetReadSize(BUFFOR_SIZE);
 
 		for (i = Dabsrc.begin(), j = Dabdest.begin();	i != Dabsrc.end() && j != Dabdest.end()&& !bCanceled; ++i, ++j) {
+			pProgress.show((100 * PrgrsFin++) / PrgrsTask);
 			for (k = FilesHeaders.begin(); k != FilesHeaders.end() ; ++k) {
 			// src jest w BMP, dest w rzeczywistosci
 				path = "";
@@ -2360,26 +2310,28 @@ namespace bmp {
 				}
 			}
 		}
+		pProgress.show(100);
 	}
 
 	/*!
 	 * \brief
-	 * Write brief comment for copyInside here.
+	 * Kopiuje pliki lub foldery wewnatrz bmp.
 	 * 
 	 * \param src
-	 * Description of parameter src.
+	 * Nazwy plikow w bmp - zrodlowe.
 	 * 
 	 * \param dest
-	 * Description of parameter dest.
+	 * Nazwy plikow w bmp - docelowe.
 	 * 
 	 * \throws <exception class>
-	 * Description of criteria for throwing this exception.
+	 * Rzuca wyjatek w przypadku bledu odczytu zapisu.
 	 * 
-	 * Write detailed description for copyInside here.
+	 * Przerwanie moze nastapic co jeden skopiowany plik.
 	 * 
 	 */
 	void BMP::copyInside(vmstring DabSrc, vmstring DabDest) {
-		// bCanceled - co jeden kopiowany plik 
+		pProgress.show(0);
+		int PrgrsTask = 0, PrgrsFin = (int) DabSrc.size() + 1;
 		// czy odczytano naglowki?
 		BmpBuf.SetCompr(ReadCompr());
 		ReadDabHeader();
@@ -2401,6 +2353,7 @@ namespace bmp {
 
 		for (k = DabSrc.begin(), m = DabDest.begin();
 			k != DabSrc.end() && m != DabDest.end()&& !bCanceled; ++k, ++m) {
+			pProgress.show((100 * PrgrsFin++) / PrgrsTask);
 			path = "";
 			if ((*k)["relativePath"].size())
 				path = (*k)["relativePath"] + '\\';
@@ -2427,7 +2380,6 @@ namespace bmp {
 						h->DataStart = h->HeaderStart +
 							BmpBuf.FileSizeInBmp(8 * (h->FileNameLen + FILE_HEADER_BYTE_SIZE), 
 							h->HeaderStart);
-						
 					}
 					else { 
 						delete h;
@@ -2474,31 +2426,28 @@ namespace bmp {
 			}
 		}
 		WriteDabHeader();
+		pProgress.show(100);
 	}
 
 	/*!
 	 * \brief
-	 * Write brief comment for modify here.
+	 * Modyfikuje pliki w bmp.
 	 * 
-	 * \param oldPath
-	 * Description of parameter oldPath.
+	 * \param DaboldPath
+	 * Nazwy plikow w bmp - zrodlowe.
 	 * 
-	 * \param newPath
-	 * Description of parameter newPath.
+	 * \param DabnewPath
+	 * Nazwy plikow w bmp - docelowe.
 	 * 
 	 * \throws <exception class>
-	 * Description of criteria for throwing this exception.
+	 * Rzuca wyjatek w przypadku bledu odczytu zapisu.
 	 * 
-	 * Write detailed description for modify here.
+	 * Mozna przerwac tylko do momentu ustalenia nowego polozenia plikow, potem wszystko trzeba juz poprzesuwac najpierw tworzymy nowe naglowki z nowymi nazwami, potem obliczamy polozenie wszystkich naglowkow i wykonujemy operacje.
 	 * 
 	 */
 	void BMP::modify(vmstring DabOldPath, vmstring DabNewPath) {
-		// bCanceled - mozna przerwac tylko do momentu ustalenia nowego polozenia plikow
-		// potem wszystko trzeba juz poprzesuwac
-		// strategia - najpierw tworzymy nowe naglowki z nowymi nazwami
-		// obliczamy polozenie wszystkich naglowkow
-		// sprawdzamy czy wykonanie operacji jest mozliwe
-
+		pProgress.show(0);
+		int PrgrsTask = 0, PrgrsFin = (int) DabOldPath.size() + 2;
 		// czy odczytano naglowki?
 		BmpBuf.SetCompr(ReadCompr());
 		ReadDabHeader();
@@ -2532,6 +2481,7 @@ namespace bmp {
 		std::vector<R_W_Pos>::reverse_iterator rr;
 		vmstring::iterator k, m;
 
+		pProgress.show((100 * ++PrgrsFin) / PrgrsTask);
 
 		// kopiowanie naglowkow i pierwszy etap zmian - nowe nazwy
 		for (i = FilesHeaders.begin(); i != FilesHeaders.end(); ++i) {
@@ -2606,15 +2556,17 @@ namespace bmp {
 				FilesHeaders.pop_back();
 				delete h;
 			}
+			pProgress.show(100);
 			return;
 		}
-
+		pProgress.show((100 * ++PrgrsFin) / PrgrsTask);
 		// przesuwanie danych w lewo poczawszy od lewej strony
 		// i - nowe naglowki, j - stare
 		for (i = NewFilesHeaders.begin(), j = FilesHeaders.begin();
 			i != NewFilesHeaders.end() && j != FilesHeaders.end(); ++i, ++j ) {
 			// dokonaj zamiany - przesuwanie pliku w lewo
 			if ((*i)->DataStart < (*j)->DataStart) {
+				pProgress.show((100 * PrgrsFin++) / PrgrsTask);
 				BmpBuf.SetMode(BUFFOR::BUF_READONLY);
 				BmpBuf.SetReadSize(BUFFOR_SIZE);
 				FileBuf.BufReset();
@@ -2652,6 +2604,7 @@ namespace bmp {
 		for (ri = NewFilesHeaders.rbegin(), rj = FilesHeaders.rbegin();
 			ri != NewFilesHeaders.rend() && rj != FilesHeaders.rend(); ++ri, ++rj ) {
 			if ((*ri)->DataStart > (*rj)->DataStart) {
+				pProgress.show((100 * PrgrsFin++) / PrgrsTask);
 				// caly plik mozna przesunac wczytujac go do buforu FileBuf
 				if ((*ri)->DataSize <= BUFFOR_SIZE) {
 					BmpBuf.SetMode(BUFFOR::BUF_READONLY);
@@ -2739,22 +2692,21 @@ namespace bmp {
 			WriteFileHeader(*i);
 		}
 		WriteDabHeader();
+		pProgress.show(100);
 	}
 
 	/*!
 	 * \brief
-	 * Write brief comment for getContent here.
+	 * Pobiera zawartosc bitmapy.
 	 * 
 	 * \param path
-	 * Description of parameter path.
+	 * Sciezka do folderu w bmp. Pusty parametr == glowny folder w bmp
 	 * 
 	 * \returns
-	 * Write description of return value here.
+	 * Zawartosc podanego folderu.
 	 * 
 	 * \throws <exception class>
-	 * Description of criteria for throwing this exception.
-	 * 
-	 * Write detailed description for getContent here.
+	 * Rzuca wyjatek w przypadku bledu odczytu zapisu.
 	 * 
 	 */
 	vmstring BMP::getContent(string Dabpath) {
@@ -2770,7 +2722,10 @@ namespace bmp {
 		smap temp;
 		std::vector<FILE_HEADER*>::iterator i;
 		std::stringstream s;
+		pProgress.show(0);
+		int PrgrsTask = 0, PrgrsFin = (int) FilesHeaders.size() + 1;
 		for (i = FilesHeaders.begin(); i!= FilesHeaders.end(); ++i) {
+		pProgress.show((100 * PrgrsFin++) / PrgrsTask);
 			if (!Dabpath.size() || (*i)->FileName.substr(0, Dabpath.size()) == Dabpath) {
 				temp.clear();
 				temp = BytesToAttrib((*i)->Attributes);
@@ -2813,20 +2768,19 @@ namespace bmp {
 					result.push_back(temp);
 				}
 			}
+		pProgress.show(100);
 		return result;
 	}
 
 	/*!
 	 * \brief
-	 * Write brief comment for getCapacity here.
+	 * Zwraca pojemnosc bitmapy przy ustalonej kompresji.
 	 * 
 	 * \returns
-	 * Write description of return value here.
+	 * Pojemnosc bitmapy w bajtach.
 	 * 
 	 * \throws <exception class>
-	 * Description of criteria for throwing this exception.
-	 * 
-	 * Write detailed description for getCapacity here.
+	 * Rzuca wyjatek w przypadku bledu odczytu zapisu.
 	 * 
 	 */
 	uint64 BMP::getCapacity(void) {
@@ -2840,16 +2794,13 @@ namespace bmp {
 
 	/*!
 	 * \brief
-	 * Write brief comment for setCompression here.
+	 * Ustawia kompresje i zapisuje ja w pliku.
 	 * 
 	 * \param DabDegree
-	 * Description of parameter DabDegree.
+	 * Stopien kompresji.
 	 * 
 	 * \throws <exception class>
-	 * Description of criteria for throwing this exception.
-	 * 
-	 * Write detailed description for setCompression here.
-	 * 
+	 * Rzuca wyjatek w przypadku bledu odczytu zapisu.
 	 */
 	void BMP::setCompression(uint8 DabnewCompr) {
 		PreferedCompr = DabnewCompr;
@@ -2860,15 +2811,13 @@ namespace bmp {
 
 	/*!
 	 * \brief
-	 * Write brief comment for getCompression here.
+	 * Pobiera kompresje z pliku.
 	 * 
 	 * \returns
-	 * Write description of return value here.
+	 * Wartosc stopnia kompresji.
 	 * 
 	 * \throws <exception class>
-	 * Description of criteria for throwing this exception.
-	 * 
-	 * Write detailed description for getCompression here.
+	 * Rzuca wyjatek w przypadku bledu odczytu zapisu.
 	 * 
 	 */
 	const uint8 BMP::getCompression()  {
@@ -2882,12 +2831,10 @@ namespace bmp {
 
 	/*!
 	 * \brief
-	 * Write brief comment for CreateDabHeader here.
+	 * Tworzy nowy naglowek Dabstera.
 	 * 
 	 * \throws <exception class>
-	 * Description of criteria for throwing this exception.
-	 * 
-	 * Write detailed description for CreateDabHeader here.
+	 * Rzuca wyjatek w przypadku bledu odczytu zapisu.
 	 * 
 	 */
 	void BMP::CreateDabHeader() {
@@ -2915,18 +2862,10 @@ namespace bmp {
 //********************end of class BMP********************//
 	/*!
 	 * \brief
-	 * Write brief comment for isBmp here.
+	 * Sprawdza czy plik jest bitmapa.
 	 * 
 	 * \param DabFile
-	 * Description of parameter DabFile.
-	 * 
-	 * \returns
-	 * Write description of return value here.
-	 * 
-	 * \throws <exception class>
-	 * Description of criteria for throwing this exception.
-	 * 
-	 * Write detailed description for isBmp here.
+	 * Plik do sprawdzenia.
 	 * 
 	 */
 	int isBmp(sfile DabFile)  {
