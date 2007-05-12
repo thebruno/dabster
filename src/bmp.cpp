@@ -134,7 +134,7 @@ namespace bmp {
 	 * \brief
 	 * OpenFile otwiera plik i ustawia tryb pracy.
 	 * 
-	 * \param path
+	 * \param DabPath
 	 * Rzeczywista sciezka dostepu.
 	 * 
 	 * \param DabFileMode
@@ -509,7 +509,7 @@ namespace bmp {
 	 * \brief
 	 * Ustawia tryb bufora.
 	 * 
-	 * \param DabbufMode
+	 * \param DabBufMode
 	 * Okresla nowy stan bufora.
 	 *
 	 * Zmienia stan bufora na ten przyslany w parametrze.
@@ -1919,7 +1919,7 @@ namespace bmp {
 	 * \brief
 	 * Zapis pojedynczego naglowka.
 	 *
-	 * \param DabHeader
+	 * \param Dabheader
 	 * Wskaznik na naglowek do zapisu. 
 	 *
 	 * \throws <exception class>
@@ -1972,7 +1972,7 @@ namespace bmp {
 	 * \brief
 	 * Kasuje pliki w bmp.
 	 * 
-	 * \param path
+	 * \param Dabpath
 	 * Przechowuje nazwy plikow do skasowania.
 	 * 
 	 * \throws <exception class>
@@ -2134,10 +2134,10 @@ namespace bmp {
 	 * \brief
 	 * Ukrywa pliki w bmp.
 	 * 
-	 * \param src
+	 * \param Dabsrc
 	 * Nazwy plikow do spakowania.
 	 * 
-	 * \param dest
+	 * \param Dabdest
 	 * Nazwy pod jakimi beda one spakowane w bmp.
 	 * 
 	 * \throws <exception class>
@@ -2250,10 +2250,10 @@ namespace bmp {
 	 * \brief
 	 * Wypakowuje pliki z bmp.
 	 * 
-	 * \param src
+	 * \param Dabsrc
 	 * Nazwy plikow w bmp.
 	 * 
-	 * \param dest
+	 * \param Dabdest
 	 * Nazwy pod jakimi zostana one wypakowane.
 	 * 
 	 * \throws <exception class>
@@ -2317,10 +2317,10 @@ namespace bmp {
 	 * \brief
 	 * Kopiuje pliki lub foldery wewnatrz bmp.
 	 * 
-	 * \param src
+	 * \param DabSrc
 	 * Nazwy plikow w bmp - zrodlowe.
 	 * 
-	 * \param dest
+	 * \param DabDest
 	 * Nazwy plikow w bmp - docelowe.
 	 * 
 	 * \throws <exception class>
@@ -2433,10 +2433,10 @@ namespace bmp {
 	 * \brief
 	 * Modyfikuje pliki w bmp.
 	 * 
-	 * \param DaboldPath
+	 * \param DabOldPath
 	 * Nazwy plikow w bmp - zrodlowe.
 	 * 
-	 * \param DabnewPath
+	 * \param DabNewPath
 	 * Nazwy plikow w bmp - docelowe.
 	 * 
 	 * \throws <exception class>
@@ -2699,7 +2699,7 @@ namespace bmp {
 	 * \brief
 	 * Pobiera zawartosc bitmapy.
 	 * 
-	 * \param path
+	 * \param Dabpath
 	 * Sciezka do folderu w bmp. Pusty parametr == glowny folder w bmp
 	 * 
 	 * \returns
@@ -2796,7 +2796,7 @@ namespace bmp {
 	 * \brief
 	 * Ustawia kompresje i zapisuje ja w pliku.
 	 * 
-	 * \param DabDegree
+	 * \param DabnewCompr
 	 * Stopien kompresji.
 	 * 
 	 * \throws <exception class>

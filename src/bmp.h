@@ -63,18 +63,18 @@ namespace bmp {
 		uint16 bfReserved1; /*!<  Pole zarezerwowane, zwykle ma wartosc 0. */
 		uint16 bfReserved2; /*!<  Pole zarezerwowane, zwykle ma wartosc 0. */
 		uint32 bfOffBits; /*!<  Pozycja danych obrazowych w pliku. */
-		uint32 biSize; /*!<  Wielkosc naglowka informacyjnego. Dlugosc stad do koñca naglówka - 40, czasem mniej. */
+		uint32 biSize; /*!<  Wielkosc naglowka informacyjnego. Dlugosc stad do konca naglowka - 40, czasem mniej. */
 		uint32 biWidth; /*!<  Szerokosc obrazu w pixelach. */
 		uint32 biHeight; /*!<  Wysokosc obrazu w pixelach. */
-		uint16 biPlanes; /*!<  Liczba platów, zwykle 0. */
-		uint16 biBitCount; /*!<  Liczba bitów na piksel. */
+		uint16 biPlanes; /*!<  Liczba platow, zwykle 0. */
+		uint16 biBitCount; /*!<  Liczba bitow na piksel. */
 		uint32 biCompression; /*!<  Algorytm kompresji. */
 		uint32 biSizeImage; /*!<  Rozmiar samego rysunku, z zerami dopelniajacymi. */
 		uint32 biXPelsPerMeter; /*!<  Rozdzielczosc pozioma. */
 		uint32 biYPelsPerMeter; /*!<  Rozdzielczosc pionowa. */
-		uint32 biClrUsed; /*!<  Liczba kolorów w palecie. */
-		uint8 biClrImportant; /*!<  Liczba wa¿nych kolorów w palecie. */
-		uint8 biCrlRotation; /*!<  Flaga sygnalizujaca czy ma nastepowaæ rotacja palety. */
+		uint32 biClrUsed; /*!<  Liczba kolorow w palecie. */
+		uint8 biClrImportant; /*!<  Liczba waznych kolorow w palecie. */
+		uint8 biCrlRotation; /*!<  Flaga sygnalizujaca czy ma nastepowac rotacja palety. */
 		uint16 biReserved; /*!< Nie uzywane. */
 	public:
 		uint32 biUsefulData; /*!< = biWidth * biHeight * 3 B. */
@@ -91,11 +91,11 @@ namespace bmp {
 	private:
 		uint32 Sygn; /*!<  sygnatura ustawiana przez program. */
 		uint32 DabName; /*!<  "DAB5" - na dysku 4 bajty. */
-		uint16 Ver; /*!<  wersja modu³u bitmap. */
+		uint16 Ver; /*!<  wersja modulu bitmap. */
 		uint8 Compr; /*!<  stopien kompresji, czyli ilosc najmlodszych bitow branych pod uwage. */
 		uint16 FilesCount; /*!<  ilosc plikow i folderow. */
 		uint32 FilesSize; /*!<  calkowita zajeta przestrzen. */
-		uint32 FreeSpc; /*!<  szacowane wolne miejsce, które pozostalo (max wartosc). */
+		uint32 FreeSpc; /*!<  szacowane wolne miejsce, ktore pozostalo (max wartosc). */
 	private: /*!< dodatkowe pola uzywane juz tylko przez klase bmp. */
 		uint64 DabHeaderStart; /*!<  poczatek naglowka dabstera	. */
 		uint64 FirstFileStart; /*!<  poczatek naglowka pierwszetgo pliku/folderu. */
@@ -166,7 +166,7 @@ namespace bmp {
 		const BUFFOR_STATE GetBufState() const;
 		void BufReset(); 
 
-		void OpenFile(string path, std::ios_base::open_mode DabFileMode, BUFFOR_MODE DabBufMode);
+		void OpenFile(string Dabpath, std::ios_base::open_mode DabFileMode, BUFFOR_MODE DabBufMode);
 
 		uint8 GetBit();
 		void PutBit(uint8 DabBit);
