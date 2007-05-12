@@ -49,7 +49,7 @@ public:
 	void copyInside(std::vector< std::map< std::string, std::string > > src, 
 					std::vector< std::map< std::string, std::string > > dest);
 
-	std::vector< std::map< std::string, std::string > > getContent(std::string path);
+	std::vector< std::map< std::string, std::string > > getContent(std::string path = "");
 };
 
 #endif

@@ -70,16 +70,19 @@ void oStck::clear(void) {
 
 /* Zwraca element z lewego konca stosu */
 item* oStck::left(void) {
-	return vStack.erase(vStack.begin());
+	if (!vStack.size()) return 0;
+	return vStack[0];
 }
 
 /* Zwraca element z prawego konca stosu */
 item* oStck::right(void) {
-	return vStack.erase(vStack.end());
+	if (!vStack.size()) return 0;
+	return vStack[vStack.size() - 1];
 }
 
 /* Zwraca element o wybranym numerze */
 item* oStck::get(int index) {
+	if (!(vStack.size() > static_cast<unsigned int>(index))) return 0;
 	return vStack[index];
 }
 

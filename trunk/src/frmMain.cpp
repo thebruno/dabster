@@ -86,43 +86,43 @@ System::Void dabster::frmMain::frmMain_Load(System::Object^ sender,
 
 	sfolder p;
 	p.setRealPath("D:\\");
-	p.getContent("Metzger\\");
+	std::vector< std::map< std::string, std::string > > y = p.getContent("Metzger\\");
 
 	std::vector< std::map< std::string, std::string > > vmTempSrc(2);
-	vmTempSrc[0][dabKeyRealPath] = "D:\\";
+	vmTempSrc[0][dabKeyRealPath] = "D:\\Y\\";
 	vmTempSrc[0][dabKeyName] = "Y";
 	vmTempSrc[0][dabKeyLength] = "0";
 	vmTempSrc[0][dabKeyAtrDirectory] = dabTrue;
 
-	vmTempSrc[1][dabKeyRealPath] = "D:\\Y\\";
+	vmTempSrc[1][dabKeyRealPath] = "D:\\Y\\pl.txt";
 	vmTempSrc[1][dabKeyName] = "pl.txt";
 	vmTempSrc[1][dabKeyLength] = "12";
 	vmTempSrc[1][dabKeyAtrDirectory] = dabFalse;
 
 	std::vector< std::map< std::string, std::string > > vmTempDst(2);
-	vmTempDst[0][dabKeyRelativePath] = "";
+	vmTempDst[0][dabKeyRelativePath] = "YY\\";
 	vmTempDst[0][dabKeyName] = "YY";
 	vmTempDst[0][dabKeyAtrDirectory] = dabTrue;
 
-	vmTempDst[1][dabKeyRelativePath] = "YY\\";
+	vmTempDst[1][dabKeyRelativePath] = "YY\\pl2.txt";
 	vmTempDst[1][dabKeyName] = "pl2.txt";
 	vmTempDst[1][dabKeyAtrDirectory] = dabFalse;
 
 	p.store(vmTempSrc, vmTempDst);
 
-	vmTempSrc[0][dabKeyRealPath] = "D:\\Metzger";
+	vmTempSrc[0][dabKeyRealPath] = "D:\\Metzger\\Y";
 	vmTempSrc[0][dabKeyName] = "Y";
 
-	vmTempSrc[1][dabKeyRealPath] = "D:\\Metzger\\Y";
+	vmTempSrc[1][dabKeyRealPath] = "D:\\Metzger\\Y\\pl.txt";
 	vmTempSrc[1][dabKeyName] = "pl.txt";
 
 	p.extract(vmTempDst, vmTempSrc);
 
-	vmTempSrc[0][dabKeyRelativePath] = "Metzger\\Y\\";
+	vmTempSrc[0][dabKeyRelativePath] = "Metzger\\Y\\pl.txt";
 	vmTempSrc[0][dabKeyName] = "pl.txt";
 	vmTempSrc[0][dabKeyAtrDirectory] = dabFalse;
 
-	vmTempSrc[1][dabKeyRelativePath] = "Metzger\\";
+	vmTempSrc[1][dabKeyRelativePath] = "Metzger\\Y\\";
 	vmTempSrc[1][dabKeyName] = "Y";
 	vmTempSrc[1][dabKeyAtrDirectory] = dabTrue;
 
@@ -470,7 +470,7 @@ void dabster::frmMain::fillOutTools(void) {
 			this->picMainTools[i][pictures]->BackColor = dabTransparent;
 			this->picMainTools[i][pictures]->Name = gcnew System::String(L"picMainTools" + i + "_" + pictures);
 			this->picMainTools[i][pictures]->Size = dabDSize(iTOOLS_MORE_WIDTH, iTOOLS_HEIGHT);
-			this->picMainTools[i][pictures]->Image = dabToImg(resources->GetObject(gcnew System::String(L"tooldabToolOptions_active")));
+			this->picMainTools[i][pictures]->Image = dabToImg(resources->GetObject(gcnew System::String(L"tool_toolOptions_active")));
 		} else if (this->pnlMainTools[i] != nullptr) {
 			/* Pasek 'i' ma byc niewidoczny */
 			if (this->pnlMainTools[iTOOLS_PANELS]->Controls->Contains(this->pnlMainTools[i])) {
