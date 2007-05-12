@@ -37,12 +37,13 @@ class drvLst {
 public:
 	void add(drive* newDrive);
 	void remove(int index);
+	void clear(void);
 
 	drive* get(int index);
 
 	int type(int index);
 	void refresh(void);
-	int find(std::string name);
+	int find(std::string path);
 
 	static const int iNOT_FOUND = -1;
 

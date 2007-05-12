@@ -45,6 +45,7 @@
 
 #include "stdMcrs.h"
 #include "err.h"
+#include "str.h"
 #include "oStck.h"
 
 /* UWAGA! Stos "lezy" poziomo, tak ze przypomina sciezke.
@@ -63,8 +64,11 @@ item* oStck::pop(void) {
 	return iTemp;
 }
 
-/* Usuwa wszystkie elementy ze stosu */
+/* Czysci stos usuwajac wskazywane przez stos elementy */
 void oStck::clear(void) {
+	for (int i = 0; i < vStack.size(); i++) {
+		if (vStack[i]) delete vStack[i];
+	}
 	vStack.clear();
 }
 
@@ -91,8 +95,15 @@ int oStck::size(void) {
 	return vStack.size();
 }
 
+/* Zwraca numer przypisany FB obiektu o danym numerze */
 int oStck::parent(int index) {
-	return 0;
+	unsigned int i = index - 1;
+	while (i >= 0) {
+		if (vStack[i]->getRealPath() != "") break;
+		i--;
+	}
+	if (i < 0) return iROOT_INDEX;
+	return i;
 }
 
 /* Zwraca typ obiektu o wybranym numerze */
@@ -111,8 +122,19 @@ int oStck::type(int index) {
 	throw err("!OSK0");
 }
 
+/* Zwraca sciezke do obiektu zapisana wzgledem FB obiektu o danym numerze */
 std::string oStck::relativePath(int index) {
-	return "";
+	std::string sPath = "";
+	for (int i = parent(index) + 1; i <= index; i++) {
+		sPath += vStack[i]->getName();
+		if (sPath[sPath.size() - 1] != '\\') sPath.push_back('\\');
+	}
+	if (((type(index) & dabFolder) == 0) && (sPath[sPath.size() - 1] == '\\')) {
+		sPath.erase(sPath.size() - 1, 1);
+	}
+	sPath = str::fixDelims(sPath);
+
+	return sPath;
 }
 
 /********************************************************************/
