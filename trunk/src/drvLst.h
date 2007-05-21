@@ -35,6 +35,8 @@
 
 class drvLst {
 public:
+	~drvLst(void);
+
 	void add(drive* newDrive);
 	void remove(int index);
 	void clear(void);
