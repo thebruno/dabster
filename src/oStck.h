@@ -35,6 +35,8 @@
 
 class oStck {
 public:
+	~oStck(void);
+
 	void push(item* newItem);
 	item* pop(void);
 	void clear(void);
@@ -47,6 +49,8 @@ public:
 
 	int type(int index);
 	std::string relativePath(int index);
+
+	static const int iROOT_INDEX = -1;
 
 private:
 	std::vector< item* > vStack;

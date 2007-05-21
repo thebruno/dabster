@@ -50,24 +50,33 @@
 
 /* UWAGA! Stos "lezy" poziomo, tak ze przypomina sciezke.
 Stad nie ma gory ani spodu, tylko lewy i prawy koniec.
-Prawy koniec pelni role gory stosu. */
+Elementy sa dodawane do prawego konca. */
+
+oStck::~oStck(void) {
+	clear();
+}
 
 /* Wrzuca nowy element na prawy koniec stosu */
 void oStck::push(item* newItem) {
 	vStack.push_back(newItem);
+	(*newItem).attach();
 }
 
 /* Sciaga element z prawego konca stosu */
 item* oStck::pop(void) {
 	item *iTemp = vStack[vStack.size() - 1];
+	(*iTemp).detach();
 	vStack.pop_back();
 	return iTemp;
 }
 
 /* Czysci stos usuwajac wskazywane przez stos elementy */
 void oStck::clear(void) {
-	for (int i = 0; i < vStack.size(); i++) {
-		if (vStack[i]) delete vStack[i];
+	for (unsigned int i = 0; i < vStack.size(); i++) {
+		if (vStack[i]) {
+			(*vStack[i]).detach();
+			vStack[i] = 0;
+		}
 	}
 	vStack.clear();
 }

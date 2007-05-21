@@ -140,7 +140,7 @@ System::Void dabster::frmMain::frmMain_Load(System::Object^ sender,
 
 	p.del(vmTempDst);
 
-	/* Testy oStck */
+	/* Testy oStck i drvLst */
 
 	oStck s;
 	drvLst dl;
@@ -167,10 +167,6 @@ System::Void dabster::frmMain::frmMain_Load(System::Object^ sender,
 	s.push(dynamic_cast< item* >(f));
 
 	i = s.parent(1);
-
-	dl.clear();
-	s.clear();
-
 }
 
 /* Zmiana rozmiaru frmMain */

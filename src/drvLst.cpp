@@ -40,20 +40,29 @@
 #include "err.h"
 #include "drvLst.h"
 
+drvLst::~drvLst(void) {
+	clear();
+}
+
 /* Dodaje nowy dysk do listy */
 void drvLst::add(drive* newDrive) {
 	vDrives.push_back(newDrive);
+	(*newDrive).attach();
 }
 
 /* Usuwa dysk o wybranym numerze */
 void drvLst::remove(int index) {
+	(*vDrives[index]).detach();
 	vDrives.erase(vDrives.begin() + index);
 }
 
 /* Czysci liste usuwajac wskazywane przez liste elementy */
 void drvLst::clear(void) {
-	for (int i = 0; i < vDrives.size(); i++) {
-		if (vDrives[i]) delete vDrives[i];
+	for (unsigned int i = 0; i < vDrives.size(); i++) {
+		if (vDrives[i]) {
+			(*vDrives[i]).detach();
+			vDrives[i] = 0;
+		}
 	}
 	vDrives.clear();
 }
@@ -79,7 +88,7 @@ void drvLst::refresh(void) {
 	/* Usuwamy wszystkie dyski logiczne */
 	for (i = 0; i < vDrives.size(); i++) {
 		if (type(i) == dabSDrive) {
-			vDrives.erase(vDrives.begin() + i);
+			remove(i);
 		}
 	}
 	
@@ -87,12 +96,13 @@ void drvLst::refresh(void) {
 	cli::array< System::String^ > ^lDrives = dabDir::GetLogicalDrives();
 	for (i = 0; i < static_cast< unsigned int >(lDrives->Length); i++) {
 		drive *dTemp;
-		std::string sTemp;
+		std::string sTemp = str::sysStrToCppStr(lDrives[i]);
+
 		dTemp = new sdrive();
-		sTemp = str::sysStrToCppStr(lDrives[i]);
 		dTemp->setRealPath(sTemp);
 		dTemp->setName(sTemp.substr(0, sTemp.size() - 2));
-		vDrives.push_back(dTemp);
+
+		add(dTemp);
 	}
 }
 

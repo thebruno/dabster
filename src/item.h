@@ -44,11 +44,15 @@ public:
 	void setRealPath(std::string path);
 	std::string getRealPath(void);
 
+	void attach(void);
+	void detach(void);
+
 protected:
 	std::string sName;
 	std::string sRealPath;
 	bool bCanceled;
 	prgrss pProgress;
+	int refCount;
 };
 
 #endif

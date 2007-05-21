@@ -29,12 +29,12 @@
 #include <string>
 #include "item.h"
 
-item::item(void) : bCanceled(false), sName(""), sRealPath("") {
+item::item(void) : bCanceled(false), sName(""), sRealPath(""), refCount(0) {
 }
 
 item::item(prgrss progress) : 
 	pProgress(progress), bCanceled(false), 
-	sName(""), sRealPath("") {
+	sName(""), sRealPath(""), refCount(0) {
 }
 
 item::~item(void) {
@@ -58,6 +58,16 @@ void item::setRealPath(std::string path) {
 /* Pobiera rzeczywista sciezke */
 std::string item::getRealPath(void) {
 	return sRealPath;
+}
+
+/* Zwieksza licznik wskazan */
+void item::attach(void) {
+	++refCount;
+}
+
+/* Zmniejsza licznik wskazan i w razie potrzeby usuwa obiekt */
+void item::detach(void) {
+	if (--refCount == 0) delete this;
 }
 
 /********************************************************************/
