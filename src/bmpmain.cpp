@@ -76,13 +76,13 @@ int main() {
 	smap plik1_out, plik2_out, plik3_out, plik4_out;
 
 	vmstring sciezki1, sciezki2, sciezki3, sciezki4, sciezki5, wynik;
-	plik1_in["name"] = "1.txt"; plik1_in["length"] = "3128"; plik1_in["realPath"]= "";
+	plik1_in["name"] = "1.txt"; plik1_in["length"] = "20237"; plik1_in["realPath"]= "";
 	sciezki1.push_back(plik1_in);
-	plik2_in["name"] = "2.txt"; plik2_in["length"] = "3055"; plik2_in["realPath"]= "";
+	plik2_in["name"] = "2.txt"; plik2_in["length"] = "26033"; plik2_in["realPath"]= "";
 	sciezki1.push_back(plik2_in);
-	plik3_in["name"] = "3.txt"; plik3_in["length"] = "4158"; plik3_in["realPath"]= "";
+	plik3_in["name"] = "3.txt"; plik3_in["length"] = "278"; plik3_in["realPath"]= "";
 	sciezki1.push_back(plik3_in);
-	plik4_in["name"] = "4.txt"; plik4_in["length"] = "170"; plik4_in["realPath"]= "";
+	plik4_in["name"] = "4.txt"; plik4_in["length"] = "1056"; plik4_in["realPath"]= "";
 	sciezki1.push_back(plik4_in);
 
 	plik1_inside["creationTimeUtc"] = "25.04.2007 08:56:33"; plik1_inside["name"] = "1.txtinbmp";
@@ -143,15 +143,15 @@ int main() {
 			b = new bmp::BMP(sf);
 			std:: cout << (wynik = b->getContent(string("")));
 			if (wynik.empty() && b->getCompression() == 0) {
-				b->setCompression(2);
+				b->setCompression(1);
 			}
 			double t1,t2, t;
 			t1 = clock();
 
-			//b->store(sciezki1,sciezki2);
+			b->store(sciezki1,sciezki2);
 			//b->del(sciezki4);
-			b->extract(sciezki5,sciezki3);
-			//b->modify(sciezki2, sciezki5);
+			//b->extract(sciezki2,sciezki3);
+			//b->modify(sciezki5, sciezki2);
 			//b->copyInside(sciezki4, sciezki5);
 			t2 = clock();
 			t = t2-t1;
@@ -165,19 +165,6 @@ int main() {
 			std::cout << "BLAD :/";
 		}
 	}
-
-	// zmienic nazwe buff mode!!!!!!!
-
-/******************************************
-kiedy ustawiac bufory i czy robic recznie fill/flush??
-napisac funkcje flush i fill dla obu bufforow
-przy konstruktorze wyjatki?
-
-
-
-*******************************************/
-
-
 	return 0;
 }
 

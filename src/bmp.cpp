@@ -1246,7 +1246,7 @@ namespace bmp {
 		}
 		// dodanie zer!!
 		uint64 ModSeek = 8 * ModReminder * ( NewSize / (24 * BmpHeader->biWidth));
-		// >= czy samo >
+		// >= czy samo ?>
 		if ((DabCurPos - 8 * BmpHeader->bfOffBits) % (8 * ModWidth) + NewSize % (24 * BmpHeader->biWidth) >= 24 * BmpHeader->biWidth ) {
 			NewSize+= 8 * ModReminder; //ModWidth - NewSize % (24 * BmpHeader->biWidth);
 		}
