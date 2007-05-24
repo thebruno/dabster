@@ -87,6 +87,16 @@
 
 
 
+##  tab module errors  ##
+
+!TAB0d Path '<param0>' incorrect
+!TAB0h No objects found
+
+!TAB1d Drive (partition) '<param0>' does not exist
+!TAB1h Partition '<param0>' not found
+
+
+
 ##  Main controls substance  ##
 
 @MNI0 File
@@ -100,6 +110,8 @@
 @TOOL_externalDrives External Drives
 @TOOL_copyToNeighbour Copy to neighbour
 @TOOL_moveToNeighbour Move to neighbour
+
+@TPG0 empty
 
 @SLB0 © The Dabster Team 2007
 @SLB1 Ready to work

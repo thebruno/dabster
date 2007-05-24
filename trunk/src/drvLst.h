@@ -33,25 +33,29 @@
 #include <string>
 #include "drive.h"
 
+namespace dabster {
+
 class drvLst {
 public:
 	~drvLst(void);
 
-	void add(drive* newDrive);
-	void remove(int index);
-	void clear(void);
+	static void add(drive* newDrive);
+	static void remove(int index);
+	static void clear(void);
 
-	drive* get(int index);
+	static drive* get(int index);
 
-	int type(int index);
-	void refresh(void);
-	int find(std::string path);
+	static int type(int index);
+	static void refresh(void);
+	static int find(std::string path);
 
 	static const int iNOT_FOUND = -1;
 
 private:
-	std::vector< drive* > vDrives;
+	static std::vector< drive* > vDrives;
 };
+
+}
 
 #endif
 

@@ -48,7 +48,7 @@ public:
 	int parent(int index);
 
 	int type(int index);
-	std::string relativePath(int index);
+	std::string relativePath(int begin, int end);
 
 	static const int iROOT_INDEX = -1;
 

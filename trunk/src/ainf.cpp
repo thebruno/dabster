@@ -40,7 +40,7 @@ using namespace System::Security::Permissions;
 [assembly:AssemblyCopyrightAttribute("Copyright (c) The Dabster Team 2007")];
 [assembly:AssemblyTrademarkAttribute("")];
 [assembly:AssemblyCultureAttribute("")];
-[assembly:AssemblyVersionAttribute("5.0.*")];
+[assembly:AssemblyVersionAttribute("5.0.77")];
 [assembly:ComVisible(false)];
 [assembly:CLSCompliantAttribute(true)];
 [assembly:SecurityPermission(SecurityAction::RequestMinimum, UnmanagedCode = true)];

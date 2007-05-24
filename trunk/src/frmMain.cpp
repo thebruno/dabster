@@ -33,11 +33,15 @@
 #include "set.h"
 #include "str.h"
 
+#include "tab.h"
+
+//#define TESTING
+
+#ifdef TESTING
 #include "sfolder.h"
-#include "sfile.h"
-#include "sdrive.h"
 #include "drvLst.h"
 #include "oStck.h"
+#endif
 
 const int iMENU_ITEMS = 7;
 const int iTOOLS_PANELS = 10;
@@ -45,12 +49,11 @@ const int iMAX_TOOLS_PER_TOOLBAR = 100;
 const int iSTAT_LABELS = 3;
 const int iSTAT_PRGRSS = 1;
 
-/* Inicjalizacja frmMain */
-void dabster::frmMain::initializeComponent(void) {
-	resources = (gcnew System::ComponentModel::ComponentResourceManager(frmMain::typeid));
+dabster::frmMain::frmMain(void) {
+	resources = (gcnew dabComponentResourceManager(frmMain::typeid));
 	this->SuspendLayout();
 
-	//frmMain
+	/* Budowanie frmMain */
 	this->AutoScaleDimensions = dabDSizeF(6, 13);
 	this->AutoScaleMode = dabAutoScaleModeFont;
 	this->BackColor = dabWhite;
@@ -60,15 +63,10 @@ void dabster::frmMain::initializeComponent(void) {
 	this->Icon = (dabToIcon(resources->GetObject(L"icon")));
 	this->Name = L"frmMain";
 	this->Text = L"Sigma Dabster 5";
-	this->Load += gcnew System::EventHandler(this, &frmMain::frmMain_Load);
 	this->Resize += gcnew System::EventHandler(this, &frmMain::frmMain_Resize);
 	this->ResumeLayout(false);
 	this->PerformLayout();
-}
 
-/* Ladowanie frmMain */
-System::Void dabster::frmMain::frmMain_Load(System::Object^ sender, 
-											System::EventArgs^ e) {
 	/* Ustalanie appPath */
 	str::path appPath;
 	try { appPath = str::fixAppPath(); }
@@ -86,6 +84,7 @@ System::Void dabster::frmMain::frmMain_Load(System::Object^ sender,
 	loadTools();
 	loadStat();
 
+	#ifdef TESTING
 	/* Testy klasy sfolder */
 
 	sfolder p;
@@ -149,7 +148,7 @@ System::Void dabster::frmMain::frmMain_Load(System::Object^ sender,
 
 	/* D:\ */
 	dl.refresh();
-	if ((i = dl.find("D:\\")) == drvLst::iNOT_FOUND) return;
+	if ((i = dl.find("D")) == drvLst::iNOT_FOUND) return;
 	s.push(dl.get(i));
 
 	/* Metzger\ */
@@ -167,6 +166,20 @@ System::Void dabster::frmMain::frmMain_Load(System::Object^ sender,
 	s.push(dynamic_cast< item* >(f));
 
 	i = s.parent(1);
+
+	/* Testy tab */
+
+	dabTabControl^ tc = gcnew dabTabControl();
+	this->Controls->Add(tc);
+	tc->Width = this->Width - 8;
+	tc->Height = this->Height - 111;
+	tc->Location = dabDPoint(0, 63);
+	dabster::tab^ t = gcnew dabster::tab(tc);
+	t->open("D:\\Moje dokumenty\\Y!\\");
+	#endif
+}
+
+dabster::frmMain::~frmMain() {
 }
 
 /* Zmiana rozmiaru frmMain */
@@ -262,6 +275,7 @@ void dabster::frmMain::resizeTools(void) {
 	int labels, pictures;
 	int lines = -1;
 	int toolData[iTOOLS_PANELS][3];	// 0 - preferowana szerokosc, 1 - nr linii, 2 - pozycja w linii
+
 	/* Zbieranie danych o paskach */
 	for (int i = 0; i < iTOOLS_PANELS; ++i) {
 		if (set::get(L"$bTOOLBAR" + i).b) {

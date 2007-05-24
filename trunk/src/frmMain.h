@@ -35,17 +35,14 @@ namespace dabster {
 
 public ref class frmMain : public System::Windows::Forms::Form {
 public:
-	frmMain(void) {	initializeComponent(); }
+	frmMain(void);
 
 protected:
-	~frmMain() { if (components) delete components; }
+	~frmMain();
 
 private:
 	/* Glowne okno */
 	dabComponentResourceManager^ resources;
-	dabContainer^ components;
-	void initializeComponent(void);
-	System::Void frmMain_Load(System::Object^ sender, System::EventArgs^ e);
 	System::Void frmMain_Resize(System::Object^ sender, System::EventArgs^ e);
 
 	/* Menu */

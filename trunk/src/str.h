@@ -30,6 +30,7 @@
 #define _STR_H
 
 #include <string>
+#include <vector>
 
 class str {
 public:
@@ -41,6 +42,7 @@ public:
 	};
 
 	static path splitPath(std::string p, const std::string delimiter = sDelimiter);
+	static std::vector< std::string > itemNames(std::string p);
 	static std::string fixDelims(std::string path, std::string delimiter = sDelimiter);
 	static void setDelimiter(const std::string delimiter);
 	static void setAppPath(path appPath);
@@ -51,7 +53,6 @@ public:
 	static char* strToChar(const std::string s);
 	static std::string charToStr(const char c);
 	static long stringToLong(const std::string s);
-//	static std::string longToString(const long);
 
 private:
 	static std::string sDelimiter;
