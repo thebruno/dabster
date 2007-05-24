@@ -87,6 +87,16 @@
 
 
 
+##  B³êdy modu³u tab  ##
+
+!TAB0d Œcie¿ka '<param0>' niepoprawna
+!TAB0h Nie znaleziono ¿adnych obiektów
+
+!TAB1d Dysk (partycja) '<param0>' nie istnieje
+!TAB1h Nie znaleziono partycji '<param0>'
+
+
+
 ##  Treœæ g³ównych kontrolek  ##
 
 @MNI0 Plik
@@ -100,6 +110,8 @@
 @TOOL_externalDrives Dyski zewnêtrzne
 @TOOL_copyToNeighbour Kopiuj do s¹siada
 @TOOL_moveToNeighbour Przenieœ do s¹siada
+
+@TPG0 pusta
 
 @SLB0 © Zespó³ Dabstera 2007
 @SLB1 Gotowy do pracy

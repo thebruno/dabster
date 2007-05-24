@@ -39,7 +39,7 @@
 std::string str::sDelimiter = "\\";
 str::path str::sAppPath;
 
-/* Dzieli sciezke na skladowe */
+/* Dzieli sciezke na dysk, katalog, nazwe pliku i rozszerzenie */
 str::path str::splitPath(std::string p, const std::string delimiter) {
 	path sPath;
 	sPath.dir = sPath.drive = sPath.extension = sPath.fileName = "";
@@ -49,7 +49,7 @@ str::path str::splitPath(std::string p, const std::string delimiter) {
 	std::string::size_type pos = 0;
 	std::string delim;
 	if (delimiter == "\\") { delim = "/"; } else { delim = "\\"; }
-	while ((pos = p.find_first_of(delim, pos)) != std::string::npos) {
+	while ((pos = p.find(delim, pos)) != std::string::npos) {
 		p.replace(pos++, 1, delimiter);
 	}
 		
@@ -90,7 +90,7 @@ str::path str::splitPath(std::string p, const std::string delimiter) {
 	}
 
 	/* Wykrywanie dysku */
-	pos = p.find_first_of("\\");
+	pos = p.find("\\");
 	if (pos == std::string::npos) {
 		if (sPath.fileName.length() == 0) {
 			/* Sciezka musi zawierac nazwe pliku lub dysk */
@@ -129,12 +129,38 @@ str::path str::splitPath(std::string p, const std::string delimiter) {
 	return sPath;
 }
 
+/* Dzieli sciezke na skladowe */
+std::vector< std::string > str::itemNames(std::string p) {
+	std::vector< std::string > rt(0);
+	if (p.length() == 0) { return rt; }
+
+	/* Ujednolicanie sciezki */
+	std::string::size_type pos = 0;
+	std::string delim;
+	if (sDelimiter == "\\") { delim = "/"; } else { delim = "\\"; }
+	while ((pos = p.find(delim, pos)) != std::string::npos) {
+		p.replace(pos++, 1, sDelimiter);
+	}
+	if ((pos = p.find(":")) != std::string::npos) p.erase(pos, 1);
+
+	/* Dzielenie sciezki */
+	pos = 0;
+	std::string::size_type pos2;
+	while ((pos2 = p.find(sDelimiter, pos)) != std::string::npos) {
+		rt.push_back(p.substr(pos, pos2 - pos));
+		pos = pos2;
+		if (p.size() <= ++pos) break;
+	}
+
+	return rt;
+}
+
 /* Naprawia symbole rozdzielajace w podanej sciezce */
 std::string str::fixDelims(std::string path, std::string delimiter) {
 	std::string::size_type pos = 0;
 	std::string delim;
 	if (delimiter == "\\") { delim = "/"; } else { delim = "\\"; }
-	while ((pos = path.find_first_of(delim, pos)) != std::string::npos) {
+	while ((pos = path.find(delim, pos)) != std::string::npos) {
 		path.replace(pos++, 1, delimiter);
 	}
 	return path;
@@ -163,14 +189,14 @@ str::path str::fixAppPath(void) {
 
 		// Usuwanie cudzyslowow i innych parametrow z linii rozkazow
 		std::string::size_type pos;
-		if ((pos = path.find_first_of("\"")) != std::string::npos) {
+		if ((pos = path.find("\"")) != std::string::npos) {
 			path.erase(pos, 1);
 		}
-		if ((pos = path.find_first_of("\"")) != std::string::npos) {
+		if ((pos = path.find("\"")) != std::string::npos) {
 			path.erase(pos);
 		}
 
-		str::setDelimiter(str::charToStr(path.at(path.find_first_of(":") + 1)));
+		str::setDelimiter(str::charToStr(path.at(path.find(":") + 1)));
 		appPath = str::splitPath(path);
 		str::setAppPath(appPath);
 	}
@@ -237,12 +263,5 @@ long str::stringToLong(const std::string s) {
 
 	return l;
 }
-
-/* Konwertuje int na string */
-//std::string str::longToString(const long l) {
-//	std::ostringstream s("");
-//	s << l;
-//	return s.str();
-//}
 
 /********************************************************************/

@@ -74,6 +74,11 @@
 #define dabAlignMiddleLeft		System::Drawing::ContentAlignment::MiddleLeft
 #define dabAlignMiddleRight		System::Drawing::ContentAlignment::MiddleRight
 
+#define dabGridNone				GlacialComponents::Controls::GLGridLineStyles::gridNone
+#define dabStyleXP				GlacialComponents::Controls::GLControlStyles::XP
+#define dabStyleSuperFlat		GlacialComponents::Controls::GLControlStyles::SuperFlat
+#define dabQuickSort			GlacialComponents::Controls::SortTypes::QuickSort
+
 //obiekty
 
 #define dabDSize	System::Drawing::Size
@@ -95,12 +100,21 @@
 
 //kontrolki
 
+#define dabForm		System::Windows::Forms::Form
+
 #define dabToolStripMenuItem	System::Windows::Forms::ToolStripMenuItem
 #define dabMenuStrip			System::Windows::Forms::MenuStrip
 
 #define dabPanel		System::Windows::Forms::Panel
 #define dabPictureBox	System::Windows::Forms::PictureBox
 #define dabLabel		System::Windows::Forms::Label
+#define dabComboBox		System::Windows::Forms::ComboBox
+
+#define dabTabControl	System::Windows::Forms::TabControl
+#define dabTabPage		System::Windows::Forms::TabPage
+
+#define dabGlacialList	GlacialComponents::Controls::GlacialList
+#define dabGLColumn		GlacialComponents::Controls::GLColumn
 
 #define dabToolStripItem			System::Windows::Forms::ToolStripItem
 #define dabToolStripStatusLabel		System::Windows::Forms::ToolStripStatusLabel

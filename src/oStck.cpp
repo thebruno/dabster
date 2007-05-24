@@ -59,13 +59,13 @@ oStck::~oStck(void) {
 /* Wrzuca nowy element na prawy koniec stosu */
 void oStck::push(item* newItem) {
 	vStack.push_back(newItem);
-	(*newItem).attach();
+	newItem->attach();
 }
 
 /* Sciaga element z prawego konca stosu */
 item* oStck::pop(void) {
 	item *iTemp = vStack[vStack.size() - 1];
-	(*iTemp).detach();
+	iTemp->detach();
 	vStack.pop_back();
 	return iTemp;
 }
@@ -74,7 +74,7 @@ item* oStck::pop(void) {
 void oStck::clear(void) {
 	for (unsigned int i = 0; i < vStack.size(); i++) {
 		if (vStack[i]) {
-			(*vStack[i]).detach();
+			vStack[i]->detach();
 			vStack[i] = 0;
 		}
 	}
@@ -131,14 +131,15 @@ int oStck::type(int index) {
 	throw err("!OSK0");
 }
 
-/* Zwraca sciezke do obiektu zapisana wzgledem FB obiektu o danym numerze */
-std::string oStck::relativePath(int index) {
+/* Zwraca wybrana czesc sciezki */
+std::string oStck::relativePath(int begin, int end) {
 	std::string sPath = "";
-	for (int i = parent(index) + 1; i <= index; i++) {
+	if (end >= vStack.size()) end = vStack.size() - 1;
+	for (int i = begin; i <= end; i++) {
 		sPath += vStack[i]->getName();
 		if (sPath[sPath.size() - 1] != '\\') sPath.push_back('\\');
 	}
-	if (((type(index) & dabFolder) == 0) && (sPath[sPath.size() - 1] == '\\')) {
+	if (((type(end) & dabFolder) == 0) && (sPath[sPath.size() - 1] == '\\')) {
 		sPath.erase(sPath.size() - 1, 1);
 	}
 	sPath = str::fixDelims(sPath);

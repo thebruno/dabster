@@ -40,27 +40,29 @@
 #include "err.h"
 #include "drvLst.h"
 
-drvLst::~drvLst(void) {
+std::vector< drive* > dabster::drvLst::vDrives;
+
+dabster::drvLst::~drvLst(void) {
 	clear();
 }
 
 /* Dodaje nowy dysk do listy */
-void drvLst::add(drive* newDrive) {
+void dabster::drvLst::add(drive* newDrive) {
 	vDrives.push_back(newDrive);
-	(*newDrive).attach();
+	newDrive->attach();
 }
 
 /* Usuwa dysk o wybranym numerze */
-void drvLst::remove(int index) {
-	(*vDrives[index]).detach();
+void dabster::drvLst::remove(int index) {
+	vDrives[index]->detach();
 	vDrives.erase(vDrives.begin() + index);
 }
 
 /* Czysci liste usuwajac wskazywane przez liste elementy */
-void drvLst::clear(void) {
+void dabster::drvLst::clear(void) {
 	for (unsigned int i = 0; i < vDrives.size(); i++) {
 		if (vDrives[i]) {
-			(*vDrives[i]).detach();
+			vDrives[i]->detach();
 			vDrives[i] = 0;
 		}
 	}
@@ -68,12 +70,12 @@ void drvLst::clear(void) {
 }
 
 /* Zwraca dysk o wybranym numerze */
-drive* drvLst::get(int index) {
+drive* dabster::drvLst::get(int index) {
 	return vDrives[index];
 }
 
 /* Zwraca typ dysku o wybranym numerze */
-int drvLst::type(int index) {
+int dabster::drvLst::type(int index) {
 	if (dynamic_cast< sdrive* >(vDrives[index])) return dabSDrive;
 	if (dynamic_cast< ftp* >(vDrives[index])) return dabFtp;
 	if (dynamic_cast< sdrive* >(vDrives[index])) return dabMldrv;
@@ -82,7 +84,7 @@ int drvLst::type(int index) {
 }
 
 /* Odœwie¿a informacje o dyskach twardych */
-void drvLst::refresh(void) {
+void dabster::drvLst::refresh(void) {
 	unsigned int i;
 
 	/* Usuwamy wszystkie dyski logiczne */
@@ -107,9 +109,9 @@ void drvLst::refresh(void) {
 }
 
 /* Zwraca index elementu o podanej nazwie */
-int drvLst::find(std::string path) {
+int dabster::drvLst::find(std::string path) {
 	for (unsigned int i = 0; i < vDrives.size(); i++) {
-		if (vDrives[i]->getRealPath() == path) return i;
+		if (vDrives[i]->getName() == path) return i;
 	}
 	return iNOT_FOUND;
 }
