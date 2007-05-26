@@ -262,7 +262,7 @@ namespace bmp {
 	class FILE_BUFFOR: public BUFFOR {
 	};
 
-	int isBmp(sfile DabFile);
+	int isBmp(file *DabFile);
 
 	/*!
 	 * \brief
@@ -316,7 +316,7 @@ namespace bmp {
 
 		BMP();
 		~BMP();
-		BMP(sfile DabFile); // otwarcie bitmapy
+		BMP(file *DabFile); // otwarcie bitmapy
 	};
 }
 #pragma pack(pop)

@@ -1372,10 +1372,10 @@ namespace bmp {
 	 * 
 	 * Otwarcie bitmapy i odczyt naglowka.
 	 */
-	BMP::BMP(sfile DabFile):BmpBuf(&BmpHeader) {
+	BMP::BMP(file *DabFile):BmpBuf(&BmpHeader) {
 		PreferedCompr = 1;
 		BmpBuf.BufReset();
-		BmpBuf.OpenFile(DabFile.getRealPath().c_str(), std::ios_base::in | std::ios_base::out, BUFFOR::BUF_READONLY);
+		BmpBuf.OpenFile(DabFile->getRealPath().c_str(), std::ios_base::in | std::ios_base::out, BUFFOR::BUF_READONLY);
 		BmpBuf.SetReadSize(BUF_READING_SIZE);
 		BmpBuf.Fill();
 		ReadBmpHeader();
@@ -2868,11 +2868,11 @@ namespace bmp {
 	 * Plik do sprawdzenia.
 	 * 
 	 */
-	int isBmp(sfile DabFile)  {
+	int isBmp(file *DabFile)  {
 		BMP_HEADER BmpHeader;
 		FILE_BUFFOR file;
 		try {
-			file.OpenFile(DabFile.getRealPath().c_str(), std::ios_base::in, BUFFOR::BUF_READONLY);
+			file.OpenFile(DabFile->getRealPath().c_str(), std::ios_base::in, BUFFOR::BUF_READONLY);
 			if (file.GetBufState() == BUFFOR::BUF_GOOD && file.GetFileSize() >= 54) {
 				uint32 i;
 				uint8 * p = reinterpret_cast<uint8*> (&BmpHeader);
