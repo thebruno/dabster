@@ -137,10 +137,11 @@ int main() {
 	bmp::BMP * b = 0;
 	sfile sf;
 	sf.setRealPath(nazwa);
-	if (bmp::isBmp(sf)) {
+	file * f = &sf;
+	if (bmp::isBmp(f)) {
 
 		try {
-			b = new bmp::BMP(sf);
+			b = new bmp::BMP(f);
 			std:: cout << (wynik = b->getContent(string("")));
 			if (wynik.empty() && b->getCompression() == 0) {
 				b->setCompression(1);
