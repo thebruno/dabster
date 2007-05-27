@@ -68,4 +68,10 @@ public:
      char * getKey ();
 };
 
+#if 0
+#include "encryption_template.H"
+// docelowo to bêdzie wygl±da³o tak:
+typedef encryption_template <aes_base, 128> aes;
+#endif	// 0
+
 #endif // _AES_H
