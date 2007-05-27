@@ -95,8 +95,31 @@ item* oStck::right(void) {
 
 /* Zwraca element o wybranym numerze */
 item* oStck::get(int index) {
-	if (!(vStack.size() > static_cast<unsigned int>(index))) return 0;
+	if ((static_cast<unsigned int>(index) >= vStack.size()) || (index < 0)) {
+		/* Indeks poza zakresem */
+		std::vector<std::string> params(1);
+		params[0] = index;
+		throw err("!OSK1", params);
+	}
+
 	return vStack[index];
+}
+
+/* Podmienia element o wybranym numerze */
+void oStck::set(int index, item* newItem) {
+	if ((static_cast<unsigned int>(index) >= vStack.size()) || (index < 0)) {
+		/* Indeks poza zakresem */
+		std::vector<std::string> params(1);
+		params[0] = index;
+		throw err("!OSK1", params);
+	}
+
+	if (vStack[index] == newItem) return;
+
+	item *oldItem = vStack[index];
+	oldItem->detach();
+	vStack[index] = newItem;
+	newItem->attach();
 }
 
 /* Zwraca wielkosc stosu */
@@ -104,11 +127,20 @@ int oStck::size(void) {
 	return vStack.size();
 }
 
-/* Zwraca numer przypisany FB obiektu o danym numerze */
+/* Zwraca numer najblizszego FB */
 int oStck::parent(int index) {
 	unsigned int i = index - 1;
+
+	if ((static_cast<unsigned int>(i) >= vStack.size()) || (i < 0)) {
+		/* Indeks poza zakresem */
+		std::vector<std::string> params(1);
+		params[0] = i;
+		throw err("!OSK1", params);
+	}
+
 	while (i >= 0) {
 		if (vStack[i]->getRealPath() != "") break;
+		if ((type(i) & dabFile) == dabFile) break;
 		i--;
 	}
 	if (i < 0) return iROOT_INDEX;
@@ -117,6 +149,13 @@ int oStck::parent(int index) {
 
 /* Zwraca typ obiektu o wybranym numerze */
 int oStck::type(int index) {
+	if ((static_cast<unsigned int>(index) >= vStack.size()) || (index < 0)) {
+		/* Indeks poza zakresem */
+		std::vector<std::string> params(1);
+		params[0] = index;
+		throw err("!OSK1", params);
+	}
+
 	if (dynamic_cast< sdrive* >(vStack[index])) return dabSDrive;
 	if (dynamic_cast< sfile* >(vStack[index])) return dabSFile;
 	if (dynamic_cast< sfolder* >(vStack[index])) return dabSFolder;
@@ -128,15 +167,24 @@ int oStck::type(int index) {
 	if (dynamic_cast< wav* >(vStack[index])) return dabWav;
 	if (dynamic_cast< twfsh* >(vStack[index])) return dabTwfsh;
 
-	throw err("!OSK0");
+	throw /* Typ nieznany */ err("!OSK0");
 }
 
 /* Zwraca wybrana czesc sciezki */
 std::string oStck::relativePath(int begin, int end) {
 	std::string sPath = "";
-	if (end >= vStack.size()) end = vStack.size() - 1;
+	if ((static_cast<unsigned int>(end) >= vStack.size()) || (end < 0)) end = vStack.size() - 1;
+
+	if ((static_cast<unsigned int>(begin) >= vStack.size()) || (begin < 0)) {
+		/* Indeks poza zakresem */
+		std::vector<std::string> params(1);
+		params[0] = begin;
+		throw err("!OSK1", params);
+	}
+
 	for (int i = begin; i <= end; i++) {
 		sPath += vStack[i]->getName();
+		if (!i) sPath.push_back(':');
 		if (sPath[sPath.size() - 1] != '\\') sPath.push_back('\\');
 	}
 	if (((type(end) & dabFolder) == 0) && (sPath[sPath.size() - 1] == '\\')) {

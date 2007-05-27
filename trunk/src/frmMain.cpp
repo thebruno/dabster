@@ -175,8 +175,9 @@ dabster::frmMain::frmMain(void) {
 	tc->Height = this->Height - 111;
 	tc->Location = dabDPoint(0, 63);
 	dabster::tab^ t = gcnew dabster::tab(tc);
-	t->open("D:\\Moje dokumenty\\Y!\\");
+	t->open("D:\\Metzger\\Qrs\\");
 	#endif
+
 }
 
 dabster::frmMain::~frmMain() {
