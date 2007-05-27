@@ -34,6 +34,21 @@
 #include <vector>
 #include <map>
 
+#include "folder.h"
+#include "item.h"
+
+#include "sfile.h"
+#include "sfolder.h"
+//#include "sdrive.h"
+//
+//#include "ftp.h"
+//#include "mldrv.h"
+//#include "bmp.h"
+//#include "aes.h"
+//#include "bwt.h"
+//#include "wav.h"
+//#include "twfsh.h"
+
 #include "stdMcrs.h"
 #include "oStck.h"
 #include "drvLst.h"
@@ -104,10 +119,11 @@ void dabster::tab::resize(void) {
 
 /* Otwiera nowy katalog */
 void dabster::tab::open(std::string path) {
-	std::vector< std::string > p = str::itemNames(path);
+	std::vector< std::string > pth = str::itemNames(path);
+	std::vector< std::string > content(0);
 	unsigned int level = 0;
 
-	if (p.size() == 0) {
+	if (pth.size() == 0) {
 		/* Sciezka niepoprawna */
 		std::vector<std::string> params(1);
 		params[0] = path;
@@ -115,9 +131,9 @@ void dabster::tab::open(std::string path) {
 	}
 
 	/* Porownywanie ze stara sciezka */
-	while ((p.size() > level) && 
+	while ((pth.size() > level) && 
 		   (static_cast<unsigned int>(opensStack->size()) > level) && 
-		   (opensStack->get(level)->getName() == p[level])) {
+		   (opensStack->get(level)->getName() == pth[level])) {
 		++level;
 	}
 
@@ -127,12 +143,12 @@ void dabster::tab::open(std::string path) {
 	}
 
 	/* Dodawanie dysku */
-	if (level == 0) {
+	if (level++ == 0) {
 		int index;
-		if ((index = drvLst::find(p[0])) == drvLst::iNOT_FOUND) {
+		if ((index = drvLst::find(pth[0])) == drvLst::iNOT_FOUND) {
 			/* Nie znaleziono partycji */
 			std::vector<std::string> params(1);
-			params[0] = p[0];
+			params[0] = pth[0];
 			throw err("!TAB1", params);
 		}
 
@@ -142,6 +158,89 @@ void dabster::tab::open(std::string path) {
 	}
 
 	/* Dodawanie reszty sciezki */
+	for (unsigned int i = level; i < pth.size(); i++) {
+		int prnt = opensStack->parent(i);	// parent
+
+		/* Zapewnianie rzeczywistej sciezki rodzica */
+		if (opensStack->get(prnt)->getRealPath() == "") {
+			int gp = opensStack->parent(prnt);	// grand parent
+			folder *grandParent = dynamic_cast< folder* >(opensStack->get(gp));
+			std::vector< std::map< std::string, std::string > > src(1), dest(1);
+
+			/* Przygotowywanie informacji o zrodle */
+			src[0][dabKeyRelativePath] = opensStack->relativePath(gp + 1, prnt);
+			src[0][dabKeyName] = opensStack->get(prnt)->getName();
+			src[0][dabKeyAtrDirectory] = dabTrue;
+
+			/* Przygotowywanie informacji o celu */
+			dest[0][dabKeyName] = str::sysStrToCppStr(dabIoPath::GetTempFileName());
+			std::string tempPath = str::getAppPath().drive;
+			if (tempPath[tempPath.size() - 1] != '\\') tempPath.push_back('\\');
+			tempPath += str::getAppPath().dir;
+			if (tempPath[tempPath.size() - 1] != '\\') tempPath.push_back('\\');
+			tempPath += "temp\\" + dest[0][dabKeyName];
+			str::fixDelims(tempPath);
+			dest[0][dabKeyRealPath] = tempPath;
+			
+			/* Wypakowywanie rodzica */
+			grandParent->extract(src, dest);
+			opensStack->get(prnt)->setRealPath(tempPath);
+		}
+
+		/* Konwersja rodzica z sfile do rzeczywistego typu */
+		int realParentType;
+		switch (realParentType = item::realType(opensStack->get(prnt))) {
+		case dabSFolder: break;
+
+		case dabSFile: {
+			/* Wewnetrzny element sciezki nie moze byc plikiem prostym */
+			std::vector<std::string> params(2);
+			params[0] = path;
+			params[1] = opensStack->get(prnt)->getName();
+			throw err("!TAB3", params);
+		}
+			
+		default:
+			item* converted = item::convert(opensStack->get(prnt), realParentType);
+			opensStack->set(prnt, converted);
+		}
+
+		/* Pobieranie zawartosci rodzica */
+		folder *parent = dynamic_cast< folder* >(opensStack->get(prnt));
+		std::vector< std::map< std::string, std::string > > parentContent;
+		std::string relPath = "";
+		if (prnt + 1 < opensStack->size()) {
+			relPath = opensStack->relativePath(prnt + 1, opensStack->size());
+		}
+		parentContent = parent->getContent(relPath);
+
+		/* Przegladanie zawartosci */
+		unsigned int j = 0;
+		while (j < parentContent.size()) {
+			if (parentContent[j][dabKeyName] == pth[i]) break; else ++j;
+		}
+
+		if (j < parentContent.size()) {
+			/* Tworzenie odpowiedniego obiektu */
+			item *newPathItem;
+			if (parentContent[j][dabKeyAtrDirectory] == dabTrue) {
+				newPathItem = new sfolder;
+			} else {
+				newPathItem = new sfile;
+			}
+			newPathItem->setName(pth[i]);
+			opensStack->push(newPathItem);
+			if (realParentType == dabSFolder) {
+				newPathItem->setRealPath(opensStack->relativePath(0, opensStack->size() - 1));
+			}
+		} else {
+			/* Wewnetrzny element sciezki nie moze byc plikiem prostym */
+			std::vector<std::string> params(2);
+			params[0] = path;
+			params[1] = pth[i];
+			throw err("!TAB4", params);
+		}
+	}
 }
 
 /* Zapisuje pliki i foldery w aktualnym katalogu */
