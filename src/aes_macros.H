@@ -48,4 +48,7 @@
 
 // Default key length in bits:
 #define AES_DEFAULT_KEYLEN 256
+namespace aes {
+     typedef unsigned int uint ;
+}
 #endif	 // AES_MACROS
