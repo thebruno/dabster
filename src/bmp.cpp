@@ -27,6 +27,7 @@
 *********************************************************************/
 
 #include "bmp.h"
+#include "err.h"
 //********************namespace bmp********************//
 namespace bmp {
 //********************class BMP********************//
@@ -37,8 +38,8 @@ namespace bmp {
  * \param DabFile
  * Rzeczywisty plik.
  * 
- * \throws <exception class>
- * Rzuca wyjatek w przypadku bledu odczytu zapisu.
+ * \throws err()
+ * Rzuca wyjatek w przypadku bledu odczytu zapisu lub b³êdnego pliku bmp.
  * 
  * Otwarcie bitmapy i odczyt naglowka.
  */
@@ -49,8 +50,11 @@ BMP::BMP(file *DabFile):BmpBuf(&BmpHeader) {
 	BmpBuf.SetReadSize(BUF_READING_SIZE);
 	BmpBuf.Fill();
 	ReadBmpHeader();
-	if (!IsBmp()) 
-		throw BMP_WRONG_FILE();
+	if (!IsBmp()) {
+		std::vector<string> params(1);
+		params[0] = DabFile->getRealPath().c_str();
+		throw err("!BMP1", params);
+	}
 }
 /*!
  * \brief
@@ -76,7 +80,7 @@ BMP::~BMP() {
  * \param Dabpath
  * Przechowuje nazwy plikow do skasowania.
  * 
- * \throws <exception class>
+ * \throws err()
  * Rzuca wyjatek w przypadku bledu odczytu zapisu.
  * 
  * Kasowanie mozna przerwac tylko do momentu zaznaczenia plikow do skasowania. Nie mozna cofnac kasowania juz zamazanego pliku, ani zostawic niespojnych danych w bmp.
@@ -88,7 +92,8 @@ void BMP::del(vmstring Dabpath) {
 	BmpBuf.SetCompr(ReadCompr());
 	ReadDabHeader();
 	if (!IsDab()) {
-		throw DAB_EXCEPTION();
+		std::vector<string> params(1);
+		throw err("!BMP4", params);
 	}
 	DeleteAllHeaders();
 	ReadAllHeaders();
@@ -131,8 +136,10 @@ void BMP::del(vmstring Dabpath) {
 	}
 
 	// ktoregos pliku nie znaleziono, niepotrzebne sprawdzanie, do usuniecia w wersji finalnej
-	if (FilesToDel != Dabpath.size())
-		throw NO_SUCH_FILE();
+	if (FilesToDel != Dabpath.size()){
+		std::vector<string> params(1);
+		throw err("!BMP0", params);
+	}
 
 	// wszystkie naglowki zaznaczone do usuniecia:
 	if (FilesToDel == FilesHeaders.size()) {
@@ -241,7 +248,7 @@ void BMP::del(vmstring Dabpath) {
  * \param Dabdest
  * Nazwy pod jakimi beda one spakowane w bmp.
  * 
- * \throws <exception class>
+ * \throws err()
  * Rzuca wyjatek w przypadku bledu odczytu zapisu oraz gdy zabraklo miejsca.
  * 
  * Przerwanie moze nastapic co jeden spakowany plik.
@@ -289,7 +296,9 @@ void BMP::store(vmstring Dabsrc, vmstring Dabdest) {
 		// sprawdzenie czy sie zmiesci naglowek + nazwa:
 		if (DabHeader.FreeSpc < header->FileNameLen + FILE_HEADER_BYTE_SIZE) {
 			delete header;
-			throw BMP_NOT_ENOUGH_SPACE();
+
+			std::vector<string> params(1);
+			throw err("!BMP3", params);
 		}
 
 		header->PerformAction = false;
@@ -320,7 +329,9 @@ void BMP::store(vmstring Dabsrc, vmstring Dabdest) {
 			// czy plik z danymi sie zmiesci?
 			if (DabHeader.FreeSpc < header->FileNameLen + FILE_HEADER_BYTE_SIZE + header->DataSize) {
 				delete header;
-				throw BMP_NOT_ENOUGH_SPACE();
+
+				std::vector<string> params(1);
+				throw err("!BMP3", params);
 			}
 			BmpBuf.SetMode(BUFFOR::BUF_READ_WRITE);
 			BmpBuf.SetReadSize(BUFFOR_SIZE);
@@ -357,7 +368,7 @@ void BMP::store(vmstring Dabsrc, vmstring Dabdest) {
  * \param Dabdest
  * Nazwy pod jakimi zostana one wypakowane.
  * 
- * \throws <exception class>
+ * \throws err()
  * Rzuca wyjatek w przypadku bledu odczytu zapisu.
  * 
  * Przerwanie moze nastapic co jeden wypakowany plik.
@@ -369,7 +380,8 @@ void BMP::extract(vmstring Dabsrc, vmstring Dabdest) {
 	BmpBuf.SetCompr(ReadCompr());
 	ReadDabHeader();
 	if (!IsDab()) {
-		throw DAB_EXCEPTION();
+		std::vector<string> params(1);
+		throw err("!BMP4", params);
 	}
 	DeleteAllHeaders();
 	ReadAllHeaders();
@@ -424,7 +436,7 @@ void BMP::extract(vmstring Dabsrc, vmstring Dabdest) {
  * \param DabDest
  * Nazwy plikow w bmp - docelowe.
  * 
- * \throws <exception class>
+ * \throws err()
  * Rzuca wyjatek w przypadku bledu odczytu zapisu.
  * 
  * Przerwanie moze nastapic co jeden skopiowany plik.
@@ -437,13 +449,17 @@ void BMP::copyInside(vmstring DabSrc, vmstring DabDest) {
 	BmpBuf.SetCompr(ReadCompr());
 	ReadDabHeader();
 	if (!IsDab()) {
-		throw DAB_EXCEPTION();
+		std::vector<string> params(1);
+		throw err("!BMP4", params);
 	}
 	DeleteAllHeaders();
 	ReadAllHeaders();
 	// nie ma zadnego naglowka lub nieprawidlowy parametr
-	if (!FilesHeaders.size() && DabSrc.size() )
-		throw NO_SUCH_FILE();
+	if (!FilesHeaders.size() && DabSrc.size() ) {
+		std::vector<string> params(1);
+		throw err("!BMP0", params);
+	}
+
 
 	FILE_HEADER * h;
 	uint64 WritingPos = 0, ReadingPos = 0, temp;
@@ -487,7 +503,8 @@ void BMP::copyInside(vmstring DabSrc, vmstring DabDest) {
 					// zastosuj juz wprowadzone zmiany
 					WriteDabHeader();
 					// braklo miejsca na skopiowanie:
-					throw BMP_NOT_ENOUGH_SPACE();
+					std::vector<string> params(1);
+					throw err("!BMP3", params);
 				}
 				FilesHeaders.push_back(h);
 				// dokonaj kopii pliku o naglowku *i w miejsce naglowka *h
@@ -540,7 +557,7 @@ void BMP::copyInside(vmstring DabSrc, vmstring DabDest) {
  * \param DabNewPath
  * Nazwy plikow w bmp - docelowe.
  * 
- * \throws <exception class>
+ * \throws err()
  * Rzuca wyjatek w przypadku bledu odczytu zapisu.
  * 
  * Mozna przerwac tylko do momentu ustalenia nowego polozenia plikow, potem wszystko trzeba juz poprzesuwac najpierw tworzymy nowe naglowki z nowymi nazwami, potem obliczamy polozenie wszystkich naglowkow i wykonujemy operacje.
@@ -553,13 +570,16 @@ void BMP::modify(vmstring DabOldPath, vmstring DabNewPath) {
 	BmpBuf.SetCompr(ReadCompr());
 	ReadDabHeader();
 	if (!IsDab()) {
-		throw DAB_EXCEPTION();
+		std::vector<string> params(1);
+		throw err("!BMP4", params);
 	}
 	DeleteAllHeaders();
 	ReadAllHeaders();
 	// nie ma zadnego naglowka 
-	if (!FilesHeaders.size() && DabOldPath.size() )
-		throw NO_SUCH_FILE();
+	if (!FilesHeaders.size() && DabOldPath.size() ) {
+		std::vector<string> params(1);
+		throw err("!BMP0", params);
+	}
 	// struktura pomocnicza przy przenoszeniu
 	struct R_W_Pos {
 		uint64 ReadingPos;
@@ -628,7 +648,8 @@ void BMP::modify(vmstring DabOldPath, vmstring DabNewPath) {
 			FilesHeaders.pop_back();
 			delete h;
 		}
-		throw NO_SUCH_FILE();
+		std::vector<string> params(1);
+		throw err("!BMP4", params);
 	}
 	// poczatek naglowka pierwszego pliku pozostaje bez zmian
 	NewFilesHeaders.front()->HeaderStart = DabHeader.FirstFileStart;
@@ -806,7 +827,7 @@ void BMP::modify(vmstring DabOldPath, vmstring DabNewPath) {
  * \returns
  * Zawartosc podanego folderu.
  * 
- * \throws <exception class>
+ * \throws err()
  * Rzuca wyjatek w przypadku bledu odczytu zapisu.
  * 
  */
@@ -880,7 +901,7 @@ vmstring BMP::getContent(string Dabpath) {
  * \returns
  * Pojemnosc bitmapy w bajtach.
  * 
- * \throws <exception class>
+ * \throws err()
  * Rzuca wyjatek w przypadku bledu odczytu zapisu.
  * 
  */
@@ -900,7 +921,7 @@ uint64 BMP::getCapacity(void) {
  * \param DabnewCompr
  * Stopien kompresji.
  * 
- * \throws <exception class>
+ * \throws err()
  * Rzuca wyjatek w przypadku bledu odczytu zapisu.
  */
 void BMP::setCompression(uint8 DabnewCompr) {
@@ -917,7 +938,7 @@ void BMP::setCompression(uint8 DabnewCompr) {
  * \returns
  * Wartosc stopnia kompresji.
  * 
- * \throws <exception class>
+ * \throws err()
  * Rzuca wyjatek w przypadku bledu odczytu zapisu.
  * 
  */
