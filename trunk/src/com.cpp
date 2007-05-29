@@ -72,6 +72,7 @@ std::string com::get(const std::string &number) {
 	}
 }
 
+#ifndef _POSIX_SOURCE
 /* Zwraca komunikat o podanym numerze */
 System::String^ com::get(System::String^ number) {
 	if (bLoaded) {
@@ -80,5 +81,6 @@ System::String^ com::get(System::String^ number) {
 		throw err();
 	}
 }
+#endif
 
 /********************************************************************/
