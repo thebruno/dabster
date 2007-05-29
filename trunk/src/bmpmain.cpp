@@ -149,10 +149,10 @@ int main() {
 			double t1,t2, t;
 			t1 = clock();
 
-			b->store(sciezki1,sciezki2);
+			//b->store(sciezki1,sciezki2);
 			//b->del(sciezki4);
-			//b->extract(sciezki2,sciezki3);
-			//b->modify(sciezki5, sciezki2);
+			b->extract(sciezki5,sciezki3);
+			//b->modify(sciezki2, sciezki5);
 			//b->copyInside(sciezki4, sciezki5);
 			t2 = clock();
 			t = t2-t1;
