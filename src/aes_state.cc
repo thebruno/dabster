@@ -23,6 +23,7 @@
 #include "aes_polynomial.H"
 #include "aes_sbox.H"
 #include "aes_key.H"
+#include "aes_macros.H"
 
 #include <iostream>
 #include <bitset>

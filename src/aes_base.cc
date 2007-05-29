@@ -24,6 +24,7 @@
 #include "aes_sbox.H"
 #include "aes_state.H"
 #include "aes_base.H"
+#include "aes_macros.H"
 
 #include "err.h"
 #include "str.h"
@@ -87,7 +88,7 @@ void
 aes_base::set_key (const char * key, size_t length)
 {
      std::vector <byte> tmp (length);
-     for (int i = 0; i < length; i++) 
+     for (uint i = 0; i < length; i++) 
 	  tmp[i] = key[i];
      The_Key.set_key (tmp);
 }
