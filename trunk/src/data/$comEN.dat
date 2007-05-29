@@ -56,7 +56,7 @@
 !SFL0d Loading contents of folder '<param0>' failed
 !SFL0h File and folder list unavailable
 
-!SFL1d Informations about file\folder '<param0>' unavailable
+!SFL1d Information about file\folder '<param0>' unavailable
 !SFL1h File/folder broken or access denied
 
 !SFL2d Cannot copy file '<param0>'
@@ -70,6 +70,23 @@
 
 !SFL5d Cannot move file/folder '<param0>' do '<param1>'
 !SFL5h Path incorrect, file in use or access denied
+
+##  BMP module errors  ##
+
+!BMP0d No such file. 
+!BMP0h An error occurred while opening file '<param0>'. File does not exist!
+
+!BMP1d Wrong BMP file. 
+!BMP1h Path '<param0>' does not represent supported BMP file. Change file and try again.
+
+!BMP2d BMP module internal error. 
+!BMP2h Unexpected error occurred while processing BMP file. File might be corrupted. Change file and try again.
+
+!BMP3d Not enough space inside BMP file. 
+!BMP3h Cannot perform operation due to insufficient free space inside BMP file. Increase compression or change BMP file.
+
+!BMP4d BMP file error. 
+!BMP4h No descriptive information inside BMP file was found. File might be corrupted or there is no information stored inside.
 
 
 
