@@ -52,23 +52,24 @@
 //   Umo¿liwia dodatkowo ustalenie i pobranie klucza (setKey,
 //   getKey), oraz wielko¶ci szyfrowanego bloku (setBlockSize,
 //   getBlockSize).
-class aes
-     : public folder,
-       public file,
-{
-private:
-     aes_base aes_;
-public:
-     aes();
-     
-     void setKey (std::string key);
-     void setKey (char * key);
-     
-     std::string getKey ();
-     char * getKey ();
-};
-
 #if 0
+// class aes_
+//      : public folder,
+//        public file,
+// {
+// private:
+//      aes_base aes_;
+// public:
+//      aes();
+     
+//      void setKey (std::string key);
+//      void setKey (char * key);
+     
+//      std::string getKey ();
+//      char * getKey ();
+// };
+
+
 #include "encryption_template.H"
 // docelowo to bêdzie wygl±da³o tak:
 typedef encryption_template <aes_base, 128> aes;
