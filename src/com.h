@@ -39,7 +39,9 @@ public:
 
 	static void load(const std::string& path);
 	static std::string get(const std::string& number);
+#ifndef _POSIX_SOURCE
 	static System::String^ get(System::String^ number);
+#endif
 
 private:
 	static const unsigned int iMAX_LINES = 65535;

@@ -61,16 +61,25 @@ aes_base::set_key (const std::vector <byte> key)
 
 inline void
 aes_base::set_key (const std::vector <char> key) 
-{The_Key.set_key (static_cast <std::vector <byte> > (key));}
+{
+     int i = key.size();
+     std::vector <byte> tmpkey (i);
+     while (--i > 0)
+	  tmpkey[i] = key[i];
+     The_Key.set_key (tmpkey);
+}
+
+     
+	  
 
 void
 aes_base::set_key (const std::string key)
 {
-     int max = key.length();
-     std::vector <byte> tmp (max);
-     for (int i = 0; i < max; i++) 
-	  tmp[i] = key[max];
-     The_Key.set_key (tmp);
+//      int max = key.length();
+//      std::vector <byte> tmp (max);
+//      for (int i = 0; i < max; i++) 
+// 	  tmp[i] = key[max];
+     The_Key.set_key (key);
 }
 
 
@@ -78,7 +87,7 @@ void
 aes_base::set_key (const char * key, size_t length)
 {
      std::vector <byte> tmp (length);
-     while (int i = 0; i < length; i++) 
+     for (int i = 0; i < length; i++) 
 	  tmp[i] = key[i];
      The_Key.set_key (tmp);
 }
@@ -291,11 +300,11 @@ int
 main()
 {
 
-     byte _key[16] = {
+     byte _key[32] = {
 	  0x00, 0x01, 0x02, 0x03,
 	  0x04, 0x05, 0x16, 0x07,
 	  0x08, 0x09, 0x2a, 0x0b,
-	  0x0c, 0x0d, 0x0e, 0x0f
+	  0x0c, 0x0d, 0x0e
      };
 
      byte _block[] = {
@@ -306,10 +315,13 @@ main()
      };
      
 
-     std::vector <byte> key (16);
+     std::vector <byte> key (32);
      std::vector <byte> block (16);
      for (int i = 0; i < 16; i++) {
 	  block[i] = _block[i];
+	  key[i] = _key[i];
+     }
+     for (int i = 16; i < 32; i++) {
 	  key[i] = _key[i];
      }
      

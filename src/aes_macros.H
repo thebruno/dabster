@@ -34,9 +34,6 @@
 #ifndef AES_MACROS
 #define AES_MACROS
 
-// These macros are used by the Makefile I wrote during the creation
-// of the single modules. They enable the main() functions when
-// debugging single modules
 #define DDABSTER 0
 #define DAES 1
 #define DSTATE 2
@@ -48,7 +45,7 @@
 
 // Default key length in bits:
 #define AES_DEFAULT_KEYLEN 256
-namespace aes {
-     typedef unsigned int uint ;
-}
+// uint by³o zachowane dla zgodno¶ci ze starymi kompilatorami C, i
+// s±dzi³em ¿e jest w standardzie.
+typedef unsigned int uint ;
 #endif	 // AES_MACROS

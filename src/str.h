@@ -48,8 +48,9 @@ public:
 	static void setAppPath(path appPath);
 	static path getAppPath(void);
 	static str::path fixAppPath(void);
-
+#ifndef _POSIX_SOURCE
 	static std::string sysStrToCppStr(System::String^ sysStr);
+#endif
 	static char* strToChar(const std::string s);
 	static std::string charToStr(const char c);
 	static long stringToLong(const std::string s);
