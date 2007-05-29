@@ -72,6 +72,23 @@
 !SFL5h Œcie¿ka niepoprawna, plik w u¿yciu lub odmowa dostêpu
 
 
+##  BMP module errors  ##
+
+!BMP0d Brak pliku. 
+!BMP0h Wyst¹pi³ b³¹d podczas otwierania pliku '<param0>'. Plik nie istnieje!
+
+!BMP1d Nieprawid³owy pliku BMP. 
+!BMP1h Scie¿ka '<param0>' nie prowadzi do obs³ugiwanego pliku BMP. Zmieñ plik i spróbuj ponownie.
+
+!BMP2d Wewnêtrzny b³¹d w module BMP. 
+!BMP2h Nieoczekiwany b³¹d podczas przetwarzania pliku BMP. Plik mo¿e byæ uszkodzony. Zmieñ plik i spróbuj ponownie.
+
+!BMP3d Za ma³o miejsca w pliku BMP. 
+!BMP3h Nie mo¿na wykonaæ operacji z powodu niewystarczaj¹cej iloœci wolnego mijsca w pliku BMP. Zwiêksz kompresjê albo zmieñ plik BMP.
+
+!BMP4d B³¹d pliku BMP.
+!BMP4h Nie znaleziono ¿adnych informacji opisowych w pliku BMP. Plik mo¿e byæ uszkodzony albo nie zapisano jeszcze ¿adnych informacji wewn¹trz pliku.
+
 
 ##  B³êdy modu³u DrvLst  ##
 
