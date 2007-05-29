@@ -66,20 +66,8 @@ const uint32 DAB_HEADER_BYTE_SIZE = 21; /*!< Wielkosc naglowka DAB. */
 const uint32 FILE_HEADER_BYTE_SIZE = 12; /*!< Wielkosc naglowka pliku. */
 const uint32 BUF_READING_SIZE = 180; /*!< Bufory moga doczytywac tyle bajtow: BUFFOR_SIZE lub BUF_READING_SIZE bufor. */
 
-
-
-	class DAB_EXCEPTION: public std::exception {
-	};
 	// nie znalesiono pliku przy otwieraniu
-	class NO_SUCH_FILE: public DAB_EXCEPTION {
-	};
-	// bledy podczas odczytow z buforow 
-	class BMP_INTERNAL_ERROR: public DAB_EXCEPTION {
-	};
-	// zla nazwa - plik to folder, za maly plik, nie bmp
-	class BMP_WRONG_FILE: public DAB_EXCEPTION {
-	};
-	class BMP_NOT_ENOUGH_SPACE: public DAB_EXCEPTION{
-	};
+class NO_SUCH_FILE: public std::exception {
+};
 }
 #endif

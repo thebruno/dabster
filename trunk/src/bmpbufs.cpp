@@ -26,6 +26,7 @@
 
 *********************************************************************/
 #include "bmpbufs.h"
+#include "err.h"
 namespace bmp {
 using namespace bmptypes;
 
@@ -76,7 +77,7 @@ BUFFOR::~BUFFOR() {
  * \param DabBufMode
  * Tryb pracy bufora.
  * 
- * \throws <exception class>
+ * \throws err()
  * Gdy plik nie istnieje.
  * 
  * Otwiera plik, ustawia tryb pracy i oblicza jego wielkosc.
@@ -85,7 +86,9 @@ void BUFFOR::OpenFile(std::string DabPath, std::ios_base::open_mode DabFileMode,
 	File.open(DabPath.c_str(), DabFileMode | std::ios_base::binary);
 	if (!File) {
 		BufState = BUF_BAD;
-		throw NO_SUCH_FILE();
+		std::vector<string> params(1);
+		params[0] = DabPath.c_str();
+		throw err("!BMP0", params);
 	}
 	BufMode = DabBufMode;
 	BufState = BUF_GOOD;
@@ -102,7 +105,7 @@ void BUFFOR::OpenFile(std::string DabPath, std::ios_base::open_mode DabFileMode,
  * \returns
  * Zwraca 0xFF lub 0x00.
  * 
- * \throws <exception class>
+ * \throws err()
  * Rzuca wyjatek, gdy nastepuje proba wykonania niedozwolonej operacji na buforze.
  * 
  * Zwraca wartosc aktualnego bitu w buforze.
@@ -153,8 +156,10 @@ uint8 BUFFOR::GetBit() {
 				return Result;
 			}
 			// tu nie powinien buffor nigdy dojsc!
-		throw BMP_INTERNAL_ERROR();
-		
+			{
+				std::vector<string> params(1);
+				throw err("!BMP2", params);
+			}
 		// tryb transfer
 		case BUF_TRANSFER: 
 			// w srodku bufora
@@ -191,11 +196,14 @@ uint8 BUFFOR::GetBit() {
 			else {
 				// nie moze zabraknac danych w Buforze!!
 				BufState = BUF_BAD;
-				throw BMP_INTERNAL_ERROR();
+				std::vector<string> params(1);
+				throw err("!BMP2", params);
 			}
-		default: 
+		default: {
 			// inny tryb niedozwolony
-			throw BMP_INTERNAL_ERROR();
+			std::vector<string> params(1);
+			throw err("!BMP2", params);
+		}
 	}
 }
 
@@ -206,7 +214,7 @@ uint8 BUFFOR::GetBit() {
  * \param DabBit
  * Wartosc zapisywanego bita 0xFF lub 0x00.
  * 
- * \throws <exception class>
+ * \throws err()
  * Rzuca wyjatek, gdy nastepuje proba wykonania niedozwolonej operacji na buforze.
  * 
  * Zapisuje wartosc bitu przeslanego w prametrze pod aktualna pozycje w buforze.
@@ -237,7 +245,8 @@ void BUFFOR::PutBit(uint8 DabBit) {
 			}
 			else {
 				BufState = BUF_BAD;
-				throw BMP_INTERNAL_ERROR();
+				std::vector<string> params(1);
+				throw err("!BMP2", params);
 			}
 		case BUF_WRITEONLY:	
 			// w srodku bufora
@@ -266,11 +275,14 @@ void BUFFOR::PutBit(uint8 DabBit) {
 			}
 			else {
 				BufState = BUF_BAD;
-				throw BMP_INTERNAL_ERROR();
+				std::vector<string> params(1);
+				throw err("!BMP2", params);
 			}
-		default: 
+		default: {
 			// nie mozna wysylac w innym trybie na Bufor!!
-			throw BMP_INTERNAL_ERROR();
+			std::vector<string> params(1);
+			throw err("!BMP2", params);
+		}
 	}
 }
 
@@ -281,7 +293,7 @@ void BUFFOR::PutBit(uint8 DabBit) {
  * \returns
  * Zwraca 0xFF lub 0x00.
  * 
- * \throws <exception class>
+ * \throws err()
  * Rzuca wyjatek, gdy nastepuje proba wykonania niedozwolonej operacji na buforze.
  * 
  * Zwraca wartosc aktualnego bajtu w buforze.
@@ -315,7 +327,11 @@ uint8 BUFFOR::GetByte() {
 				return Result;
 			}
 			// tu nie powinien buffor nigdy dojsc!
-			throw BMP_INTERNAL_ERROR();
+			{
+				std::vector<string> params(1);
+				throw err("!BMP2", params);
+			}
+
 		
 		case BUF_TRANSFER: 
 			// w srodku bufora
@@ -336,12 +352,15 @@ uint8 BUFFOR::GetByte() {
 			else {
 				// nie moze zabraknac danych w Buforze!!
 				BufState = BUF_BAD;
-				throw BMP_INTERNAL_ERROR();
+				std::vector<string> params(1);
+				throw err("!BMP2", params);
 			}
 		
-		default: 
+		default: {
 			// inny tryb niedozwolony
-			throw BMP_INTERNAL_ERROR();
+			std::vector<string> params(1);
+			throw err("!BMP2", params);
+		}
 		
 	}
 }
@@ -353,7 +372,7 @@ uint8 BUFFOR::GetByte() {
  * \param DabByte
  * Wartosc zapisywanego bajtu 0xFF lub 0x00.
  * 
- * \throws <exception class>
+ * \throws err()
  * Rzuca wyjatek, gdy nastepuje proba wykonania niedozwolonej operacji na buforze.
  * 
  * Zapisuje wartosc bajtu przeslanego w prametrze pod aktualna pozycje w buforze.
@@ -381,7 +400,8 @@ void BUFFOR::PutByte(uint8 DabByte) {
 			}
 			else {
 				BufState = BUF_BAD;
-				throw BMP_INTERNAL_ERROR();
+				std::vector<string> params(1);
+				throw err("!BMP2", params);
 			}
 		case BUF_WRITEONLY:	
 			// w srodku bufora
@@ -406,11 +426,14 @@ void BUFFOR::PutByte(uint8 DabByte) {
 			}
 			else {
 				BufState = BUF_BAD;
-				throw BMP_INTERNAL_ERROR();
+				std::vector<string> params(1);
+				throw err("!BMP2", params);
 			}
-		default: 
+		default: {
 			// nie mozna wysylac w innym trybie na Bufor!!
-			throw BMP_INTERNAL_ERROR();
+			std::vector<string> params(1);
+			throw err("!BMP2", params);
+		}
 	}
 }
 
@@ -470,7 +493,7 @@ void BUFFOR::BufReset()	{
  * \brief
  * Ustawienie pozycji w bajtach do odczytu.
  *
- * \throws <exception class>
+ * \throws err()
  * Rzuca wyjatek, gdy nastepuje proba wykonania niedozwolonej operacji na buforze.
  *
  */
@@ -479,14 +502,16 @@ void BUFFOR::BufByteSeekg(uint32 DabnewPos) {
 		BufBytePosg = DabnewPos;
 		BufBitPosg = DabnewPos * 8;
 	}
-	else 
-		throw BMP_INTERNAL_ERROR();
+	else {
+		std::vector<string> params(1);
+		throw err("!BMP2", params);	
+	}
 }
 /*!
  * \brief
  * Ustawienie pozycji w bajtach do zapisu.
  *
- * \throws <exception class>
+ * \throws err()
  * Rzuca wyjatek, gdy nastepuje proba wykonania niedozwolonej operacji na buforze.
  *
  */
@@ -495,14 +520,16 @@ void BUFFOR::BufByteSeekp(uint32 DabnewPos) {
 		BufBytePosp = DabnewPos;
 		BufBitPosp = DabnewPos * 8;
 	}
-	else 
-		throw BMP_INTERNAL_ERROR();
+	else {
+		std::vector<string> params(1);
+		throw err("!BMP2", params);
+	}
 }
 /*!
  * \brief
  * Ustawienie pozycji w bitach do odczytu.
  *
- * \throws <exception class>
+ * \throws err()
  * Rzuca wyjatek, gdy nastepuje proba wykonania niedozwolonej operacji na buforze.
  *
  */
@@ -511,14 +538,16 @@ void BUFFOR::BufBitSeekg(uint32 DabnewPos) {
 		BufBitPosg = DabnewPos;
 		BufBytePosg = DabnewPos / 8;
 	}
-	else 
-		throw BMP_INTERNAL_ERROR();
+	else  {
+		std::vector<string> params(1);
+		throw err("!BMP2", params);
+	}
 }
 /*!
  * \brief
  * Ustawienie pozycji w bitach do zapisu.
  *
- * \throws <exception class>
+ * \throws err()
  * Rzuca wyjatek, gdy nastepuje proba wykonania niedozwolonej operacji na buforze.
  *
  */
@@ -527,8 +556,10 @@ void BUFFOR::BufBitSeekp(uint32 DabnewPos) {
 		BufBitPosp = DabnewPos;
 		BufBytePosp = DabnewPos / 8;			
 	}
-	else 
-		throw BMP_INTERNAL_ERROR();
+	else  {
+		std::vector<string> params(1);
+		throw err("!BMP2", params);
+	}
 }
 /*!
  * \brief
@@ -562,7 +593,7 @@ const uint32 BUFFOR::BufBitTellp() const {
  * \brief
  * Napelnienie bufora.
  *
- * \throws <exception class>
+ * \throws err()
  * Rzuca wyjatek przy bledach odczytu zapisu.
  * 
  * Odczyt danych z dysku do bufora. 
@@ -584,8 +615,10 @@ void BUFFOR::Fill() {
 			BufBytePosg = 0;
 			BufBitPosg = 0;
 			break;
-		default: 
-			throw BMP_INTERNAL_ERROR();
+		default: {
+			std::vector<string> params(1);
+			throw err("!BMP2", params);
+		}
 	}
 }
 
@@ -606,8 +639,10 @@ void BUFFOR::Flush() {
 			BufBytePosg = BufBitPosg = 0;
 			BitDataCount = DataCount = 0;
 			break;
-		default: 
-			throw BMP_INTERNAL_ERROR();
+		default: {
+			std::vector<string> params(1);
+			throw err("!BMP2", params);
+		}
 	}
 }
 //********************end of class BUFFOR********************//
@@ -659,7 +694,7 @@ BMP_BUFFOR::BMP_BUFFOR(BMP_HEADER* DabBmpHeader) {
  * \returns
  * Zwraca 0xFF lub 0x00.
  * 
- * \throws <exception class>
+ * \throws err()
  * Rzuca wyjatek, gdy nastepuje proba wykonania niedozwolonej operacji na buforze.
  * 
  * Zwraca wartosc aktualnego bitu w buforze.
@@ -774,11 +809,13 @@ uint8 BMP_BUFFOR::GetBit() {
 				}
 				return Result;
 			} 
-			throw BMP_INTERNAL_ERROR();
+			std::vector<string> params(1);
+			throw err("!BMP2", params);
 	   }
 		default: {
 			// inny tryb niedozwolony
-			throw BMP_INTERNAL_ERROR();
+			std::vector<string> params(1);
+			throw err("!BMP2", params);
 		}
 	}
 }
@@ -790,7 +827,7 @@ uint8 BMP_BUFFOR::GetBit() {
  * \param DabBit
  * Wartosc zapisywanego bita 0xFF lub 0x00.
  * 
- * \throws <exception class>
+ * \throws err()
  * Rzuca wyjatek, gdy nastepuje proba wykonania niedozwolonej operacji na buforze.
  * 
  * Zapisuje wartosc bitu przeslanego w prametrze pod aktualna pozycje w buforze.
@@ -833,7 +870,8 @@ void BMP_BUFFOR::PutBit(uint8 DabBit) {
 								else 
 									// jakis blad
 									BufState = BUF_BAD;
-								throw BMP_INTERNAL_ERROR();
+								std::vector<string> params(1);
+								throw err("!BMP2", params);
 							}
 							// wstepne ustawienie
 							BufBytePosp = 0;
@@ -902,11 +940,14 @@ void BMP_BUFFOR::PutBit(uint8 DabBit) {
 				return;
 			}
 			// tu nie powinien sie nigdy znalezc!!
-			throw BMP_INTERNAL_ERROR();
+			std::vector<string> params(1);
+			throw err("!BMP2", params);
 		}
 		default: {
 			// nie mozna wysylac w innym trybie na Bufor!!
-			throw BMP_INTERNAL_ERROR();
+			std::vector<string> params(1);
+			throw err("!BMP2", params);
+
 		}
 	}
 }
@@ -964,7 +1005,7 @@ void BUFFOR::SetReadSize(uint32 DabNewSize) {
  * \param DabSeekWay
  * Wartosci: BEGINING albo FORWARD.
  * 
- * \throws <exception class>
+ * \throws err()
  * Rzuca wyjatek przy bledach odczytu zapisu.
  * 
  * Gdy parametr == BEGINING, ustawiamy pozycje na bit przyslany w parametrze liczac od poczatku pliku. Gdy parametr == FORWARD, ustawiamy przesuwamy pozycje o DabnewPos w przod.
@@ -1003,7 +1044,8 @@ void BMP_BUFFOR::BitSeekg(uint64 DabnewPos, SEEKWAY DabSeekWay) {
 			break;
 		}
 		default: {
-			throw BMP_INTERNAL_ERROR();
+			std::vector<string> params(1);
+			throw err("!BMP2", params);
 		}						  
 	}
 }
@@ -1019,7 +1061,7 @@ void BMP_BUFFOR::BitSeekg(uint64 DabnewPos, SEEKWAY DabSeekWay) {
  * \param DabSeekWay
  * Wartosci: BEGINING albo FORWARD.
  * 
- * \throws <exception class>
+ * \throws err()
  * Rzuca wyjatek przy bledach odczytu zapisu.
  * 
  * Gdy parametr == BEGINING, ustawiamy pozycje na bit przyslany w parametrze liczac od poczatku pliku. Gdy parametr == FORWARD, ustawiamy przesuwamy pozycje o DabnewPos w przod.
@@ -1062,7 +1104,8 @@ void BMP_BUFFOR::BitSeekp(uint64 DabnewPos, SEEKWAY DabSeekWay) {
 			break;
 		}
 		default: {
-			throw BMP_INTERNAL_ERROR();
+			std::vector<string> params(1);
+			throw err("!BMP2", params);
 		}
 	}
 }
@@ -1134,7 +1177,7 @@ const uint64 BMP_BUFFOR::BitTellp() const{
  * \brief
  * Napelnienie bufora.
  *
- * \throws <exception class>
+ * \throws err()
  * Rzuca wyjatek przy bledach odczytu zapisu.
  * 
  * Odczyt danych z dysku do bufora. Wersja niemodyfikujaca pozycji glowic - np. gdy bedzie skok do jakiejs pozycji to nalezy zaczac czytac od tego ustawionego bita a nie od pierwszego w kompresjiUstawienia glowic zaleza od trybu.
@@ -1176,8 +1219,11 @@ void BMP_BUFFOR::Fill() {
 			}
 			BufState = BUF_GOOD;
 			break;
-		default: 
-			throw BMP_INTERNAL_ERROR();
+		default: {
+			std::vector<string> params(1);
+			throw err("!BMP2", params);
+		}
+
 	}
 
 }
@@ -1186,14 +1232,14 @@ void BMP_BUFFOR::Fill() {
  * \brief
  * Oproznienie bufora.
  *
- * \throws <exception class>
+ * \throws err()
  * Rzuca wyjatek przy bledach odczytu zapisu.
  *  
  * Zapis danych z bufora na dysk.
  */
 void BMP_BUFFOR::Flush() {
 	switch (BufMode) {
-		case BUF_READ_WRITE: {
+		case BUF_READ_WRITE: 
 			File.clear();
 			File.seekp(BytePosp,std::ios_base::beg);
 			File.write((char *)Buf,DataCount);
@@ -1202,10 +1248,10 @@ void BMP_BUFFOR::Flush() {
 			File.flush();
 			BufState = BUF_EMPTY;
 			break;
-		}
-		default: {
-			throw BMP_INTERNAL_ERROR();
-		}
+		
+		default: 
+			std::vector<string> params(1);
+			throw err("!BMP2", params);
 	}
 }
 //********************end of class BMP_BUFFOR********************//

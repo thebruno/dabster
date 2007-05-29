@@ -5,6 +5,7 @@
 #include <vector>
 #include <stdlib.h>
 #include <ctime>
+#include "err.h"
 using namespace bmptypes;
 
 
@@ -149,9 +150,9 @@ int main() {
 			double t1,t2, t;
 			t1 = clock();
 
-			//b->store(sciezki1,sciezki2);
+			b->store(sciezki1,sciezki2);
 			//b->del(sciezki4);
-			b->extract(sciezki5,sciezki3);
+			//b->extract(sciezki2,sciezki3);
 			//b->modify(sciezki2, sciezki5);
 			//b->copyInside(sciezki4, sciezki5);
 			t2 = clock();
@@ -162,7 +163,10 @@ int main() {
 			delete b;
 		}
 
-		catch(DAB_EXCEPTION& )	{
+		catch(err& a)	{
+			std::cout << a.sDescription << std::endl;
+			std::cout << a.sHelp << std::endl;
+			std::cout << a.sNumber << std::endl;
 			std::cout << "BLAD :/";
 		}
 	}

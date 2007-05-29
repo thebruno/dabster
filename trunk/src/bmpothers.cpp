@@ -295,7 +295,7 @@ bool BMP::IsDab() {
  * \brief
  * Odczytuje naglowek Dabstera.
  *	
- * \throws <exception class>
+ * \throws err()
  * Rzuca wyjatek w przypadku bledu odczytu zapisu.
  * 
  * Odczyt naglowka bez interpretacji jego zawartosci.
@@ -353,7 +353,7 @@ void BMP::ReadDabHeader() {
  * \brief
  * Zapisuje naglowek Dabstera.
  * 
- * \throws <exception class>
+ * \throws err()
  * Rzuca wyjatek w przypadku bledu odczytu zapisu.
  */
 void BMP::WriteDabHeader() {
@@ -409,7 +409,7 @@ void BMP::WriteDabHeader() {
  * \returns
  * Wartosc odczytanej kompresji.
  * 
- * \throws <exception class>
+ * \throws err()
  * Rzuca wyjatek w przypadku bledu odczytu zapisu.
  * 
  * Nie interpretuje odczytanej wartosci.
@@ -434,7 +434,7 @@ const uint8 BMP::ReadCompr() {
  * \brief
  * Zapis stopnia kompresji na dysku.
  *
- * \throws <exception class>
+ * \throws err()
  * Rzuca wyjatek w przypadku bledu odczytu zapisu.
  */
 void BMP::WriteCompr() {
@@ -455,7 +455,7 @@ void BMP::WriteCompr() {
  * \brief
  * Odczyt Wszystkich naglowkow z pliku.
  *
- * \throws <exception class>
+ * \throws err()
  * Rzuca wyjatek w przypadku bledu odczytu zapisu.
  * 
  * Nie interpretuje odczytanej wartosci.
@@ -494,7 +494,7 @@ void BMP::DeleteAllHeaders() {
  * \returns
  * Wskaznik na nowy naglowek.
  * 
- * \throws <exception class>
+ * \throws err()
  * Rzuca wyjatek w przypadku bledu odczytu zapisu.
  * 
  * Nie interpretuje odczytanej wartosci.
@@ -553,7 +553,7 @@ FILE_HEADER* BMP::ReadFileHeader() {
  * \param Dabheader
  * Wskaznik na naglowek do zapisu. 
  *
- * \throws <exception class>
+ * \throws err()
  * Rzuca wyjatek w przypadku bledu odczytu zapisu.
  * 
  */
@@ -601,7 +601,7 @@ void BMP::edit() {
  * \brief
  * Tworzy nowy naglowek Dabstera.
  * 
- * \throws <exception class>
+ * \throws err()
  * Rzuca wyjatek w przypadku bledu odczytu zapisu.
  * 
  */
