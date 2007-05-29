@@ -5,6 +5,7 @@
 #include <vector>
 #include <stdlib.h>
 #include <ctime>
+#include "err.h"
 using namespace bmptypes;
 
 
@@ -162,7 +163,7 @@ int main() {
 			delete b;
 		}
 
-		catch(DAB_EXCEPTION& )	{
+		catch(err& )	{
 			std::cout << "BLAD :/";
 		}
 	}
