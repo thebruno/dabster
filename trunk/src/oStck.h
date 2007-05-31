@@ -43,7 +43,10 @@ public:
 
 	item* left(void);
 	item* right(void);
+
 	item* get(int index);
+	void set(int index, item* newItem);
+
 	int size(void);
 	int parent(int index);
 
