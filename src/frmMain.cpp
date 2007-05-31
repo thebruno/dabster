@@ -178,7 +178,7 @@ dabster::frmMain::frmMain(void) {
 	tc->Location = dabDPoint(0, 63);
 	dabster::tab^ t = gcnew dabster::tab(tc);
 	t->resize();
-	t->open("D:\\Metzger\\Qrs\\");	// Tu podajcie wlasna sciezke !!!!!!!!!!!!!!!!! <---------
+	t->open("D:\\");	// Tu podajcie wlasna sciezke !!!!!!!!!!!!!!!!! <---------
 	t->refresh();
 }
 

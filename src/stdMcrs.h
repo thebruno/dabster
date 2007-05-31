@@ -90,6 +90,7 @@
 #define dabIContainer					System::ComponentModel::IContainer
 #define dabCommandLine					System::Environment::CommandLine
 #define dabComponent					System::ComponentModel::Component
+#define dabArrayList					System::Collections::ArrayList
 
 #define	dabDir				System::IO::Directory
 #define dabDirInfo			System::IO::DirectoryInfo
