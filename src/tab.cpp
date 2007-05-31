@@ -39,15 +39,6 @@
 
 #include "sfile.h"
 #include "sfolder.h"
-//#include "sdrive.h"
-//
-//#include "ftp.h"
-//#include "mldrv.h"
-//#include "bmp.h"
-//#include "aes.h"
-//#include "bwt.h"
-//#include "wav.h"
-//#include "twfsh.h"
 
 #include "stdMcrs.h"
 #include "frmMain.h"
@@ -57,6 +48,12 @@
 #include "com.h"
 #include "err.h"
 #include "tab.h"
+
+static const int iICON_COLUMN = 0;
+static const int iNAME_COLUMN = 1;
+static const int iSIZE_COLUMN = 2;
+static const int iTYPE_COLUMN = 3;
+static const int iMODIFIED_COLUMN = 4;
 
 dabster::tab::tab(dabTabControl^ ownerTabControl) {
 	owner = ownerTabControl;
@@ -108,7 +105,7 @@ dabster::tab::tab(dabTabControl^ ownerTabControl) {
 	gltList->Columns->Add(com::get("@GLT0"), 250);
 	gltList->Columns->Add(com::get("@GLT1"), 60);
 	gltList->Columns->Add(com::get("@GLT2"), 60);
-	gltList->Columns->Add(com::get("@GLT3"), 100);
+	gltList->Columns->Add(com::get("@GLT3"), 110);
 	gltList->DoubleClick += gcnew System::EventHandler(this, &tab::gltList_DoubleClick);
 	tpgTab->Controls->Add(gltList);
 
@@ -123,6 +120,7 @@ dabster::tab::tab(dabTabControl^ ownerTabControl) {
 
 dabster::tab::~tab(void) {
 	if (opensStack) delete opensStack;
+	if (content) delete content;
 }
 
 /* Dostosowuje rozmiary zakladki */
@@ -136,6 +134,12 @@ void dabster::tab::refresh(void) {
 	std::string relativePath = "";
 	if (lFB + 1 < opensStack->size()) {
 		relativePath = opensStack->relativePath(lFB + 1, opensStack->size() - 1);
+	}
+
+	/* Konwersja ostatniego FB do rzeczywistego typu */
+	int rType = item::realType(opensStack->get(lFB));
+	if (opensStack->type(lFB) != rType) {
+		opensStack->set(lFB, item::convert(opensStack->get(lFB), rType));
 	}
 
 	folder *lastFB = dynamic_cast< folder* >(opensStack->get(lFB));
@@ -156,8 +160,8 @@ void dabster::tab::refresh(void) {
 		dabPictureBox^ picTemp = gcnew dabPictureBox();
 		picTemp->Image = dabToImg(resources->GetObject(L"up"));
 		picTemp->Size = dabDSize(20, 18);
-		gltList->Items[0]->SubItems[0]->Control = picTemp;
-		gltList->Items[0]->SubItems[1]->Text = com::get("@GLT8");
+		gltList->Items[0]->SubItems[iICON_COLUMN]->Control = picTemp;
+		gltList->Items[0]->SubItems[iNAME_COLUMN]->Text = com::get("@GLT8");
 	}
 
 	/* Dodawanie nowych elementow */
@@ -174,28 +178,37 @@ void dabster::tab::refresh(void) {
 		if ((*content)[i][dabKeyAtrDirectory] == dabTrue) {
 			// folder
 			picTemp->Image = dabToImg(resources->GetObject(L"folder"));
-			gltList->Items[i+up]->SubItems[3]->Text = com::get("@GLT4");
+			gltList->Items[i+up]->SubItems[iTYPE_COLUMN]->Text = com::get("@GLT4");
 		} else {
-			picTemp->Image = dabToImg(resources->GetObject(L"file"));
-			gltList->Items[i+up]->SubItems[3]->Text = com::get("@GLT5");
+			str::path p = str::splitPath((*content)[i][dabKeyName]);
+
+			if (p.extension == "bmp") {
+				// bmp
+				picTemp->Image = dabToImg(resources->GetObject(L"bmp"));
+				gltList->Items[i+up]->SubItems[iTYPE_COLUMN]->Text = com::get("@GLT6");
+			} else {
+				// plik
+				picTemp->Image = dabToImg(resources->GetObject(L"file"));
+				gltList->Items[i+up]->SubItems[iTYPE_COLUMN]->Text = com::get("@GLT5");
+			}
 		}
 		picTemp->Size = dabDSize(20, 18);
 		gltList->Items[i+up]->SubItems[0]->Control = picTemp;
 
 		// Nazwa
-		gltList->Items[i+up]->SubItems[1]->Text = 
+		gltList->Items[i+up]->SubItems[iNAME_COLUMN]->Text = 
 			gcnew System::String((*content)[i][dabKeyName].c_str());
 
 		// Rozmiar
 		if ((*content)[i][dabKeyName] != "") {
-			gltList->Items[i+up]->SubItems[2]->Text = 
+			gltList->Items[i+up]->SubItems[iSIZE_COLUMN]->Text = 
 				gcnew System::String((*content)[i][dabKeyLength].c_str());
 		} else {
-			gltList->Items[i+up]->SubItems[2]->Text = com::get("@GLT7");
+			gltList->Items[i+up]->SubItems[iSIZE_COLUMN]->Text = com::get("@GLT7");
 		}
 
 		// Data modyfikacji
-		gltList->Items[i+up]->SubItems[4]->Text = 
+		gltList->Items[i+up]->SubItems[iMODIFIED_COLUMN]->Text = 
 			gcnew System::String((*content)[i][dabKeyLastAccessTimeUtc].c_str());
 	}
 }
@@ -417,14 +430,16 @@ System::Void dabster::tab::gltList_DoubleClick(System::Object^ sender, System::E
 			str::fixDelims(path);
 			open(path);
 			refresh();
-		} else {
-			/* Kliknieto w inny element */
+		} else if (gltList->Items[i]->SubItems[iTYPE_COLUMN]->Text != com::get("@GLT5")) {
+			/* Kliknieto w element typu folder */
 			if (path[path.size() - 1] != '\\') path.push_back('\\');
-			path += str::sysStrToCppStr(gltList->Items[i]->SubItems[1]->Text);	// name
+			path += str::sysStrToCppStr(gltList->Items[i]->SubItems[iNAME_COLUMN]->Text);	// name
 			if (path[path.size() - 1] != '\\') path.push_back('\\');
 			str::fixDelims(path);
 			open(path);
 			refresh();
+		} else {
+			/* Kliknieto w plik */
 		}
 	}
 }
