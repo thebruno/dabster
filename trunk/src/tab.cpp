@@ -50,6 +50,7 @@
 //#include "twfsh.h"
 
 #include "stdMcrs.h"
+#include "frmMain.h"
 #include "oStck.h"
 #include "drvLst.h"
 #include "str.h"
@@ -63,6 +64,7 @@ dabster::tab::tab(dabTabControl^ ownerTabControl) {
 	gltList = gcnew dabGlacialList();
 	picExit = gcnew dabPictureBox();
 	picHeaderUnderline = gcnew dabPictureBox();
+	resources = gcnew dabComponentResourceManager(frmMain::typeid);
 
 	opensStack = new oStck;
 
@@ -70,9 +72,9 @@ dabster::tab::tab(dabTabControl^ ownerTabControl) {
 	tpgTab->Location = dabDPoint(4, 22);
 	tpgTab->Name = L"tabPage";
 	tpgTab->Padding = System::Windows::Forms::Padding(3);
+	tpgTab->Text = com::get("@TPG0");
 	tpgTab->Width = owner->Width - 8;
 	tpgTab->Height = owner->Height - 26;
-	tpgTab->Text = com::get("@TPG0");
 
 	gltList->AllowColumnResize = true;
 	gltList->AllowMultiselect = true;
@@ -102,11 +104,20 @@ dabster::tab::tab(dabTabControl^ ownerTabControl) {
 	gltList->SortType = dabQuickSort;
 	gltList->SuperFlatHeaderColor = dabWhite;
 	gltList->Text = L"glacialList";
-
-	owner->Controls->Add(tpgTab);
+	gltList->Columns->Add("", 20);
+	gltList->Columns->Add(com::get("@GLT0"), 100);
+	gltList->Columns->Add(com::get("@GLT1"), 40);
+	gltList->Columns->Add(com::get("@GLT2"), 40);
+	gltList->Columns->Add(com::get("@GLT3"), 40);
 	tpgTab->Controls->Add(gltList);
+
+	picHeaderUnderline = gcnew System::Windows::Forms::PictureBox();
+	picHeaderUnderline->Location = System::Drawing::Point(0, 18);
+	picHeaderUnderline->BackColor = System::Drawing::Color::DarkGray;
+	gltList->Controls->Add(picHeaderUnderline);
+
 	tpgTab->Controls->Add(picExit);
-	tpgTab->Controls->Add(picHeaderUnderline);
+	owner->Controls->Add(tpgTab);
 }
 
 dabster::tab::~tab(void) {
@@ -115,12 +126,61 @@ dabster::tab::~tab(void) {
 
 /* Dostosowuje rozmiary zakladki */
 void dabster::tab::resize(void) {
+	picHeaderUnderline->Size = System::Drawing::Size(tpgTab->Width, 2);
+}
+
+/* Odswierza widok zakladki */
+void dabster::tab::refresh(void) {
+	int lFB = opensStack->parent(opensStack->size());	// ostatni FB
+	std::string relativePath = "";
+	if (lFB + 1 < opensStack->size()) {
+		relativePath = opensStack->relativePath(lFB + 1, opensStack->size() - 1);
+	}
+
+	folder *lastFB = dynamic_cast< folder* >(opensStack->get(lFB));
+	if (!content) content = new std::vector< std::map< std::string, std::string > >;
+	*content = lastFB->getContent(relativePath);
+
+	for (unsigned int i = 0; i < content->size(); i++) {
+		gltList->Items->Add("");
+		gltList->Items[i]->BackColor = dabWhite;
+		gltList->Items[i]->ForeColor = dabBlack;
+		gltList->Items[i]->RowBorderSize = 0;
+
+		dabPictureBox^ picTemp = gcnew dabPictureBox();
+
+		// Ikona i typ
+		if ((*content)[i][dabKeyAtrDirectory] == dabTrue) {
+			picTemp->Image = dabToImg(resources->GetObject(L"folder"));
+			gltList->Items[i]->SubItems[3]->Text = com::get("@GLT4");
+		} else {
+			picTemp->Image = dabToImg(resources->GetObject(L"file"));
+			gltList->Items[i]->SubItems[3]->Text = com::get("@GLT5");
+		}
+		picTemp->Size = dabDSize(20, 18);
+		gltList->Items[i]->SubItems[0]->Control = picTemp;
+
+		// Nazwa
+		gltList->Items[i]->SubItems[1]->Text = 
+			gcnew System::String((*content)[i][dabKeyName].c_str());
+
+		// Rozmiar
+		if ((*content)[i][dabKeyName] != "") {
+			gltList->Items[i]->SubItems[2]->Text = 
+				gcnew System::String((*content)[i][dabKeyLength].c_str());
+		} else {
+			gltList->Items[i]->SubItems[2]->Text = com::get("@GLT7");
+		}
+
+		// Data modyfikacji
+		gltList->Items[i]->SubItems[4]->Text = 
+			gcnew System::String((*content)[i][dabKeyLastAccessTimeUtc].c_str());
+	}
 }
 
 /* Otwiera nowy katalog */
 void dabster::tab::open(std::string path) {
 	std::vector< std::string > pth = str::itemNames(path);
-	std::vector< std::string > content(0);
 	unsigned int level = 0;
 
 	if (pth.size() == 0) {
@@ -191,6 +251,9 @@ void dabster::tab::open(std::string path) {
 		int realParentType;
 		switch (realParentType = item::realType(opensStack->get(prnt))) {
 		case dabSFolder: break;
+		case dabSDrive: break;
+		case dabFtp: break;
+		case dabMlDrv: break;
 
 		case dabSFile: {
 			/* Wewnetrzny element sciezki nie moze byc plikiem prostym */
@@ -230,7 +293,7 @@ void dabster::tab::open(std::string path) {
 			}
 			newPathItem->setName(pth[i]);
 			opensStack->push(newPathItem);
-			if (realParentType == dabSFolder) {
+			if ((realParentType == dabSFolder) || (realParentType == dabSDrive)) {
 				newPathItem->setRealPath(opensStack->relativePath(0, opensStack->size() - 1));
 			}
 		} else {
@@ -240,6 +303,33 @@ void dabster::tab::open(std::string path) {
 			params[1] = pth[i];
 			throw err("!TAB4", params);
 		}
+	}
+
+	/* Zapewnianie rzeczywistej sciezki ostatniego FB */
+	int prnt = opensStack->parent(opensStack->size());	// ostatni FB
+	if (opensStack->get(prnt)->getRealPath() == "") {
+		int gp = opensStack->parent(prnt);	// grand parent
+		folder *grandParent = dynamic_cast< folder* >(opensStack->get(gp));
+		std::vector< std::map< std::string, std::string > > src(1), dest(1);
+
+		/* Przygotowywanie informacji o zrodle */
+		src[0][dabKeyRelativePath] = opensStack->relativePath(gp + 1, prnt);
+		src[0][dabKeyName] = opensStack->get(prnt)->getName();
+		src[0][dabKeyAtrDirectory] = dabTrue;
+
+		/* Przygotowywanie informacji o celu */
+		dest[0][dabKeyName] = str::sysStrToCppStr(dabIoPath::GetTempFileName());
+		std::string tempPath = str::getAppPath().drive;
+		if (tempPath[tempPath.size() - 1] != '\\') tempPath.push_back('\\');
+		tempPath += str::getAppPath().dir;
+		if (tempPath[tempPath.size() - 1] != '\\') tempPath.push_back('\\');
+		tempPath += "temp\\" + dest[0][dabKeyName];
+		str::fixDelims(tempPath);
+		dest[0][dabKeyRealPath] = tempPath;
+		
+		/* Wypakowywanie rodzica */
+		grandParent->extract(src, dest);
+		opensStack->get(prnt)->setRealPath(tempPath);
 	}
 }
 
