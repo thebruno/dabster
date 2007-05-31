@@ -28,6 +28,7 @@
 
 #include "frmMain.h"
 #include "stdMcrs.h"
+#include "drvLst.h"
 #include "err.h"
 #include "com.h"
 #include "set.h"
@@ -39,7 +40,6 @@
 
 #ifdef TESTING
 #include "sfolder.h"
-#include "drvLst.h"
 #include "oStck.h"
 #endif
 
@@ -166,9 +166,11 @@ dabster::frmMain::frmMain(void) {
 	s.push(dynamic_cast< item* >(f));
 
 	i = s.parent(1);
+	#endif
 
 	/* Testy tab */
 
+	drvLst::refresh();
 	dabTabControl^ tc = gcnew dabTabControl();
 	this->Controls->Add(tc);
 	tc->Width = this->Width - 8;
@@ -176,13 +178,8 @@ dabster::frmMain::frmMain(void) {
 	tc->Location = dabDPoint(0, 63);
 	dabster::tab^ t = gcnew dabster::tab(tc);
 	t->resize();
-	//this->SuspendLayout();
-	//this->PerformLayout();
-	//this->ResumeLayout(false);
-	t->open("D:\\Metzger\\Qrs\\");
+	t->open("D:\\Metzger\\Qrs\\");	// Tu podajcie wlasna sciezke !!!!!!!!!!!!!!!!! <---------
 	t->refresh();
-	#endif
-
 }
 
 dabster::frmMain::~frmMain() {
