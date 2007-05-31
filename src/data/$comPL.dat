@@ -130,5 +130,16 @@
 
 @TPG0 pusta
 
+@GLT0 Nazwa
+@GLT1 Rozmiar
+@GLT2 Typ
+@GLT3 Data modyfikacji
+
+@GLT4 folder
+@GLT5 plik
+@GLT6 bmp
+
+@GLT7 nieznany
+
 @SLB0 © Zespó³ Dabstera 2007
 @SLB1 Gotowy do pracy
