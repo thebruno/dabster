@@ -74,7 +74,7 @@ dabster::tab::tab(dabTabControl^ ownerTabControl) {
 	tpgTab->Padding = System::Windows::Forms::Padding(3);
 	tpgTab->Text = com::get("@TPG0");
 	tpgTab->Width = owner->Width - 8;
-	tpgTab->Height = owner->Height - 26;
+	tpgTab->Height = owner->Height - 30;
 
 	gltList->AllowColumnResize = true;
 	gltList->AllowMultiselect = true;
@@ -105,10 +105,11 @@ dabster::tab::tab(dabTabControl^ ownerTabControl) {
 	gltList->SuperFlatHeaderColor = dabWhite;
 	gltList->Text = L"glacialList";
 	gltList->Columns->Add("", 20);
-	gltList->Columns->Add(com::get("@GLT0"), 100);
-	gltList->Columns->Add(com::get("@GLT1"), 40);
-	gltList->Columns->Add(com::get("@GLT2"), 40);
-	gltList->Columns->Add(com::get("@GLT3"), 40);
+	gltList->Columns->Add(com::get("@GLT0"), 250);
+	gltList->Columns->Add(com::get("@GLT1"), 60);
+	gltList->Columns->Add(com::get("@GLT2"), 60);
+	gltList->Columns->Add(com::get("@GLT3"), 100);
+	gltList->DoubleClick += gcnew System::EventHandler(this, &tab::gltList_DoubleClick);
 	tpgTab->Controls->Add(gltList);
 
 	picHeaderUnderline = gcnew System::Windows::Forms::PictureBox();
@@ -138,42 +139,63 @@ void dabster::tab::refresh(void) {
 	}
 
 	folder *lastFB = dynamic_cast< folder* >(opensStack->get(lFB));
-	if (!content) content = new std::vector< std::map< std::string, std::string > >;
+	if (content) delete content;
+	content = new std::vector< std::map< std::string, std::string > >;
 	*content = lastFB->getContent(relativePath);
 
-	for (unsigned int i = 0; i < content->size(); i++) {
+	/* Usuwanie starych elementow */
+	gltList->Items->Clear();
+
+	int up = 0;
+	if (opensStack->size() > 1) {
+		up = 1;
 		gltList->Items->Add("");
-		gltList->Items[i]->BackColor = dabWhite;
-		gltList->Items[i]->ForeColor = dabBlack;
-		gltList->Items[i]->RowBorderSize = 0;
+		gltList->Items[0]->BackColor = dabWhite;
+		gltList->Items[0]->ForeColor = dabBlack;
+		gltList->Items[0]->RowBorderSize = 0;
+		dabPictureBox^ picTemp = gcnew dabPictureBox();
+		picTemp->Image = dabToImg(resources->GetObject(L"up"));
+		picTemp->Size = dabDSize(20, 18);
+		gltList->Items[0]->SubItems[0]->Control = picTemp;
+		gltList->Items[0]->SubItems[1]->Text = com::get("@GLT8");
+	}
+
+	/* Dodawanie nowych elementow */
+	for (unsigned int i = 0; i < content->size(); i++) {
+		// i = numer w content; i+up numer w Items
+		gltList->Items->Add("");
+		gltList->Items[i+up]->BackColor = dabWhite;
+		gltList->Items[i+up]->ForeColor = dabBlack;
+		gltList->Items[i+up]->RowBorderSize = 0;
 
 		dabPictureBox^ picTemp = gcnew dabPictureBox();
 
-		// Ikona i typ
+		/* Ikona i typ */
 		if ((*content)[i][dabKeyAtrDirectory] == dabTrue) {
+			// folder
 			picTemp->Image = dabToImg(resources->GetObject(L"folder"));
-			gltList->Items[i]->SubItems[3]->Text = com::get("@GLT4");
+			gltList->Items[i+up]->SubItems[3]->Text = com::get("@GLT4");
 		} else {
 			picTemp->Image = dabToImg(resources->GetObject(L"file"));
-			gltList->Items[i]->SubItems[3]->Text = com::get("@GLT5");
+			gltList->Items[i+up]->SubItems[3]->Text = com::get("@GLT5");
 		}
 		picTemp->Size = dabDSize(20, 18);
-		gltList->Items[i]->SubItems[0]->Control = picTemp;
+		gltList->Items[i+up]->SubItems[0]->Control = picTemp;
 
 		// Nazwa
-		gltList->Items[i]->SubItems[1]->Text = 
+		gltList->Items[i+up]->SubItems[1]->Text = 
 			gcnew System::String((*content)[i][dabKeyName].c_str());
 
 		// Rozmiar
 		if ((*content)[i][dabKeyName] != "") {
-			gltList->Items[i]->SubItems[2]->Text = 
+			gltList->Items[i+up]->SubItems[2]->Text = 
 				gcnew System::String((*content)[i][dabKeyLength].c_str());
 		} else {
-			gltList->Items[i]->SubItems[2]->Text = com::get("@GLT7");
+			gltList->Items[i+up]->SubItems[2]->Text = com::get("@GLT7");
 		}
 
 		// Data modyfikacji
-		gltList->Items[i]->SubItems[4]->Text = 
+		gltList->Items[i+up]->SubItems[4]->Text = 
 			gcnew System::String((*content)[i][dabKeyLastAccessTimeUtc].c_str());
 	}
 }
@@ -203,7 +225,8 @@ void dabster::tab::open(std::string path) {
 	}
 
 	/* Dodawanie dysku */
-	if (level++ == 0) {
+	if (level == 0) {
+		++level;
 		int index;
 		if ((index = drvLst::find(pth[0])) == drvLst::iNOT_FOUND) {
 			/* Nie znaleziono partycji */
@@ -331,10 +354,26 @@ void dabster::tab::open(std::string path) {
 		grandParent->extract(src, dest);
 		opensStack->get(prnt)->setRealPath(tempPath);
 	}
+
+	tpgTab->Text = gcnew System::String(path.c_str());
 }
 
 /* Zapisuje pliki i foldery w aktualnym katalogu */
 void dabster::tab::store(std::vector< std::map< std::string, std::string > > src, std::vector< std::map< std::string, std::string > > dest) {
+	int lFB = opensStack->parent(opensStack->size());	// ostatni FB
+	std::string relativePath = "";
+	if (lFB + 1 < opensStack->size()) {
+		relativePath = opensStack->relativePath(lFB + 1, opensStack->size() - 1);
+
+	}
+
+	folder *lastFB = dynamic_cast< folder* >(opensStack->get(lFB));
+
+	for (int i = 0; i < opensStack->size(); i++) {
+		dest[i][dabKeyRelativePath] = relativePath + src[i][dabKeyRelativePath];
+	}
+
+	lastFB->store(src, dest);
 }
 
 void dabster::tab::extract(std::vector< std::map< std::string, std::string > > src, std::vector< std::map< std::string, std::string > > dest) {
@@ -355,6 +394,39 @@ std::vector< std::map< std::string, std::string > > dabster::tab::getContent(voi
 
 unsigned long long dabster::tab::getCapacity(void) {
 	return 0;
+}
+
+/* Obsluga zdarzenia Click */
+System::Void dabster::tab::gltList_DoubleClick(System::Object^ sender, System::EventArgs^  e) {
+	std::string path = opensStack->relativePath(0, opensStack->size() - 1);
+	dabArrayList^ sel = gltList->SelectedIndicies;
+
+	int up = 0;
+	if (opensStack->size() > 1) up = 1;
+
+	if (sel->Count == 1) {
+		int i = static_cast< int >(sel[0]);
+
+		if (up && !i) {
+			/* Kliknieto w up */
+			std::string::size_type pos;
+			if (path[path.size() - 1] == '\\') path.erase(path.size() - 1);
+			if ((pos = path.rfind("\\")) != std::string::npos) {
+				path.erase(pos + 1);
+			}
+			str::fixDelims(path);
+			open(path);
+			refresh();
+		} else {
+			/* Kliknieto w inny element */
+			if (path[path.size() - 1] != '\\') path.push_back('\\');
+			path += str::sysStrToCppStr(gltList->Items[i]->SubItems[1]->Text);	// name
+			if (path[path.size() - 1] != '\\') path.push_back('\\');
+			str::fixDelims(path);
+			open(path);
+			refresh();
+		}
+	}
 }
 
 /********************************************************************/

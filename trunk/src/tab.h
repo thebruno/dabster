@@ -71,6 +71,7 @@ private:
 
 	oStck* opensStack;
 	std::vector< std::map< std::string, std::string > >* content;
+	System::Void gltList_DoubleClick(System::Object^ sender, System::EventArgs^  e);
 };
 
 }
