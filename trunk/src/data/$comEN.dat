@@ -130,5 +130,16 @@
 
 @TPG0 empty
 
+@GLT0 Name
+@GLT1 Size
+@GLT2 Type
+@GLT3 Modyfied
+
+@GLT4 folder
+@GLT5 file
+@GLT6 bmp
+
+@GLT7 unknown
+
 @SLB0 © The Dabster Team 2007
 @SLB1 Ready to work
