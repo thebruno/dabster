@@ -163,7 +163,7 @@ int oStck::type(int index) {
 	if (dynamic_cast< bmp::BMP* >(vStack[index])) return dabBmp;
 	if (dynamic_cast< aes* >(vStack[index])) return dabAes;
 	if (dynamic_cast< bwt* >(vStack[index])) return dabBwt;
-	if (dynamic_cast< mldrv* >(vStack[index])) return dabMldrv;
+	if (dynamic_cast< mldrv* >(vStack[index])) return dabMlDrv;
 	if (dynamic_cast< wav* >(vStack[index])) return dabWav;
 	if (dynamic_cast< twfsh* >(vStack[index])) return dabTwfsh;
 

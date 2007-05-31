@@ -78,7 +78,7 @@ drive* dabster::drvLst::get(int index) {
 int dabster::drvLst::type(int index) {
 	if (dynamic_cast< sdrive* >(vDrives[index])) return dabSDrive;
 	if (dynamic_cast< ftp* >(vDrives[index])) return dabFtp;
-	if (dynamic_cast< sdrive* >(vDrives[index])) return dabMldrv;
+	if (dynamic_cast< sdrive* >(vDrives[index])) return dabMlDrv;
 
 	throw err("!DLT0");
 }

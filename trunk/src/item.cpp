@@ -27,6 +27,22 @@
 *********************************************************************/
 
 #include <string>
+
+#include "file.h"
+#include "drive.h"
+
+#include "sfile.h"
+#include "sdrive.h"
+#include "sfolder.h"
+
+#include "bmp.h"
+#include "aes.h"
+#include "bwt.h"
+#include "wav.h"
+#include "twfsh.h"
+
+#include "stdMcrs.h"
+#include "err.h"
 #include "item.h"
 
 item::item(void) : bCanceled(false), sName(""), sRealPath(""), refCount(0) {
@@ -68,6 +84,41 @@ void item::attach(void) {
 /* Zmniejsza licznik wskazan i w razie potrzeby usuwa obiekt */
 void item::detach(void) {
 	if (--refCount == 0) delete this;
+}
+
+/* Sprawdza rzeczywisty typ obiektu (nie uwzglednia dyskow!) */
+int item::realType(item* itemToCheck) {
+	if (!itemToCheck) /* Nie przekazano obiektu */ throw err("!TAB2");
+
+	if (file *f = dynamic_cast< file* >(itemToCheck)) {
+		if (bmp::isBmp(f)) return dabBmp;
+		return dabSFile;
+	} else if (dynamic_cast< sdrive* >(itemToCheck)) {
+		return dabSDrive;
+	//} else if (dynamic_cast< ftp* >(itemToCheck)) {
+	//	return dabFtp;
+	//} else if (dynamic_cast< mldrv* >(itemToCheck)) {
+	//	return dabMlDrv;
+	} else {
+		return dabSFolder;
+	}
+}
+
+/* Konwertuje obiekt do wskazanego typu szczegolowego (nie uwzglednia dyskow!) */
+item* item::convert(item *objectToConvert, int type) {
+	if (!objectToConvert) /* Nie przekazano obiektu */ throw err("!TAB2");
+	
+	item *rt;
+	switch (type) {
+		case dabBmp: rt = new bmp::BMP(); break;
+		case dabSFolder: rt = new sfolder(); break;
+		case dabSFile: rt = new sfile(); break;
+	}
+
+	rt->setName(objectToConvert->getName());
+	rt->setRealPath(objectToConvert->getRealPath());
+
+	return rt;
 }
 
 /********************************************************************/
