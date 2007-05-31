@@ -50,7 +50,7 @@ const int iSTAT_LABELS = 3;
 const int iSTAT_PRGRSS = 1;
 
 dabster::frmMain::frmMain(void) {
-	resources = (gcnew dabComponentResourceManager(frmMain::typeid));
+	resources = gcnew dabComponentResourceManager(frmMain::typeid);
 	this->SuspendLayout();
 
 	/* Budowanie frmMain */
@@ -175,7 +175,12 @@ dabster::frmMain::frmMain(void) {
 	tc->Height = this->Height - 111;
 	tc->Location = dabDPoint(0, 63);
 	dabster::tab^ t = gcnew dabster::tab(tc);
+	t->resize();
+	//this->SuspendLayout();
+	//this->PerformLayout();
+	//this->ResumeLayout(false);
 	t->open("D:\\Metzger\\Qrs\\");
+	t->refresh();
 	#endif
 
 }

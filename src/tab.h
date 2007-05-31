@@ -43,6 +43,7 @@ public:
 	tab(dabTabControl^ ownerTabControl);
 
 	void resize(void);
+	void refresh(void);
 
 	void open(std::string path);
 
@@ -61,6 +62,7 @@ protected:
 
 private:
 	dabTabControl^ owner;
+	dabComponentResourceManager^ resources;
 	
 	dabTabPage^ tpgTab;
 	dabGlacialList^ gltList;
@@ -68,6 +70,7 @@ private:
 	dabPictureBox^ picHeaderUnderline;
 
 	oStck* opensStack;
+	std::vector< std::map< std::string, std::string > >* content;
 };
 
 }
