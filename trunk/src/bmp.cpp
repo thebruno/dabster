@@ -43,7 +43,7 @@ namespace bmp {
  * 
  * Otwarcie bitmapy i odczyt naglowka.
  */
-BMP::BMP(file *DabFile):BmpBuf(&BmpHeader) {
+/*BMP::BMP(file *DabFile):BmpBuf(&BmpHeader) {
 	PreferedCompr = 1;
 	BmpBuf.BufReset();
 	BmpBuf.OpenFile(DabFile->getRealPath().c_str(), std::ios_base::in | std::ios_base::out, BUFFOR::BUF_READONLY);
@@ -55,7 +55,7 @@ BMP::BMP(file *DabFile):BmpBuf(&BmpHeader) {
 		params[0] = DabFile->getRealPath().c_str();
 		throw err("!BMP1", params);
 	}
-}
+}*/
 /*!
  * \brief
  * Konstruktor klasy BMP
@@ -88,6 +88,8 @@ BMP::~BMP() {
 void BMP::del(vmstring Dabpath) {
 	pProgress.show(0);
 	int PrgrsTask = 0, PrgrsFin = 0;
+	// odczyt naglowka bmp
+	ReadBmpHeader();
 	// czy odczytano naglowki?
 	BmpBuf.SetCompr(ReadCompr());
 	ReadDabHeader();
@@ -257,6 +259,8 @@ void BMP::del(vmstring Dabpath) {
 void BMP::store(vmstring Dabsrc, vmstring Dabdest) {
 	pProgress.show(0);
 	int PrgrsFin = 0, PrgrsTask = (int)Dabsrc.size() + 1;
+	// odczyt naglowka bmp
+	ReadBmpHeader();
 	// czy odczytano naglowki?
 	BmpBuf.SetCompr(ReadCompr());
 	ReadDabHeader();
@@ -377,6 +381,8 @@ void BMP::store(vmstring Dabsrc, vmstring Dabdest) {
 void BMP::extract(vmstring Dabsrc, vmstring Dabdest) {
 	pProgress.show(0);
 	int PrgrsFin = 0, PrgrsTask = (int) Dabsrc.size() + 1;
+	// odczyt naglowka bmp
+	ReadBmpHeader();
 	BmpBuf.SetCompr(ReadCompr());
 	ReadDabHeader();
 	if (!IsDab()) {
@@ -445,6 +451,8 @@ void BMP::extract(vmstring Dabsrc, vmstring Dabdest) {
 void BMP::copyInside(vmstring DabSrc, vmstring DabDest) {
 	pProgress.show(0);
 	int PrgrsFin = 0, PrgrsTask = (int) DabSrc.size() + 1;
+	// odczyt naglowka bmp
+	ReadBmpHeader();
 	// czy odczytano naglowki?
 	BmpBuf.SetCompr(ReadCompr());
 	ReadDabHeader();
@@ -566,6 +574,8 @@ void BMP::copyInside(vmstring DabSrc, vmstring DabDest) {
 void BMP::modify(vmstring DabOldPath, vmstring DabNewPath) {
 	pProgress.show(0);
 	int PrgrsFin = 0, PrgrsTask = (int) DabOldPath.size() + 2;
+	// odczyt naglowka bmp
+	ReadBmpHeader();
 	// czy odczytano naglowki?
 	BmpBuf.SetCompr(ReadCompr());
 	ReadDabHeader();
@@ -832,6 +842,7 @@ void BMP::modify(vmstring DabOldPath, vmstring DabNewPath) {
  * 
  */
 vmstring BMP::getContent(string Dabpath) {
+	ReadBmpHeader();
 	BmpBuf.SetCompr(ReadCompr());
 	ReadDabHeader();
 	if (!IsDab())
@@ -926,6 +937,8 @@ uint64 BMP::getCapacity(void) {
  */
 void BMP::setCompression(uint8 DabnewCompr) {
 	PreferedCompr = DabnewCompr;
+	// odczyt naglowka bmp
+	ReadBmpHeader();
 	CreateDabHeader();
 	WriteCompr();
 	WriteDabHeader();
@@ -943,6 +956,8 @@ void BMP::setCompression(uint8 DabnewCompr) {
  * 
  */
 const uint8 BMP::getCompression()  {
+	// odczyt naglowka bmp
+	ReadBmpHeader();
 	BmpBuf.SetCompr(ReadCompr());	
 	ReadDabHeader();
 	if (IsDab()) 

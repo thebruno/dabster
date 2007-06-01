@@ -69,7 +69,7 @@ int main() {
 	ri++;
 	std::cout << *ri;
 */
-	std::string nazwa = "1.bmp";
+	std::string nazwa = "2.bmp";
 	
 	smap plik1_in, plik2_in, plik3_in, plik4_in;
 	smap plik1_inside, plik2_inside, plik3_inside, plik4_inside;
@@ -86,22 +86,22 @@ int main() {
 	plik4_in["name"] = "4.txt"; plik4_in["length"] = "1056"; plik4_in["realPath"]= "";
 	sciezki1.push_back(plik4_in);
 
-	plik1_inside["creationTimeUtc"] = "25.04.2007 08:56:33"; plik1_inside["name"] = "1.txtinbmp";
+	plik1_inside["creationTimeUtc"] = "25.04.2007 08:56:33"; plik1_inside["name"] = "11.txtinbmp";
 	plik1_inside["atrReadOnly"] = "true"; plik1_inside["relativePath"] = "";
 	//plik1_inside["atrDirectory"] = "true";
 	sciezki2.push_back(plik1_inside);
 
-	plik2_inside["creationTimeUtc"] = "01.12.2007 20:56:27"; plik2_inside["name"] = "2.txtinbmp";
+	plik2_inside["creationTimeUtc"] = "01.12.2007 20:56:27"; plik2_inside["name"] = "22.txtinbmp";
 	plik2_inside["atrSystem"] = "true"; plik2_inside["relativePath"] = "";
 	//plik2_inside["atrDirectory"] = "true";
 	sciezki2.push_back(plik2_inside);
 
-	plik3_inside["creationTimeUtc"] = "01.12.2007 20:56:27"; plik3_inside["name"] = "3.txtinbmp";
+	plik3_inside["creationTimeUtc"] = "01.12.2007 20:56:27"; plik3_inside["name"] = "33.txtinbmp";
 	plik3_inside["atrHidden"] = "true"; plik3_inside["relativePath"] = "";
 	//plik3_inside["atrDirectory"] = "true";
 	sciezki2.push_back(plik3_inside);
 
-	plik4_inside["creationTimeUtc"] = "11.12.2007 11:56:27"; plik4_inside["name"] = "4.txtinbmp";
+	plik4_inside["creationTimeUtc"] = "11.12.2007 11:56:27"; plik4_inside["name"] = "44.txtinbmp";
 	plik4_inside["atrHidden"] = "true"; plik4_inside["relativePath"] = "";
 	//plik3_inside["atrDirectory"] = "true";
 	sciezki2.push_back(plik4_inside);
@@ -142,7 +142,8 @@ int main() {
 	if (bmp::isBmp(f)) {
 
 		try {
-			b = new bmp::BMP(f);
+			b = new bmp::BMP();
+			b->setRealPath(nazwa);
 			std:: cout << (wynik = b->getContent(string("")));
 			if (wynik.empty() && b->getCompression() == 0) {
 				b->setCompression(1);
@@ -150,9 +151,9 @@ int main() {
 			double t1,t2, t;
 			t1 = clock();
 
-			b->store(sciezki1,sciezki2);
+			//b->store(sciezki1,sciezki2);
 			//b->del(sciezki4);
-			//b->extract(sciezki2,sciezki3);
+			b->extract(sciezki2,sciezki3);
 			//b->modify(sciezki2, sciezki5);
 			//b->copyInside(sciezki4, sciezki5);
 			t2 = clock();
