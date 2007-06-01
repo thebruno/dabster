@@ -26,6 +26,7 @@
 
 *********************************************************************/
 #include "bmp.h"
+#include "err.h"
 //********************namespace bmp********************//
 namespace bmp {
 //********************class BMP********************//
@@ -34,13 +35,25 @@ namespace bmp {
  * Odczyt naglowkow pliku bmp.
  */
 void BMP::ReadBmpHeader() {
+	BmpBuf.BufReset();
+	BmpBuf.OpenFile(this->getRealPath().c_str(), std::ios_base::in | std::ios_base::out, BUFFOR::BUF_READONLY);
+	BmpBuf.SetReadSize(BUF_READING_SIZE);
+	BmpBuf.Fill();
+	// read bmp header
 	uint32 i;
 	uint8 * p = reinterpret_cast<uint8*> (&BmpHeader);
 	for (i = 0; i < 54; ++i) {
 		p[i] = BmpBuf.GetByte();
 	}
 	BmpHeader.biUsefulData = BmpHeader.biWidth * BmpHeader.biHeight * 3; // w bajtach
+
+	if (!IsBmp()) {
+		std::vector<string> params(1);
+		params[0] = this->getRealPath().c_str();
+		throw err("!BMP1", params);
+	}
 }
+
 /*!
  * \brief
  * Konwersja Atrybutow na format binarny.

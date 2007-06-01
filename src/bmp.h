@@ -43,7 +43,6 @@ namespace bmp {
 using namespace bmptypes;
 
 int isBmp(file *DabFile);
-
 /*!
  * \brief
  * Klasa BMP.

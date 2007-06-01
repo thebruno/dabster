@@ -83,6 +83,11 @@ BUFFOR::~BUFFOR() {
  * Otwiera plik, ustawia tryb pracy i oblicza jego wielkosc.
  */
 void BUFFOR::OpenFile(std::string DabPath, std::ios_base::open_mode DabFileMode, BUFFOR_MODE DabBufMode) {
+	// zamknij aktualny plik i zresetuj strumien
+	if (File) {
+		File.close();
+		File.clear();
+	}
 	File.open(DabPath.c_str(), DabFileMode | std::ios_base::binary);
 	if (!File) {
 		BufState = BUF_BAD;
@@ -467,6 +472,7 @@ void BUFFOR::SetMode(BUFFOR_MODE DabBufMode) {
 void BUFFOR::CloseFile() {
 	BufReset();
 	File.close();
+	File.clear();
 }
 /*!
  * \brief
