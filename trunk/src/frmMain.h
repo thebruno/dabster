@@ -30,10 +30,11 @@
 #define _FRM_MAIN_H_
 
 #include "stdMcrs.h"
+#include "tabPnl.h"
 
 namespace dabster {
 
-public ref class frmMain : public System::Windows::Forms::Form {
+public ref class frmMain : public dabForm {
 public:
 	frmMain(void);
 
@@ -47,26 +48,29 @@ private:
 
 	/* Menu */
 	dabMenuStrip^ mnuMain;
-	cli::array<dabToolStripMenuItem^>^ mniMain;
+	cli::array< dabToolStripMenuItem^ >^ mniMain;
 	inline void loadMenu(void);
 	void resizeMenu(void);
 	void fillOutMenu(void);
 
 	/* Narzedzia */
-	cli::array<dabPanel^>^ pnlMainTools;
-	cli::array<cli::array<dabPictureBox^>^>^ picMainTools;
-	cli::array<cli::array<dabLabel^>^>^ lblMainTools;
+	cli::array< dabPanel^ >^ pnlMainTools;
+	cli::array< cli::array< dabPictureBox^ >^ >^ picMainTools;
+	cli::array< cli::array< dabLabel^ >^ >^ lblMainTools;
 	inline void loadTools(void);
 	void resizeTools(void);
 	void fillOutTools(void);
 
 	/* Pasek stanu */
 	dabStatusStrip^ stsMain;
-	cli::array<dabToolStripStatusLabel^>^ slbMain;
-	cli::array<dabToolStripProgressBar^>^ spbMain;
+	cli::array< dabToolStripStatusLabel^ >^ slbMain;
+	cli::array< dabToolStripProgressBar^ >^ spbMain;
 	inline void loadStat(void);
 	void resizeStat(void);
 	void fillOutStat(void);
+
+	/* Zakladki */
+	cli::array< dabster::tabPnl^ >^ tplViews;
 };
 
 }
