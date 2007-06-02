@@ -35,6 +35,7 @@
 #include "str.h"
 
 #include "tab.h"
+#include "tabPnl.h"
 
 //#define TESTING
 
@@ -83,6 +84,28 @@ dabster::frmMain::frmMain(void) {
 	loadMenu();
 	loadTools();
 	loadStat();
+
+	drvLst::refresh();
+
+	tplViews = gcnew cli::array< tabPnl^ >(2);	// 0 - lewa, 1 - prawa
+	tplViews[0] = gcnew tabPnl(this);
+	tplViews[1] = gcnew tabPnl(this);
+
+	frmMain_Resize(this, gcnew System::EventArgs());
+
+	tplViews[0]->addTab();
+	tplViews[0]->addTab();
+	tplViews[1]->addTab();
+	tplViews[1]->addTab();
+
+	tplViews[0]->getTab(0)->open("C:\\");
+	tplViews[0]->getTab(0)->refresh();
+	tplViews[0]->getTab(1)->open("D:\\");
+	tplViews[0]->getTab(1)->refresh();
+	tplViews[1]->getTab(0)->open("E:\\");
+	tplViews[1]->getTab(0)->refresh();
+	tplViews[1]->getTab(1)->open("F:\\");
+	tplViews[1]->getTab(1)->refresh();
 
 	#ifdef TESTING
 	/* Testy klasy sfolder */
@@ -167,19 +190,6 @@ dabster::frmMain::frmMain(void) {
 
 	i = s.parent(1);
 	#endif
-
-	/* Testy tab */
-
-	drvLst::refresh();
-	dabTabControl^ tc = gcnew dabTabControl();
-	this->Controls->Add(tc);
-	tc->Width = this->Width - 8;
-	tc->Height = this->Height - 111;
-	tc->Location = dabDPoint(0, 63);
-	dabster::tab^ t = gcnew dabster::tab(tc);
-	t->resize();
-	t->open("D:\\");	// Tu podajcie wlasna sciezke !!!!!!!!!!!!!!!!! <---------
-	t->refresh();
 }
 
 dabster::frmMain::~frmMain() {
@@ -191,6 +201,16 @@ System::Void dabster::frmMain::frmMain_Resize(System::Object^ sender,
 	resizeMenu();
 	resizeTools();
 	resizeStat();
+
+	tplViews[0]->Width((this->Width - 14) / 2);
+	tplViews[0]->Height(this->Height - 116);
+	tplViews[0]->Left(0);
+	tplViews[0]->Top(60);
+
+	tplViews[1]->Width((this->Width - 14) / 2);
+	tplViews[1]->Height(this->Height - 116);
+	tplViews[1]->Left((this->Width - 14) / 2 + 6);
+	tplViews[1]->Top(60);
 }
 
 /* Buduje glowne menu */
@@ -243,12 +263,14 @@ void dabster::frmMain::loadTools(void) {
 	this->picMainTools = gcnew cli::array<cli::array<dabPictureBox^>^>(iTOOLS_PANELS + 1);
 	this->lblMainTools = gcnew cli::array<cli::array<dabLabel^>^>(iTOOLS_PANELS + 1);
 
+	// Panel glowny
 	this->pnlMainTools[iTOOLS_PANELS] = gcnew dabPanel();
 	this->pnlMainTools[iTOOLS_PANELS]->BackColor = dabLightBlue;
 	this->pnlMainTools[iTOOLS_PANELS]->Location = dabDPoint(0, 0);
 	this->pnlMainTools[iTOOLS_PANELS]->Name = gcnew System::String(L"pnlMainTools" + iTOOLS_PANELS);
 	this->Controls->Add(this->pnlMainTools[iTOOLS_PANELS]);
 
+	// Logo
 	this->picMainTools[iTOOLS_PANELS] = gcnew cli::array<dabPictureBox^>(1);
 	this->picMainTools[iTOOLS_PANELS][0] = gcnew dabPictureBox();
 	this->picMainTools[iTOOLS_PANELS][0]->BackColor = dabTransparent;

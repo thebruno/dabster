@@ -45,6 +45,7 @@
 #include "oStck.h"
 #include "drvLst.h"
 #include "str.h"
+#include "set.h"
 #include "com.h"
 #include "err.h"
 #include "tab.h"
@@ -54,6 +55,8 @@ static const int iNAME_COLUMN = 1;
 static const int iSIZE_COLUMN = 2;
 static const int iTYPE_COLUMN = 3;
 static const int iMODIFIED_COLUMN = 4;
+static const int iHORIZONTAL_MARGIN = 8;
+static const int iVERTICAL_MARGIN = 26;
 
 dabster::tab::tab(dabTabControl^ ownerTabControl) {
 	owner = ownerTabControl;
@@ -70,8 +73,8 @@ dabster::tab::tab(dabTabControl^ ownerTabControl) {
 	tpgTab->Name = L"tabPage";
 	tpgTab->Padding = System::Windows::Forms::Padding(3);
 	tpgTab->Text = com::get("@TPG0");
-	tpgTab->Width = owner->Width - 8;
-	tpgTab->Height = owner->Height - 30;
+	tpgTab->Width = owner->Width - iHORIZONTAL_MARGIN;
+	tpgTab->Height = owner->Height - iVERTICAL_MARGIN;
 
 	gltList->AllowColumnResize = true;
 	gltList->AllowMultiselect = true;
@@ -115,17 +118,37 @@ dabster::tab::tab(dabTabControl^ ownerTabControl) {
 	gltList->Controls->Add(picHeaderUnderline);
 
 	tpgTab->Controls->Add(picExit);
-	owner->Controls->Add(tpgTab);
+	owner->TabPages->Add(tpgTab);
+
+	resize();
 }
 
 dabster::tab::~tab(void) {
+	owner->TabPages->Remove(tpgTab);
+	delete gltList;
+	delete picExit;
+	delete picHeaderUnderline;
+	delete resources;
+	delete tpgTab;
+
 	if (opensStack) delete opensStack;
 	if (content) delete content;
 }
 
 /* Dostosowuje rozmiary zakladki */
 void dabster::tab::resize(void) {
+	tpgTab->Width = owner->Width - iHORIZONTAL_MARGIN;
+	tpgTab->Height = owner->Height - iVERTICAL_MARGIN;
+
+	gltList->Width = tpgTab->Width;
+	gltList->Height = tpgTab->Height;
+
 	picHeaderUnderline->Size = System::Drawing::Size(tpgTab->Width, 2);
+
+	for (int i = 1; i < gltList->Columns->Count; i++) {
+		gltList->Columns[i]->Width = static_cast< long >(gltList->Width) \
+			* set::get("$iCOLUMN" + i + "_WIDTH").i / 1000;
+	}
 }
 
 /* Odswierza widok zakladki */
@@ -211,6 +234,10 @@ void dabster::tab::refresh(void) {
 		gltList->Items[i+up]->SubItems[iMODIFIED_COLUMN]->Text = 
 			gcnew System::String((*content)[i][dabKeyLastAccessTimeUtc].c_str());
 	}
+
+	gltList->PerformLayout();
+	gltList->SuspendLayout();
+	gltList->ResumeLayout(false);
 }
 
 /* Otwiera nowy katalog */
@@ -270,11 +297,7 @@ void dabster::tab::open(std::string path) {
 
 			/* Przygotowywanie informacji o celu */
 			dest[0][dabKeyName] = str::sysStrToCppStr(dabIoPath::GetTempFileName());
-			std::string tempPath = str::getAppPath().drive;
-			if (tempPath[tempPath.size() - 1] != '\\') tempPath.push_back('\\');
-			tempPath += str::getAppPath().dir;
-			if (tempPath[tempPath.size() - 1] != '\\') tempPath.push_back('\\');
-			tempPath += "temp\\" + dest[0][dabKeyName];
+			std::string tempPath = set::get(L"$sTMP_DIR").s + dest[0][dabKeyName];
 			str::fixDelims(tempPath);
 			dest[0][dabKeyRealPath] = tempPath;
 			
@@ -355,11 +378,7 @@ void dabster::tab::open(std::string path) {
 
 		/* Przygotowywanie informacji o celu */
 		dest[0][dabKeyName] = str::sysStrToCppStr(dabIoPath::GetTempFileName());
-		std::string tempPath = str::getAppPath().drive;
-		if (tempPath[tempPath.size() - 1] != '\\') tempPath.push_back('\\');
-		tempPath += str::getAppPath().dir;
-		if (tempPath[tempPath.size() - 1] != '\\') tempPath.push_back('\\');
-		tempPath += "temp\\" + dest[0][dabKeyName];
+		std::string tempPath = set::get(L"$sTMP_DIR").s + dest[0][dabKeyName];
 		str::fixDelims(tempPath);
 		dest[0][dabKeyRealPath] = tempPath;
 		
@@ -377,7 +396,6 @@ void dabster::tab::store(std::vector< std::map< std::string, std::string > > src
 	std::string relativePath = "";
 	if (lFB + 1 < opensStack->size()) {
 		relativePath = opensStack->relativePath(lFB + 1, opensStack->size() - 1);
-
 	}
 
 	folder *lastFB = dynamic_cast< folder* >(opensStack->get(lFB));
