@@ -844,8 +844,10 @@ vmstring BMP::getContent(string Dabpath) {
 
 				temp.clear();
 				temp = BytesToAttrib((*i)->Attributes);
-				
-				temp["name"] = TestFileName;
+				if (TestFileName.size() > 1 &&k == TestFileName.size() - 1)
+					temp["name"] = TestFileName.substr(0,TestFileName.size() - 1);
+				else
+					temp["name"] = TestFileName;
 				temp["realPath"] = "";
 				temp["relativePath"] = TestFileName;
 				temp["volumeLabel"] = "none";
