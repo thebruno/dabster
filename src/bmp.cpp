@@ -93,6 +93,7 @@ void BMP::del(vmstring Dabpath) {
 	// czy odczytano naglowki?
 	BmpBuf.SetCompr(ReadCompr());
 	ReadDabHeader();
+
 	if (!IsDab()) {
 		std::vector<string> params(1);
 		throw err("!BMP4", params);
@@ -104,18 +105,14 @@ void BMP::del(vmstring Dabpath) {
 	uint32 FilesToDel = 0, FilesToMove = 0;
 	int64 WritingPos, ReadingPos, z;
 	int32 count;
-	string path;
+
 	DAB_HEADER DabHeaderCopy = DabHeader;
 	pProgress.show(2);
 	// zaznaczenie plikow do usuniecia
 	for (i = Dabpath.begin(); i != Dabpath.end(); ++i) {
-		path = "";
-		if ((*i)["relativePath"].size())
-			path = (*i)["relativePath"] + '\\';
-		path += (*i)["name"];
 		for (j = FilesHeaders.begin(); j != FilesHeaders.end() ; ++j) {
 			// plik do usuniecia:
-			if (path == (*j)->FileName) {
+			if ((*i)["relativePath"] == (*j)->FileName) {
 				(*j)->PerformAction = true;
 				--DabHeader.FilesCount;
 				DabHeader.FilesSize -= (*j)->DataSize;
@@ -280,22 +277,16 @@ void BMP::store(vmstring Dabsrc, vmstring Dabdest) {
 	else
 		WritingPos = FilesHeaders.back()->DataStart +
 			BmpBuf.FileSizeInBmp(8 * FilesHeaders.back()->DataSize, FilesHeaders.back()->DataStart);
-
 	vmstring::iterator i, j;
-	string path;
-
 	for (i = Dabsrc.begin(), j = Dabdest.begin(); i != Dabsrc.end() && j != Dabdest.end() && !bCanceled; ++i, ++j) {
 
 		// pasek postepu
 		pProgress.show((100 * PrgrsFin++) / PrgrsTask);
 
 		header = new FILE_HEADER;
-		// FileName ::= <relativePath> + '\\' + <name> | <name>
 		header->HeaderStart = WritingPos;
 		// src jest w rzeczywistosci, dest w BMP
-		if ((*j)["relativePath"].size())
-			header->FileName = (*j)["relativePath"] + '\\';
-		header->FileName += (*j)["name"];
+		header->FileName = (*j)["relativePath"];
 		header->FileNameLen = uint16(header->FileName.size());
 		// sprawdzenie czy sie zmiesci naglowek + nazwa:
 		if (DabHeader.FreeSpc < header->FileNameLen + FILE_HEADER_BYTE_SIZE) {
@@ -315,7 +306,7 @@ void BMP::store(vmstring Dabsrc, vmstring Dabdest) {
 		DabHeader.FreeSpc -= FILE_HEADER_BYTE_SIZE + header->FileNameLen;
 		
 		// pakujemy folder
-		if ((*i)["atrDirectory"] == "true") {
+		if ((*j)["atrDirectory"] == "true") {
 			// folder nie ma danych!
 			header->DataSize = 0;
 		}
@@ -323,11 +314,7 @@ void BMP::store(vmstring Dabsrc, vmstring Dabdest) {
 		else {
 			FileBuf.BufReset();
 			FileBuf.SetReadSize(BUFFOR_SIZE);
-			path = "";
-			if ((*i)["realPath"].size())
-				path = (*i)["realPath"] + '\\';
-			path += (*i)["name"];
-			FileBuf.OpenFile(path.c_str(), std::ios_base::in, BUFFOR::BUF_READONLY);
+			FileBuf.OpenFile((*i)["realPath"].c_str(), std::ios_base::in, BUFFOR::BUF_READONLY);
 			FileBuf.Fill();
 			header->DataSize = FileBuf.GetFileSize();
 			// czy plik z danymi sie zmiesci?
@@ -392,7 +379,6 @@ void BMP::extract(vmstring Dabsrc, vmstring Dabdest) {
 	DeleteAllHeaders();
 	ReadAllHeaders();
 	uint32 iter;
-	string path;
 	vmstring::iterator i, j;
 	std::vector<FILE_HEADER *>::iterator k;
 	BmpBuf.SetMode(BUFFOR::BUF_READONLY);
@@ -402,19 +388,10 @@ void BMP::extract(vmstring Dabsrc, vmstring Dabdest) {
 		pProgress.show((100 * PrgrsFin++) / PrgrsTask);
 		for (k = FilesHeaders.begin(); k != FilesHeaders.end() ; ++k) {
 		// src jest w BMP, dest w rzeczywistosci
-			path = "";
-			if ((*i)["relativePath"].size()) 
-				path = (*i)["relativePath"] + '\\';
-			path += (*i)["name"];
-			if ((*k)->FileName == path) {
+			if ((*k)->FileName == (*i)["relativePath"]) {
 				FileBuf.BufReset();
 				FileBuf.SetReadSize(BUFFOR_SIZE);
-				path = "";
-				if ((*j)["realPath"].size()) 
-					path = (*j)["realPath"] + '\\';
-				path += (*j)["name"];
-
-				FileBuf.OpenFile(path.c_str(),std::ios_base::out, BUFFOR::BUF_WRITEONLY);
+				FileBuf.OpenFile((*j)["realPath"].c_str(),std::ios_base::out, BUFFOR::BUF_WRITEONLY);
 				// reszta ustawien byla powyzej  
 				BmpBuf.BitSeekg((*k)->DataStart);
 
@@ -468,31 +445,22 @@ void BMP::copyInside(vmstring DabSrc, vmstring DabDest) {
 		throw err("!BMP0", params);
 	}
 
-
 	FILE_HEADER * h;
 	uint64 WritingPos = 0, ReadingPos = 0, temp;
 	uint32 number;
 	std::vector<FILE_HEADER *>::iterator i, j;
 	vmstring::iterator k, m;
-	string path;
 
 	for (k = DabSrc.begin(), m = DabDest.begin();
 		k != DabSrc.end() && m != DabDest.end()&& !bCanceled; ++k, ++m) {
 		pProgress.show((100 * PrgrsFin++) / PrgrsTask);
-		path = "";
-		if ((*k)["relativePath"].size())
-			path = (*k)["relativePath"] + '\\';
-		path += (*k)["name"];
 		for (i = FilesHeaders.begin(), number = 0 ; i != FilesHeaders.end(); ++i, ++number) {
-			if (path == (*i)->FileName) {
+			if ((*k)["relativePath"] == (*i)->FileName) {
 				h = new FILE_HEADER;
 				h->Attributes = (*i)->Attributes;
 				h->DataSize = (*i)->DataSize;
 				h->TimeDate = (*i)->TimeDate;
-				h->FileName = "";
-				if ((*m)["relativePath"].size())
-					h->FileName = (*m)["relativePath"] + '\\';
-				h->FileName  += (*m)["name"];
+				h->FileName  = (*m)["relativePath"];
 				h->FileNameLen = (uint16) h->FileName.size();
 				
 				if (DabHeader.FreeSpc >= (*i)->DataSize + FILE_HEADER_BYTE_SIZE + (*i)->FileNameLen) {
@@ -597,7 +565,6 @@ void BMP::modify(vmstring DabOldPath, vmstring DabNewPath) {
 		R_W_Pos(): ReadingPos(0), WritingPos(0) {}
 	} Pos;
 	
-	string path;
 	std::vector<FILE_HEADER *> NewFilesHeaders;
 	std::vector<FILE_HEADER *>::iterator i, j;
 	std::vector<FILE_HEADER *>::reverse_iterator ri,rj;
@@ -623,16 +590,9 @@ void BMP::modify(vmstring DabOldPath, vmstring DabNewPath) {
 		h->TimeDate = (*i)->TimeDate;
 		for (k = DabOldPath.begin(), m = DabNewPath.begin();
 			k != DabOldPath.end() && m != DabNewPath.end(); ++k, ++m) {
-			path = "";
-			if ((*k)["relativePath"].size())
-				path = (*k)["relativePath"] + '\\';
-			path += (*k)["name"];
 			// modyfukujemy nazwe pliku
-			if (path == (*i)->FileName) {
-				h->FileName = "";
-				if ((*m)["relativePath"].size())
-					h->FileName = (*m)["relativePath"] + '\\';
-				h->FileName  += (*m)["name"];
+			if ((*k)["relativePath"] == (*i)->FileName) {
+				h->FileName  = (*m)["relativePath"];
 				// dodac ograniczeni nazwy do 256 znakow
 				h->FileNameLen = (uint16) h->FileName.size();
 				FileNamesChanges += h->FileNameLen - (*i)->FileNameLen;
@@ -842,39 +802,52 @@ void BMP::modify(vmstring DabOldPath, vmstring DabNewPath) {
  * 
  */
 vmstring BMP::getContent(string Dabpath) {
+	// odczytaj dane
 	ReadBmpHeader();
 	BmpBuf.SetCompr(ReadCompr());
 	ReadDabHeader();
 	if (!IsDab())
 		return vmstring();
 	
-	uint32 k;
+	size_t k;
+	// odswiez naglowki
 	DeleteAllHeaders();
 	ReadAllHeaders();
+	// nazwa do testowania
+	string TestFileName;
 	vmstring result;
 	smap temp;
 	std::vector<FILE_HEADER*>::iterator i;
 	std::stringstream s;
 	pProgress.show(0);
 	int PrgrsFin = 0, PrgrsTask = (int) FilesHeaders.size() + 1;
+	// sprawdzaj po kolei wszystkie naglowki
+	if (Dabpath.size() && Dabpath[Dabpath.size() - 1] != '\\') 
+		Dabpath.push_back('\\');
 	for (i = FilesHeaders.begin(); i!= FilesHeaders.end(); ++i) {
-	pProgress.show((100 * PrgrsFin++) / PrgrsTask);
-		if (!Dabpath.size() || (*i)->FileName.substr(0, Dabpath.size()) == Dabpath) {
-			temp.clear();
-			temp = BytesToAttrib((*i)->Attributes);
-			// wyznaczenie gdzie zaczyna sie nazwa obiektu (i gdzie konczy sie sciezka)
-			if (k = (uint32)(*i)->FileName.size()) {
-				--k;
-				while (k && (*i)->FileName[k] != '\\' )
-				--k;
-			}
-				if (k)
-					// pominiece znaku '\\'
-					temp["name"] = (*i)->FileName.substr(k + 1, (*i)->FileName.size());
-				else 
-					temp["name"] = (*i)->FileName.substr(0, (*i)->FileName.size());
+		pProgress.show((100 * PrgrsFin++) / PrgrsTask);
+
+		// sprawdzenie czy pocz¹tki œcie¿ek siê zgadzaj¹?
+		// jestli tak to rozpatruj napis skrocony z przodu o czesc wspolna
+		// jesli poczatki nie sa zgodne idz dalej
+
+		// sprawdzic czy "" == "" ?
+		if ((*i)->FileName.substr(0, Dabpath.size()) == Dabpath) {
+			// kopuje podstring za znakiem '\\' do konca
+			TestFileName = (*i)->FileName.substr(Dabpath.size()) ;
+		
+			// dodaj nazwe do wektora wynikowego jesli:
+			// rozpatrywana nazwa nie zawiera znaku '\\' (pliki)
+			// albo zawiera jeden znak '\\' na koncu nazwy (foldery)
+			if (TestFileName != "" && ((k = TestFileName.find_first_of('\\')) == std::string::npos || 
+				k == TestFileName.size() - 1)) {
+
+				temp.clear();
+				temp = BytesToAttrib((*i)->Attributes);
+				
+				temp["name"] = TestFileName;
 				temp["realPath"] = "";
-				temp["relativePath"] = (*i)->FileName.substr(0,k);
+				temp["relativePath"] = TestFileName;
 				temp["volumeLabel"] = "none";
 				temp["driveFormat"] = "DFS";
 				temp["driveType"] = "DFS";
@@ -901,6 +874,7 @@ vmstring BMP::getContent(string Dabpath) {
 				result.push_back(temp);
 			}
 		}
+	}
 	pProgress.show(100);
 	return result;
 }

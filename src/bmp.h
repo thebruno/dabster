@@ -25,7 +25,6 @@
 	bmp.h
 
 *********************************************************************/
-
 #ifndef BMPHEADERFILE
 #define BMPHEADERFILE
 
