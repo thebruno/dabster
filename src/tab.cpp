@@ -374,17 +374,22 @@ void dabster::tab::open(std::string path) {
 		/* Przygotowywanie informacji o zrodle */
 		src[0][dabKeyRelativePath] = opensStack->relativePath(gp + 1, prnt);
 		src[0][dabKeyName] = opensStack->get(prnt)->getName();
-		src[0][dabKeyAtrDirectory] = dabTrue;
+		if ((opensStack->type(prnt) & (dabFolder)) == dabFolder) {
+			src[0][dabKeyAtrDirectory] = dabTrue;
+		} else {
+			src[0][dabKeyAtrDirectory] = dabFalse;
+		}
 
 		/* Przygotowywanie informacji o celu */
-		dest[0][dabKeyName] = str::sysStrToCppStr(dabIoPath::GetTempFileName());
-		std::string tempPath = set::get(L"$sTMP_DIR").s + dest[0][dabKeyName];
-		str::fixDelims(tempPath);
-		dest[0][dabKeyRealPath] = tempPath;
+		dest[0][dabKeyRealPath] = str::sysStrToCppStr(dabIoPath::GetTempFileName());
+		str::fixDelims(dest[0][dabKeyName]);
+		str::path p = str::splitPath(dest[0][dabKeyRealPath]);
+		dest[0][dabKeyName] = p.fileName;
+		if (p.extension != "") dest[0][dabKeyName] += "." + p.extension;
 		
 		/* Wypakowywanie rodzica */
 		grandParent->extract(src, dest);
-		opensStack->get(prnt)->setRealPath(tempPath);
+		opensStack->get(prnt)->setRealPath(dest[0][dabKeyRealPath]);
 	}
 
 	tpgTab->Text = gcnew System::String(path.c_str());
