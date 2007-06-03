@@ -117,7 +117,14 @@ void oStck::set(int index, item* newItem) {
 	if (vStack[index] == newItem) return;
 
 	item *oldItem = vStack[index];
+	bool bDelete = true;
+	if (oldItem->getRealPath() == newItem->getRealPath()) {
+		std::string sTemp = oldItem->getRealPath();
+		bDelete = (oldItem->getRefCount() <= 1);
+		oldItem->setRealPath("");	//Zapobiegamy usunieciu pliku przez destruktor
+	}
 	oldItem->detach();
+	if (!bDelete) oldItem->setRealPath(sTemp);
 	vStack[index] = newItem;
 	newItem->attach();
 }
@@ -161,7 +168,7 @@ int oStck::type(int index) {
 	if (dynamic_cast< sfolder* >(vStack[index])) return dabSFolder;
 	if (dynamic_cast< ftp* >(vStack[index])) return dabFtp;
 	if (dynamic_cast< bmp::BMP* >(vStack[index])) return dabBmp;
-	if (dynamic_cast< aes* >(vStack[index])) return dabAes;
+	//if (dynamic_cast< aes* >(vStack[index])) return dabAes;
 	if (dynamic_cast< bwt* >(vStack[index])) return dabBwt;
 	if (dynamic_cast< mldrv* >(vStack[index])) return dabMlDrv;
 	if (dynamic_cast< wav* >(vStack[index])) return dabWav;

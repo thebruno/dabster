@@ -46,6 +46,7 @@ public:
 
 	void attach(void);
 	void detach(void);
+	int getRefCount(void);
 
 	static int realType(item* itemToCheck);
 	static item* convert(item *objectToConvert, int type);
