@@ -118,8 +118,9 @@ void oStck::set(int index, item* newItem) {
 
 	item *oldItem = vStack[index];
 	bool bDelete = true;
+	std::string sTemp;
 	if (oldItem->getRealPath() == newItem->getRealPath()) {
-		std::string sTemp = oldItem->getRealPath();
+		sTemp = oldItem->getRealPath();
 		bDelete = (oldItem->getRefCount() <= 1);
 		oldItem->setRealPath("");	//Zapobiegamy usunieciu pliku przez destruktor
 	}
