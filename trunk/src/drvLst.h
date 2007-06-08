@@ -48,6 +48,7 @@ public:
 	static int type(int index);
 	static void refresh(void);
 	static int find(std::string path);
+	static int size(void);
 
 	static const int iNOT_FOUND = -1;
 

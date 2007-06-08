@@ -26,6 +26,10 @@
 
 *********************************************************************/
 
+#include <map>
+#include <vector>
+#include <string>
+
 #include "frmMain.h"
 #include "stdMcrs.h"
 #include "drvLst.h"
@@ -36,13 +40,6 @@
 
 #include "tab.h"
 #include "tabPnl.h"
-
-//#define TESTING
-
-#ifdef TESTING
-#include "sfolder.h"
-#include "oStck.h"
-#endif
 
 const int iMENU_ITEMS = 7;
 const int iTOOLS_PANELS = 10;
@@ -106,90 +103,6 @@ dabster::frmMain::frmMain(void) {
 	tplViews[1]->getTab(0)->refresh();
 	tplViews[1]->getTab(1)->open("F:\\");
 	tplViews[1]->getTab(1)->refresh();
-
-	#ifdef TESTING
-	/* Testy klasy sfolder */
-
-	sfolder p;
-	p.setRealPath("D:\\");
-	std::vector< std::map< std::string, std::string > > y = p.getContent("Metzger\\");
-
-	std::vector< std::map< std::string, std::string > > vmTempSrc(2);
-	vmTempSrc[0][dabKeyRealPath] = "D:\\Y\\";
-	vmTempSrc[0][dabKeyName] = "Y";
-	vmTempSrc[0][dabKeyLength] = "0";
-	vmTempSrc[0][dabKeyAtrDirectory] = dabTrue;
-
-	vmTempSrc[1][dabKeyRealPath] = "D:\\Y\\pl.txt";
-	vmTempSrc[1][dabKeyName] = "pl.txt";
-	vmTempSrc[1][dabKeyLength] = "12";
-	vmTempSrc[1][dabKeyAtrDirectory] = dabFalse;
-
-	std::vector< std::map< std::string, std::string > > vmTempDst(2);
-	vmTempDst[0][dabKeyRelativePath] = "YY\\";
-	vmTempDst[0][dabKeyName] = "YY";
-	vmTempDst[0][dabKeyAtrDirectory] = dabTrue;
-
-	vmTempDst[1][dabKeyRelativePath] = "YY\\pl2.txt";
-	vmTempDst[1][dabKeyName] = "pl2.txt";
-	vmTempDst[1][dabKeyAtrDirectory] = dabFalse;
-
-	p.store(vmTempSrc, vmTempDst);
-
-	vmTempSrc[0][dabKeyRealPath] = "D:\\Metzger\\Y";
-	vmTempSrc[0][dabKeyName] = "Y";
-
-	vmTempSrc[1][dabKeyRealPath] = "D:\\Metzger\\Y\\pl.txt";
-	vmTempSrc[1][dabKeyName] = "pl.txt";
-
-	p.extract(vmTempDst, vmTempSrc);
-
-	vmTempSrc[0][dabKeyRelativePath] = "Metzger\\Y\\pl.txt";
-	vmTempSrc[0][dabKeyName] = "pl.txt";
-	vmTempSrc[0][dabKeyAtrDirectory] = dabFalse;
-
-	vmTempSrc[1][dabKeyRelativePath] = "Metzger\\Y\\";
-	vmTempSrc[1][dabKeyName] = "Y";
-	vmTempSrc[1][dabKeyAtrDirectory] = dabTrue;
-
-	p.del(vmTempSrc);
-
-	vmTempDst.resize(3);
-	vmTempDst[2] = vmTempDst[0];
-	vmTempDst[0] = vmTempDst[1];
-	vmTempDst[1] = vmTempDst[2];
-	vmTempDst.resize(2);
-
-	p.del(vmTempDst);
-
-	/* Testy oStck i drvLst */
-
-	oStck s;
-	drvLst dl;
-	folder *f;
-	int i;
-
-	/* D:\ */
-	dl.refresh();
-	if ((i = dl.find("D")) == drvLst::iNOT_FOUND) return;
-	s.push(dl.get(i));
-
-	/* Metzger\ */
-	if ((s.type(0) & dabFolder) == dabFolder) f = dynamic_cast< folder* >(s.get(0));
-	std::vector< std::map< std::string, std::string > > cntnt = f->getContent();
-	i = 0;
-	while (i < static_cast< int >(cntnt.size())) {
-		if (cntnt[i][dabKeyName] == "Metzger") break;
-		i++;
-	}
-	if (i == cntnt.size()) return;
-	f = new sfolder();
-	f->setName("Metzger");
-	f->setRealPath("D:\\Metzger\\");
-	s.push(dynamic_cast< item* >(f));
-
-	i = s.parent(1);
-	#endif
 }
 
 dabster::frmMain::~frmMain() {
@@ -519,6 +432,9 @@ void dabster::frmMain::fillOutTools(void) {
 					this->picMainTools[i][pictures]->Name = gcnew System::String(L"picMainTools" + i + "_" + pictures);
 					this->picMainTools[i][pictures]->Size = dabDSize(iTOOLS_ICON_WIDTH, iTOOLS_HEIGHT);
 					this->picMainTools[i][pictures]->Image = dabToImg(resources->GetObject(gcnew System::String(("tool_" + function + "_active").c_str())));	
+					if (function == "copyToNeighbour") {
+						this->picMainTools[i][pictures]->Click += gcnew System::EventHandler(this, &frmMain::copyToNeighbour_Click);
+					}
 					pictures++;
 				}
 				if (toolOption.find(" more") != std::string::npos) {
@@ -540,6 +456,9 @@ void dabster::frmMain::fillOutTools(void) {
 					this->lblMainTools[i][labels]->Height = iTOOLS_HEIGHT;
 					this->lblMainTools[i][labels]->Text = com::get(gcnew System::String(("@TOOL_" + function).c_str()));
 					this->lblMainTools[i][labels]->Width = this->lblMainTools[i][labels]->PreferredWidth;
+					if (function == "copyToNeighbour") {
+						this->lblMainTools[i][labels]->Click += gcnew System::EventHandler(this, &frmMain::copyToNeighbour_Click);
+					}
 					labels++;
 				}
 			}
@@ -559,6 +478,55 @@ void dabster::frmMain::fillOutTools(void) {
 			this->pnlMainTools[i] = nullptr;
 		}
 	}
+}
+
+/* Kliknieto przycisk na pasku narzedzi */
+System::Void dabster::frmMain::copyToNeighbour_Click(System::Object^ sender, System::EventArgs^  e) {
+	int a = dabster::active;
+	dabster::tab^ from = tplViews[a]->getTab(tplViews[a]->activeTab());
+	a = (a + 1) & 1;
+	dabster::tab^ to = tplViews[a]->getTab(tplViews[a]->activeTab());
+	std::vector< std::map< std::string, std::string > > src(0), dest(0), content(0), src2(0);
+
+	/* Tworzenie listy elementow do skopiowania */
+	dabArrayList^ sel = from->gltList->SelectedIndicies;
+	int up = 0;
+	if (from->opensStack->size() > 1) up = 1;
+	for (int i = 0; i < sel->Count; i++) {
+		int index = static_cast< int >(sel[i]);
+		if ((up == 0) || (index != 0)) {	// Zaznaczenie up nas nie interesuje
+			content.push_back((*from->content)[index - up]);
+			int last = content.size() - 1;
+			content[last][dabKeyRelativePath] = content[last][dabKeyName];
+													// Wzgledem wyswietlanego katalogu
+		}
+	}
+	if (content.size() == 0) return;
+	src2 = content;
+
+	/* Zapewnianie rzeczywistej sciezki plikow do skopiowania */
+	for (unsigned int i = 0; i < content.size(); i++) {
+		if (content[i][dabKeyRealPath] == "") {
+			src.push_back(content[i]);
+			int last = src.size() - 1;
+
+			dest.push_back(std::map< std::string, std::string >());
+			last = dest.size() - 1;
+			dest[last][dabKeyRealPath] = str::sysStrToCppStr(dabIoPath::GetTempFileName());
+			str::fixDelims(dest[last][dabKeyRealPath]);
+			str::path p = str::splitPath(dest[last][dabKeyRealPath]);
+			dest[last][dabKeyName] = p.fileName;
+			if (p.extension != "") dest[last][dabKeyName] += "." + p.extension;
+
+			src2[i][dabKeyRealPath] = dest[last][dabKeyRealPath];
+			src2[i][dabKeyName] = dest[last][dabKeyName];
+		}
+	}
+	if (src.size() > 0)	from->extract(src, dest);
+
+	/* Zapisywanie w docelowym katalogu */
+	to->store(src2, content);
+	to->refresh();
 }
 
 /* Buduje pasek stanu */

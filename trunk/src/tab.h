@@ -38,6 +38,8 @@
 
 namespace dabster {
 
+extern int active;
+
 public ref class tab {
 public:
 	tab(dabTabControl^ ownerTabControl);
@@ -54,8 +56,12 @@ public:
 	void modify(std::vector< std::map< std::string, std::string > > src, std::vector< std::map< std::string, std::string > > dest);
 	void copyInside(std::vector< std::map< std::string, std::string > > src, std::vector< std::map< std::string, std::string > > dest);
 
-	std::vector< std::map< std::string, std::string > > getContent(void);
+	//std::vector< std::map< std::string, std::string > > getContent(void);
 	unsigned long long getCapacity(void);
+
+	oStck* opensStack;
+	std::vector< std::map< std::string, std::string > >* content;
+	dabGlacialList^ gltList;
 
 protected:
 	~tab(void);
@@ -65,13 +71,11 @@ private:
 	dabComponentResourceManager^ resources;
 	
 	dabTabPage^ tpgTab;
-	dabGlacialList^ gltList;
 	dabPictureBox^ picExit;
 	dabPictureBox^ picHeaderUnderline;
 
-	oStck* opensStack;
-	std::vector< std::map< std::string, std::string > >* content;
 	System::Void gltList_DoubleClick(System::Object^ sender, System::EventArgs^  e);
+	System::Void gltList_Click(System::Object^ sender, System::EventArgs^  e);
 };
 
 }

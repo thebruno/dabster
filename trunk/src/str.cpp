@@ -56,35 +56,57 @@ str::path str::splitPath(std::string p, const std::string delimiter) {
 	/* Wykrywanie rozszerzenia */
 	pos = p.find_last_of(".");
 	if (pos != std::string::npos) {
-		if (pos == 0) {
-			/* Sciezka nie moze zaczynac sie od kropki */
-			std::vector<std::string> params(1);
-			params[0] = p;
-			throw err("!STR0", params);
-		}
+		//if (pos == 0) {
+		//	/* Sciezka nie moze zaczynac sie od kropki */
+		//	std::vector<std::string> params(1);
+		//	params[0] = p;
+		//	throw err("!STR0", params);
+		//}
 
 		std::string::size_type dl = p.length() - pos;
-		char *temp = new char[dl];
-		p.copy(temp, dl - 1, pos + 1);
-		temp[dl - 1] = 0;
-		sPath.extension = temp;
+		if (dl > 1) {
+			char *temp = new char[dl];
+			p.copy(temp, dl - 1, pos + 1);
+			temp[dl - 1] = 0;
+			sPath.extension = temp;
+		}
 	}
 
 	/* Wykrywanie nazwy pliku */
-	pos = p.find_last_of("\\");
+	pos = p.rfind("\\");
 	std::string::size_type dl;
 	if (sPath.extension.length() != 0) {
 		/* Jesli bylo rozszerzenie */
-		if (pos == std::string::npos) { pos = 0; }
-		dl = p.length() - pos - sPath.extension.length() - 1;
+		char *temp;
+		if (pos == std::string::npos) {
+			dl = p.length() - sPath.extension.length();
+			if (dl > 1) {
+				temp = new char[dl];
+				p.copy(temp, dl - 1);
+				temp[dl - 1] = 0;
+				sPath.fileName = temp;
+			}
+		} else {
+			dl = p.length() - pos - sPath.extension.length() - 1;
+			if (dl > 1) {
+				temp = new char[dl];
+				p.copy(temp, dl - 1, pos + 1);
+				temp[dl - 1] = 0;
+				sPath.fileName = temp;
+			}
+		}
 	} else {
 		/* Jesli nie bylo rozszerzenia i jest nazwa pliku */
-		if (pos == std::string::npos) { pos = 0; }
-		dl = p.length() - pos + 1;
-	}
-	if (pos != p.length()) {
-		char *temp = new char[dl];
-		p.copy(temp, dl - 1, pos + 1);
+		char *temp;
+		if (pos == std::string::npos) {
+			dl = p.length();
+			temp = new char[dl];
+			p.copy(temp, dl - 1);
+		} else {
+			dl = p.length() - pos;
+			temp = new char[dl];
+			p.copy(temp, dl - 1, pos + 1);
+		}
 		temp[dl - 1] = 0;
 		sPath.fileName = temp;
 	}

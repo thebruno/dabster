@@ -116,4 +116,9 @@ int dabster::drvLst::find(std::string path) {
 	return iNOT_FOUND;
 }
 
+/* Zwraca ilosc dyskow */
+int dabster::drvLst::size(void) {
+	return vDrives.size();
+}
+
 /********************************************************************/
