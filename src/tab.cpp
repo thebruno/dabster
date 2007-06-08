@@ -110,6 +110,7 @@ dabster::tab::tab(dabTabControl^ ownerTabControl) {
 	gltList->Columns->Add(com::get("@GLT2"), 60);
 	gltList->Columns->Add(com::get("@GLT3"), 110);
 	gltList->DoubleClick += gcnew System::EventHandler(this, &tab::gltList_DoubleClick);
+	gltList->Click += gcnew System::EventHandler(this, &tab::gltList_Click);
 	tpgTab->Controls->Add(gltList);
 
 	picHeaderUnderline = gcnew System::Windows::Forms::PictureBox();
@@ -382,7 +383,7 @@ void dabster::tab::open(std::string path) {
 
 		/* Przygotowywanie informacji o celu */
 		dest[0][dabKeyRealPath] = str::sysStrToCppStr(dabIoPath::GetTempFileName());
-		str::fixDelims(dest[0][dabKeyName]);
+		str::fixDelims(dest[0][dabKeyRealPath]);
 		str::path p = str::splitPath(dest[0][dabKeyRealPath]);
 		dest[0][dabKeyName] = p.fileName;
 		if (p.extension != "") dest[0][dabKeyName] += "." + p.extension;
@@ -393,6 +394,7 @@ void dabster::tab::open(std::string path) {
 	}
 
 	tpgTab->Text = gcnew System::String(path.c_str());
+	owner->Text = tpgTab->Text;
 }
 
 /* Zapisuje pliki i foldery w aktualnym katalogu */
@@ -405,14 +407,28 @@ void dabster::tab::store(std::vector< std::map< std::string, std::string > > src
 
 	folder *lastFB = dynamic_cast< folder* >(opensStack->get(lFB));
 
-	for (int i = 0; i < opensStack->size(); i++) {
-		dest[i][dabKeyRelativePath] = relativePath + src[i][dabKeyRelativePath];
+	for (unsigned int i = 0; i < dest.size(); i++) {
+		dest[i][dabKeyRelativePath] = relativePath + dest[i][dabKeyRelativePath];
 	}
 
 	lastFB->store(src, dest);
 }
 
+/* Wypakowuje pliki lub foldery z aktualnego katalogu */
 void dabster::tab::extract(std::vector< std::map< std::string, std::string > > src, std::vector< std::map< std::string, std::string > > dest) {
+	int lFB = opensStack->parent(opensStack->size());	// ostatni FB
+	std::string relativePath = "";
+	if (lFB + 1 < opensStack->size()) {
+		relativePath = opensStack->relativePath(lFB + 1, opensStack->size() - 1);
+	}
+
+	folder *lastFB = dynamic_cast< folder* >(opensStack->get(lFB));
+
+	for (unsigned int i = 0; i < src.size(); i++) {
+		src[i][dabKeyRelativePath] = relativePath + src[i][dabKeyRelativePath];
+	}
+
+	lastFB->extract(src, dest);
 }
 
 void dabster::tab::del(std::vector< std::map< std::string, std::string > > path) {
@@ -424,15 +440,11 @@ void dabster::tab::modify(std::vector< std::map< std::string, std::string > > sr
 void dabster::tab::copyInside(std::vector< std::map< std::string, std::string > > src, std::vector< std::map< std::string, std::string > > dest) {
 }
 
-std::vector< std::map< std::string, std::string > > dabster::tab::getContent(void) {
-	return std::vector< std::map< std::string, std::string > >(0);
-}
-
 unsigned long long dabster::tab::getCapacity(void) {
 	return 0;
 }
 
-/* Obsluga zdarzenia Click */
+/* Obsluga zdarzenia DoubleClick */
 System::Void dabster::tab::gltList_DoubleClick(System::Object^ sender, System::EventArgs^  e) {
 	std::string path = opensStack->relativePath(0, opensStack->size() - 1);
 	dabArrayList^ sel = gltList->SelectedIndicies;
@@ -465,6 +477,13 @@ System::Void dabster::tab::gltList_DoubleClick(System::Object^ sender, System::E
 			/* Kliknieto w plik */
 		}
 	}
+
+	dabster::active = static_cast< int >(owner->Tag);
+}
+
+/* Obsluga zdarzenia Clikc */
+System::Void dabster::tab::gltList_Click(System::Object^ sender, System::EventArgs^  e) {
+	dabster::active = static_cast< int >(owner->Tag);
 }
 
 /********************************************************************/

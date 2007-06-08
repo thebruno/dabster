@@ -27,6 +27,7 @@
 *********************************************************************/
 
 #include "frmMain.h"
+#include "err.h"
 #include "str.h"
 
 using namespace dabster;

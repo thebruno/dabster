@@ -58,7 +58,7 @@ item::~item(void) {
 	/* TODO: Sprawdzanie czy plik jest tymczasowy i czy mozna go usunac
 	         (najlepiej jakas flaga w item, wskazujaca czy plik zostal
 			 stworzony przez wypakowanie) */
-	if (sRealPath != "") {
+	if ((sRealPath.length() > 0) && (sRealPath[sRealPath.length() - 1] != '\\')) {
 		str::path p = str::splitPath(sRealPath);
 		if ((p.extension == "tmp") && (p.fileName.length() >= 3) 
 			&& (p.fileName.substr(0, 3) == "tmp")) {
@@ -97,7 +97,9 @@ void item::attach(void) {
 
 /* Zmniejsza licznik wskazan i w razie potrzeby usuwa obiekt */
 void item::detach(void) {
-	if (--refCount <= 0) delete this;
+	if (--refCount <= 0) {
+		delete this;
+	}
 }
 
 /* Zwraca wartosc licznika wskazan */

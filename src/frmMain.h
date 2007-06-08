@@ -34,6 +34,8 @@
 
 namespace dabster {
 
+extern int active;
+
 public ref class frmMain : public dabForm {
 public:
 	frmMain(void);
@@ -60,6 +62,7 @@ private:
 	inline void loadTools(void);
 	void resizeTools(void);
 	void fillOutTools(void);
+	System::Void copyToNeighbour_Click(System::Object^ sender, System::EventArgs^  e);
 
 	/* Pasek stanu */
 	dabStatusStrip^ stsMain;

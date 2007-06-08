@@ -28,12 +28,16 @@
 
 #include "frmMain.h"
 #include "stdMcrs.h"
+#include "drvLst.h"
+#include "str.h"
 #include "tabPnl.h"
 
 static const int iCOMBO_HORIZONTAL_MARGINS = 4;
 static const int iCOMBO_TOP_MARGIN = 3;
 static const int iCOMBO_HEIGHT = 21;
 static const int iCOMBO_TAB_CONTROL_SPACE = 6;
+
+namespace dabster { int active; }
 
 dabster::tabPnl::tabPnl(dabForm^ ownerForm) {
 	owner = ownerForm;
@@ -46,7 +50,11 @@ dabster::tabPnl::tabPnl(dabForm^ ownerForm) {
 	// TabControl
 	tbcPanel->Location = dabDPoint(0, 0);
 	tbcPanel->Name = L"tabControl";
+	++dabster::a;
+	tbcPanel->Tag = dabster::active = dabster::a;
 	tbcPanel->Size = dabDSize(350, 450);
+	tbcPanel->SelectedIndexChanged += gcnew System::EventHandler(this, &tabPnl::tbcPanel_SelectedIndexChanged);
+	tbcPanel->TextChanged += gcnew System::EventHandler(this, &tabPnl::tbcPanel_TextChanged);
 
 	// Tlo pod ComboBoxami z adresem
 	pnlBackground = gcnew dabPanel();
@@ -58,6 +66,9 @@ dabster::tabPnl::tabPnl(dabForm^ ownerForm) {
 	cboAddress->Location = System::Drawing::Point(4, 63);
 	cboAddress->Name = L"comboBox";
 	cboAddress->Size = System::Drawing::Size(350, 21);
+	for (int i = 0; i < drvLst::size(); i++) {
+		cboAddress->Items->Add(gcnew System::String((drvLst::get(i)->getName() + ":\\").c_str()));
+	}
 
 	ownerForm->Controls->Add(tbcPanel);
 	ownerForm->Controls->Add(cboAddress);
@@ -102,6 +113,11 @@ dabster::tab^ dabster::tabPnl::getTab(int index) {
 	return tabPages[index];
 }
 
+/* Zwrtaca numer aktywnej zakladki */
+int dabster::tabPnl::activeTab(void) {
+	return tbcPanel->SelectedIndex;
+}
+
 /* Ustawia szerokosc */
 void dabster::tabPnl::Width(int w) {
 	width = w;
@@ -144,6 +160,16 @@ void dabster::tabPnl::resize() {
 	pnlBackground->Height = iCOMBO_HEIGHT + iCOMBO_TAB_CONTROL_SPACE;
 
 	for (int i = 0; i < tabPages->Length; i++) tabPages[i]->resize();
+}
+
+/* Zmieniono adres */
+System::Void dabster::tabPnl::tbcPanel_SelectedIndexChanged(System::Object^ sender, System::EventArgs^  e) {
+	tbcPanel->Text = tbcPanel->TabPages[tbcPanel->SelectedIndex]->Text;
+}
+
+/* Otwarto inny folder */
+System::Void dabster::tabPnl::tbcPanel_TextChanged(System::Object^ sender, System::EventArgs^  e) {
+	cboAddress->Text = tbcPanel->Text;
 }
 
 /********************************************************************/

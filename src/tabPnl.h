@@ -34,6 +34,8 @@
 
 namespace dabster {
 
+static int a = -1;
+
 public ref class tabPnl {
 public:
 	tabPnl(dabForm^ ownerForm);
@@ -42,6 +44,7 @@ public:
 	void removeTab(int index);
 	int size(void);
 	tab^ getTab(int index);
+	int activeTab(void);
 
 	void Width(int w);
 	void Height(int h);
@@ -57,13 +60,16 @@ private:
 	dabForm^ owner;
 	dabComponentResourceManager^ resources;
 
-	cli::array< tab^ >^ tabPages;
 	dabComboBox^ cboAddress;
+	cli::array< tab^ >^ tabPages;
 	dabPanel^ pnlBackground;
 	dabTabControl^ tbcPanel;
 	
 	int width, height;
 	int top, left;
+
+	System::Void tbcPanel_TextChanged(System::Object^ sender, System::EventArgs^  e);
+	System::Void tbcPanel_SelectedIndexChanged(System::Object^ sender, System::EventArgs^  e);
 };
 
 }
