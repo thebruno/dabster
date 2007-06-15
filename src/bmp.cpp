@@ -954,23 +954,23 @@ const uint8 BMP::getCompression()  {
  */
 int isBmp(file *DabFile)  {
 	BMP_HEADER BmpHeader;
-	FILE_BUFFOR file;
+	FILE_BUFFOR BmpFile;
 	try {
-		file.OpenFile(DabFile->getRealPath().c_str(), std::ios_base::in, BUFFOR::BUF_READONLY);
-		if (file.GetBufState() == BUFFOR::BUF_GOOD && file.GetFileSize() >= 54) {
+		BmpFile.OpenFile(DabFile->getRealPath().c_str(), std::ios_base::in, BUFFOR::BUF_READONLY);
+		if (BmpFile.GetBufState() == BUFFOR::BUF_GOOD && BmpFile.GetFileSize() >= 54) {
 			uint32 i;
 			uint8 * p = reinterpret_cast<uint8*> (&BmpHeader);
 			// zeby nie doczytywal
-			file.SetReadSize(55);
-			file.Fill();
+			BmpFile.SetReadSize(55);
+			BmpFile.Fill();
 			for (i = 0; i < 54; ++i) {
-				p[i] = file.GetByte();
+				p[i] = BmpFile.GetByte();
 			}
 			BmpHeader.biUsefulData = BmpHeader.biWidth * BmpHeader.biHeight * 3; // w bajtach
-			if (BmpHeader.bfType == 19778 && BmpHeader.bfSize == file.GetFileSize() &&
+			if (BmpHeader.bfType == 19778 && BmpHeader.bfSize == BmpFile.GetFileSize() &&
 				BmpHeader.biBitCount == 24 && BmpHeader.biCompression == 0 && BmpHeader.biClrUsed == 0 &&
 				// 14 - pozycja biSize w Bmp
-				BmpHeader.biSizeImage == file.GetFileSize() - BmpHeader.biSize - 14)
+				BmpHeader.biSizeImage == BmpFile.GetFileSize() - BmpHeader.biSize - 14)
 				return 1;
 		}
 	}

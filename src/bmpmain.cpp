@@ -75,7 +75,7 @@ int main() {
 	/* Wczytywanie bazy komunikatow i bledow */
 
 
-	std::string nazwa = "1.bmp";
+	std::string nazwa = "test.bmp";
 	
 	smap plik1_in, plik2_in, plik3_in, plik4_in, plik5_in, plik6_in ;
 	smap folder1_in, folder2_in, folder3_in, folder4_in;
@@ -92,7 +92,21 @@ int main() {
 
 	vmstring sciezki1, sciezki2, sciezki3, sciezki4, sciezki5, wynik;
 	// deklaracja plikow rzeczywistych
-	plik1_in["name"] = "1.txt"; plik1_in["length"] = "20237"; plik1_in["realPath"]= "1.txt";
+
+
+	// testowanie wydajnosci:
+	plik1_in["name"] = "1.rar"; plik1_in["length"] = "11282348"; plik1_in["realPath"]= "1.rar";
+	sciezki1.push_back(plik1_in);
+
+	plik1_inside["creationTimeUtc"] = "25.04.2007 08:56:33"; plik1_inside["name"] = "11.rarinbmp";
+	plik1_inside["atrReadOnly"] = "true"; plik1_inside["relativePath"] = "11.txtinbmp";
+	sciezki2.push_back(plik1_inside);
+
+	plik1_out["name"] = "wynik1.rar"; plik1_out["realPath"]= "wynik1.rar";
+	sciezki3.push_back(plik1_out);
+
+
+	/*plik1_in["name"] = "1.txt"; plik1_in["length"] = "20237"; plik1_in["realPath"]= "1.txt";
 	sciezki1.push_back(plik1_in);
 	plik2_in["name"] = "2.txt"; plik2_in["length"] = "26033"; plik2_in["realPath"]= "2.txt";
 	sciezki1.push_back(plik2_in);
@@ -225,7 +239,7 @@ int main() {
 	sciezki4.push_back(folder4_inside);
 	sciezki5.push_back(new_folder4_inside);
 
-
+*/
 	bmp::BMP * b = 0;
 	sfile sf;
 	sf.setRealPath(nazwa);
@@ -242,16 +256,17 @@ int main() {
 			double t1,t2, t;
 			t1 = clock();
 
-			//b->store(sciezki1,sciezki2);
+			b->store(sciezki1,sciezki2);
 			//b->del(sciezki4);
-			b->extract(sciezki2,sciezki3);
+			//b->extract(sciezki2,sciezki3);
 			//b->modify(sciezki2, sciezki5);
 			//b->copyInside(sciezki4, sciezki5);
 			t2 = clock();
 			t = t2-t1;
 
 			if (!t) t = 1;
-				std::cout << 0.0 / t<< " KB/s" << std::endl;
+			t /= 1000 ;
+				std::cout << (11282348/1024) / t<< " KB/s" << std::endl;
 			delete b;
 		}
 

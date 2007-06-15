@@ -88,6 +88,7 @@ void BUFFOR::OpenFile(std::string DabPath, std::ios_base::open_mode DabFileMode,
 		File.close();
 		File.clear();
 	}
+	File.rdbuf()->pubsetbuf(0, 0);
 	File.open(DabPath.c_str(), DabFileMode | std::ios_base::binary);
 	if (!File) {
 		BufState = BUF_BAD;

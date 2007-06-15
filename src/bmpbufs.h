@@ -83,7 +83,7 @@ public:
  * Zwraca aktualny stan bufora.
  * 
  */
-	const BUFFOR_STATE GetBufState() const {
+	inline const BUFFOR_STATE GetBufState() const {
 		return BufState;
 	}
 
@@ -232,7 +232,10 @@ public:
  * Uzytecznosc taka jak dla klasy podstawowej.
  */
 class FILE_BUFFOR: public BUFFOR {
+public:
+	FILE_BUFFOR() {};
 };
 
 }
 #endif 
+
